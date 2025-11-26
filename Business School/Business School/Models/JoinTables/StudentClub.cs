@@ -2,8 +2,8 @@
 {
     public class StudentClub
     {
-        public int StudentId { get; set; }
-        public Student Student { get; set; } = null!;
+        public int UserStudentId { get; set; }
+        public ApplicationUser UserStudent { get; set; } = null!;
 
         public int ClubId { get; set; }
         public Club Club { get; set; } = null!;

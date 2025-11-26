@@ -16,9 +16,13 @@ namespace Business_School.Models
 
         public Department? Department { get; set; }
 
+        public int? LeaderId { get; set; }
+        public ApplicationUser? Leader { get; set; }
+
         // Many-to-many with Student
         public ICollection<StudentClub> StudentClubs { get; set; } = new List<StudentClub>();
-        public ICollection<Event> Events { get; set; } = new List<Event>();
+
+
     }
 
 }

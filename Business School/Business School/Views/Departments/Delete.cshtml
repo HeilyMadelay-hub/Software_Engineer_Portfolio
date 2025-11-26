@@ -1,1 +1,57 @@
-@* Vista vacía *@
+@model Business_School.Models.Department
+@{
+    ViewData["Title"] = "Delete Department";
+    var clubsCount = Model.Clubs?.Count() ?? 0;
+    var eventsCount = Model.Events?.Count() ?? 0;
+    var studentsCount = (ViewData["UniqueStudents"] as IEnumerable<Business_School.Models.ApplicationUser>)?.Count() ?? 0;
+}
+
+<h2 class="mt-4 mb-3 text-danger">Borrar Departmento</h2>
+
+<div class="alert alert-warning">
+    <strong>¿Confirmas que quieres borrar el siguiente departamento?</strong>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Nombre</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9"><a href="mailto:@Model.Email">@Model.Email</a></dd>
+
+            <dt class="col-sm-3">Teléfono</dt>
+            <dd class="col-sm-9">@Model.PhoneNumber</dd>
+
+            <dt class="col-sm-3">Oficina</dt>
+            <dd class="col-sm-9">@Model.OfficeLocation</dd>
+
+            <dt class="col-sm-3"># Clubs</dt>
+            <dd class="col-sm-9">@clubsCount</dd>
+
+            <dt class="col-sm-3"># Eventos</dt>
+            <dd class="col-sm-9">@eventsCount</dd>
+
+            <dt class="col-sm-3"># Estudiantes</dt>
+            <dd class="col-sm-9">@studentsCount</dd>
+        </dl>
+
+        @if (clubsCount > 0 || eventsCount > 0 || studentsCount > 0)
+        {
+            <div class="alert alert-danger">
+                Warning: Este departamento tiene datos relacionado que no pueden borrarse hasta que todo lo relacionado a este dato este borrado.
+            </div>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Back</a>
+        }
+        else
+        {
+            <form asp-action="DeleteConfirmed" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        }
+    </div>
+</div>

@@ -1,1 +1,193 @@
-@* Vista vacía *@
+@model Business_School.Models.Department
+
+@{
+    ViewData["Title"] = "Detalles del Departamento";
+    // Controller previously populated unique students into ViewData["UniqueStudents"] (IEnumerable<ApplicationUser>)
+    var uniqueStudents = ViewData["UniqueStudents"] as IEnumerable<Business_School.Models.ApplicationUser>
+                         ?? Enumerable.Empty<Business_School.Models.ApplicationUser>();
+}
+
+<h2 class="mt-4 mb-3">Detalles del Departamento</h2>
+
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-secondary btn-sm">Volver a la lista</a>
+
+    @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm ms-2">Editar</a>
+    }
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm ms-2">Eliminar</a>
+    }
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h4 class="card-title">@Model.Name</h4>
+
+        <dl class="row">
+            <dt class="col-sm-3">Correo</dt>
+            <dd class="col-sm-9"><a href="mailto:@Model.Email">@Model.Email</a></dd>
+
+            <dt class="col-sm-3">Teléfono</dt>
+            <dd class="col-sm-9">@Model.PhoneNumber</dd>
+
+            <dt class="col-sm-3">Oficina</dt>
+            <dd class="col-sm-9">@Model.OfficeLocation</dd>
+
+            <dt class="col-sm-3">Responsable</dt>
+            <dd class="col-sm-9">
+                @if (Model.ManagerUser != null)
+                {
+                    <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.ManagerUser.Id">@Model.ManagerUser.FullName</a>
+                }
+                else
+                {
+                    <span class="text-muted">Sin responsable asignado</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Clubs Asociados (@(Model.Clubs?.Count() ?? 0))</strong>
+                @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
+                {
+                    <a asp-controller="Clubs" asp-action="Create" asp-route-departmentId="@Model.Id" class="btn btn-sm btn-success">Crear Club</a>
+                }
+            </div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead class="table-light small">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th style="width:120px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Clubs != null && Model.Clubs.Any())
+                        {
+                            foreach (var club in Model.Clubs)
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-controller="Clubs" asp-action="Details" asp-route-id="@club.Id">@club.Name</a>
+                                    </td>
+                                    <td class="text-truncate" style="max-width:200px;">@club.Description</td>
+                                    <td>
+                                        <a asp-controller="Clubs" asp-action="Details" asp-route-id="@club.Id" class="btn btn-sm btn-info">Detalles</a>
+
+                                        @if (User.IsInRole("Admin") ||
+                                                                        (User.IsInRole("ClubLeader") &&
+                                                                        club.LeaderId == int.Parse(User.FindFirst("sub")!.Value)))
+                                        {
+                                            <a asp-controller="Clubs" asp-action="Edit" asp-route-id="@club.Id" class="btn btn-sm btn-warning ms-1">Editar</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="3" class="text-muted">No hay clubs en este departamento.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">
+                <strong>Estudiantes (@uniqueStudents.Count())</strong>
+            </div>
+            <div class="card-body p-0">
+                <table class="table mb-0 small">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Clubs</th>
+                            <th style="width:120px">Perfil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in uniqueStudents)
+                        {
+                            <tr>
+                                <td>@student.FullName</td>
+                                <td>
+                                    @{
+                                        var clubsOfStudent = (Model.Clubs ?? Enumerable.Empty<Business_School.Models.Club>())
+                                        .SelectMany(c => c.StudentClubs ?? Enumerable.Empty<Business_School.Models.JoinTables.StudentClub>())
+                                        .Where(sc => sc.UserStudentId == student.Id)
+                                        .Select(sc => sc.Club?.Name)
+                                        .Where(n => !string.IsNullOrEmpty(n))
+                                        .ToArray();
+                                    }
+                                    @if (clubsOfStudent.Any())
+                                    {
+                                        <span class="badge bg-secondary">@string.Join(", ", clubsOfStudent)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-controller="Students" asp-action="Details" asp-route-id="@student.Id"
+                                       class="btn btn-sm btn-info">Perfil</a>
+                                </td>
+                            </tr>
+                        }
+
+                        @if (!uniqueStudents.Any())
+                        {
+                            <tr><td colspan="3" class="text-muted">No hay estudiantes en este departamento.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><strong>Eventos del Departamento (@(Model.Events?.Count() ?? 0))</strong></div>
+            <div class="card-body p-0">
+                <table class="table mb-0 small">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Evento</th>
+                            <th>Fecha</th>
+                            <th style="width:120px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Events != null && Model.Events.Any())
+                        {
+                            foreach (var ev in Model.Events.OrderBy(e => e.StartDate))
+                            {
+                                <tr>
+                                    <td>@ev.Title</td>
+                                    <td>@ev.StartDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>
+                                        <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.Id" class="btn btn-sm btn-info">Detalles</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="3" class="text-muted">No hay eventos en este departamento.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

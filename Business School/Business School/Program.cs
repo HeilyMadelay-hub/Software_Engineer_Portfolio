@@ -1,4 +1,5 @@
 using Business_School.Data;
+using Business_School.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,13 +7,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+})
+ .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -32,66 +39,45 @@ using (var scope = app.Services.CreateScope()) {
     var services = scope.ServiceProvider;
 
     // 2. We create the roles
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
-    string[] roles = { "Admin", "DepartmentManager", "ClubLeader", "Student" };
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
+    /*
+    In OnModelCreating, we only seed tables that do **NOT** depend on Identity  
+    (Departments, Clubs, Events, Achievements, and the intermediate table EventClub).  
 
-    // 3. admin
-    var adminEmail = "admin@businessschool.com";
-    var adminUser = await userManager.FindByEmailAsync(adminEmail);
-    if (adminUser == null)
-    {
-        adminUser = new IdentityUser
-        {
-            UserName = adminEmail,
-            Email = adminEmail,
-            EmailConfirmed = true 
-        };
+    This is done this way because Identity **does not allow seeding** any entity that has  
+    foreign keys pointing to AspNetUsers. Therefore, it is impossible to seed the following  
+    from OnModelCreating:  
+    - StudentClub  
+    - StudentAchievement  
+    - EventAttendance  
+    - nor assign values to ManagerUserId, LeaderId, or OrganizerId.
 
-        var result = await userManager.CreateAsync(adminUser, "Admin123!");
-        if (result.Succeeded)
-        {
-            await userManager.AddToRoleAsync(adminUser, "Admin");
-        }
-    }
+    That’s why we use an **external DataSeeder** to which we pass  
+    UserManager, RoleManager, and the ApplicationDbContext.
 
-    // We assign User as rol by default to any user 
-    var users = userManager.Users.ToList();
-    foreach (var user in users)
-    {
-        var role = await userManager.GetRolesAsync(user);
-        if (!role.Any())
-        {
-            await userManager.AddToRoleAsync(user, "User");
-        }
-    }
+    In that external seeder we:  
+    1. Create the roles  
+    2. Create the users  
+    3. Once Identity has generated the real user IDs, we can safely establish all the dynamic relationships:  
+       - department managers  
+       - club leaders  
+       - event organizers  
+       - club enrollments  
+       - event attendances  
+       - achievements  
+       - points and levels  
 
-    //We create an DepartmentManager and a ClubLeader as example
-    var deptManagerEmail = "manager.finance@businessschool.com";
-    var deptManager = await userManager.FindByEmailAsync(deptManagerEmail);
-    if (deptManager == null)
-    {
-        deptManager = new IdentityUser { UserName = deptManagerEmail, Email = deptManagerEmail, EmailConfirmed = true };
-        await userManager.CreateAsync(deptManager, "Manager123!");
-        await userManager.AddToRoleAsync(deptManager, "DepartmentManager");
-    }
+    For this reason, it is **mandatory** to resolve the DbContext first with GetRequiredService<ApplicationDbContext>()
+    before calling DataSeeder.SeedAsync().
+     */
 
-    var leaderEmail = "leader.marketing@businessschool.com";
-    var leader = await userManager.FindByEmailAsync(leaderEmail);
-    if (leader == null)
-    {
-        leader = new IdentityUser { UserName = leaderEmail, Email = leaderEmail, EmailConfirmed = true };
-        await userManager.CreateAsync(leader, "Leader123!");
-        await userManager.AddToRoleAsync(leader, "ClubLeader");
-    }
+
+    var db = services.GetRequiredService<ApplicationDbContext>();
+
+    await DataSeeder.SeedAsync(userManager, roleManager, db);
+
 }
 
 // Configure the HTTP request pipeline.
@@ -117,7 +103,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 app.MapRazorPages();
 
 app.Run();

@@ -1,1 +1,158 @@
-@* Vista vacía *@
+@model IEnumerable<Business_School.Models.Department>
+
+@{
+    ViewData["Title"] = "Departamentos";
+}
+
+<div class="container mt-4">
+
+    <!-- Title+create button-->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2>
+                <i class="bi bi-building"></i> Departamentos
+            </h2>
+        </div>
+        <div class="col-md-6 text-end">
+            @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
+            {
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Crear Nuevo Departamento
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- search -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form class="d-flex" method="get" asp-action="Index">
+                <input name="q" class="form-control me-2" placeholder="Buscar departamentos..." />
+                <button class="btn btn-outline-secondary">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ALERTS -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- table -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Oficina</th>
+                                <th class="text-center">Responsable</th>
+                                <th class="text-center" style="width:220px">Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var d in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@d.Name</strong>
+                                    </td>
+
+                                    <td>
+                                        <i class="bi bi-envelope"></i>
+                                        <a href="mailto:@d.Email">@d.Email</a>
+                                    </td>
+
+                                    <td>
+                                        <i class="bi bi-telephone"></i>
+                                        @d.PhoneNumber
+                                    </td>
+
+                                    <td>
+                                        <i class="bi bi-geo-alt"></i>
+                                        @d.OfficeLocation
+                                    </td>
+
+                                    <td class="text-center">
+                                        @if (d.ManagerUser != null)
+                                        {
+                                            <span class="badge bg-primary">
+                                                @d.ManagerUser.FullName
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">-</span>
+                                        }
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+
+                                            <!-- DETAILS -->
+                                            <a asp-action="Details" asp-route-id="@d.Id"
+                                               class="btn btn-sm btn-outline-info px-2"
+                                               title="Detalles">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+
+                                            <!-- EDIT -->
+                                            @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
+                                            {
+                                                <a asp-action="Edit" asp-route-id="@d.Id"
+                                                   class="btn btn-sm btn-outline-warning px-2 ms-1"
+                                                   title="Editar">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                            }
+
+                                            <!-- DELETE -->
+                                            @if (User.IsInRole("Admin"))
+                                            {
+                                                <a asp-action="Delete" asp-route-id="@d.Id"
+                                                   class="btn btn-sm btn-outline-danger px-2 ms-1"
+                                                   title="Eliminar">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            }
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle"></i>
+                    No se encontraron departamentos. Crea el primero para comenzar.
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Business_School.Models
 {
     public class Department
@@ -14,9 +17,16 @@ namespace Business_School.Models
 
         public string OfficeLocation { get; set; } = string.Empty;
 
+
+
+        public int? ManagerUserId { get; set; }
+        public ApplicationUser? ManagerUser { get; set; }
+
+
+        public ICollection<ApplicationUser> Students { get; set; } = new List<ApplicationUser>();
         public ICollection<Club> Clubs { get; set; } = new List<Club>();
         public ICollection<Event> Events { get; set; } = new List<Event>();
-        public ICollection<Student> Students { get; set; } = new List<Student>();
+  
     }
 
 }

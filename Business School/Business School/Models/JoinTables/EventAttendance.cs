@@ -5,8 +5,8 @@
         public int EventId { get; set; }
         public Event Event { get; set; } = null!;
 
-        public int StudentId { get; set; }
-        public Student Student { get; set; } = null!;
+        public int UserStudentId { get; set; }
+        public ApplicationUser UserStudent { get; set; } = null!;
 
         public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
         public bool HasAttended { get; set; } = false;
