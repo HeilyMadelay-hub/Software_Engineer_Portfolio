@@ -1,5 +1,6 @@
 ﻿using Business_School.Models.JoinTables;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Business_School.Models
 {
@@ -23,6 +24,12 @@ namespace Business_School.Models
         public Department? Department { get; set; }
 
         public int Points { get; set; } = 0;
+
+
+
+        [NotMapped]//This is not going to the database only for the view
+        public GamificationProgress Gamification { get; set; }
+
         public StudentLevel Level { get; set; } = StudentLevel.Principiante;
 
         public ICollection<StudentClub> ClubMemberships { get; set; } = new List<StudentClub>();

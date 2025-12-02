@@ -1,1 +1,47 @@
-@* Vista vacía *@
+@model Business_School.ViewModels.Event.EventFormVM
+@{
+ ViewData["Title"] = "Crear Evento";
+}
+<h2>Crear Evento</h2>
+<form asp-action="Create" method="post">
+ <div class="mb-3">
+ <label asp-for="Title" class="form-label"></label>
+ <input asp-for="Title" class="form-control" />
+ <span asp-validation-for="Title" class="text-danger"></span>
+ </div>
+ <div class="mb-3">
+ <label asp-for="Description" class="form-label"></label>
+ <textarea asp-for="Description" class="form-control"></textarea>
+ <span asp-validation-for="Description" class="text-danger"></span>
+ </div>
+ <div class="mb-3">
+ <label asp-for="StartDate" class="form-label"></label>
+ <input asp-for="StartDate" type="datetime-local" class="form-control" />
+ <span asp-validation-for="StartDate" class="text-danger"></span>
+ </div>
+ <div class="mb-3">
+ <label asp-for="DepartmentId" class="form-label">Departamento</label>
+ <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-select"></select>
+ <span asp-validation-for="DepartmentId" class="text-danger"></span>
+ </div>
+ <div class="mb-3">
+ <label>Clubs</label>
+ <div>
+ @foreach (var club in Model.Clubs)
+ {
+ <div class="form-check">
+ <input class="form-check-input" type="checkbox" value="@club.Value" name="SelectedClubIds" id="club_@club.Value" />
+ <label class="form-check-label" for="club_@club.Value">@club.Text</label>
+ </div>
+ }
+ </div>
+ </div>
+ <div class="mb-3">
+ <label asp-for="MaxCapacity" class="form-label">Aforo Máximo (opcional)</label>
+ <input asp-for="MaxCapacity" class="form-control" />
+ <span asp-validation-for="MaxCapacity" class="text-danger"></span>
+ </div>
+ <button type="submit" class="btn btn-success">Guardar</button>
+ <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+@section Scripts {<partial name="_ValidationScriptsPartial" />}

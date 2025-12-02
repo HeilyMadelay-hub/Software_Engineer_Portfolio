@@ -1,1 +1,58 @@
-@* Vista vacía *@
+@model IEnumerable<Business_School.ViewModels.Student.StudentListVM>
+
+@{
+    ViewData["Title"] = "Lista de Estudiantes";
+    var returnUrl = ViewBag.ReturnUrl as string ?? Url.Action("Admin", "Dashboard");
+}
+
+<h2 class="mb-4">@ViewData["Title"]</h2>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nombre completo</th>
+                <th scope="col">Email</th>
+                <th scope="col">Puntos</th>
+                <th scope="col">Clubs</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.Id</td>
+                    <td>@student.FullName</td>
+                    <td>@student.Email</td>
+                    <td>@student.Points</td>
+                    <td>
+                        @if (student.Clubs.Any())
+                        {
+                            @foreach (var club in student.Clubs)
+                            {
+                                <span class="badge bg-primary me-1 mb-1">@club</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">Sin clubs</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="d-flex flex-wrap gap-1">
+                            <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@student.Id">Detalles</a>
+                            <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@student.Id" asp-route-returnUrl="@returnUrl">Editar</a>
+                            <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@student.Id">Eliminar</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-3">
+    <a class="btn btn-success" asp-action="Create" asp-route-returnUrl="@returnUrl"><i class="bi bi-plus-circle"></i> Crear nuevo estudiante</a>
+</div>

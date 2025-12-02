@@ -15,7 +15,8 @@ namespace Business_School.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            // No root view present; redirect to Account/Login to avoid404/InvalidOperationException
+            return RedirectToAction("Login", "Account");
         }
 
         public IActionResult Privacy()

@@ -1,1 +1,30 @@
-@* Next events *@
+@model IEnumerable<Business_School.ViewModels.Event.EventListVM>
+@{
+ ViewData["Title"] = "Próximos Eventos";
+}
+<h2>Próximos Eventos</h2>
+<table class="table table-striped">
+ <thead>
+ <tr>
+ <th>Título</th>
+ <th>Fecha</th>
+ <th>Departamento</th>
+ <th>Clubs</th>
+ <th>Registrados</th>
+ <th></th>
+ </tr>
+ </thead>
+ <tbody>
+ @foreach (var e in Model)
+ {
+ <tr>
+ <td>@e.Title</td>
+ <td>@e.StartDate.ToString("dd/MM/yyyy HH:mm")</td>
+ <td>@e.DepartmentName</td>
+ <td>@string.Join(", ", e.Clubs)</td>
+ <td>@e.RegisteredCount</td>
+ <td><a asp-action="Details" asp-route-id="@e.Id" class="btn btn-sm btn-primary">Ver</a></td>
+ </tr>
+ }
+ </tbody>
+</table>

@@ -2,12 +2,12 @@
 using Business_School.Models;
 using Business_School.Models.JoinTables;
 using Microsoft.AspNetCore.Authorization;
-using Business_School.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Business_School.ViewModels;
 
 namespace Business_School.Controllers
 {
@@ -80,36 +80,52 @@ namespace Business_School.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var departamentoToUpdate = await _db.Departments
+            var department = await _db.Departments
                 .FirstOrDefaultAsync(d => d.Id == id);
 
-            //We have to pass the user list for the drop down if we dont do it it will be appear empty
+            if (department == null)
+                return NotFound();
+
+            //We have to pass the user list for the drop down
             var users = await GetAssignableManagersAsync();
 
-            // SelectList: value = Id, text = FullName, selected = ManagerUserId
-            ViewBag.Managers = new SelectList(users, "Id", "FullName", departamentoToUpdate.ManagerUserId);
+            var vm = new DepartmentFormViewModel
+            {
+                Department = department,
+                Managers = users
+            };
 
-            return View(departamentoToUpdate);
+            return View(vm);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Department d)
+        public async Task<IActionResult> Edit(DepartmentFormViewModel vm)
         {
+            if (!ModelState.IsValid)
+            {
+                vm.Managers = await GetAssignableManagersAsync();
+                return View(vm);
+            }
 
-            _db.Update(d);
+            var departmentToUpdate = await _db.Departments.FindAsync(vm.Department.Id);
+            if (departmentToUpdate == null)
+                return NotFound();
+
+            
+            departmentToUpdate.Name = vm.Department.Name;
+            departmentToUpdate.PhoneNumber = vm.Department.PhoneNumber;
+            departmentToUpdate.Email = vm.Department.Email;
+            departmentToUpdate.OfficeLocation = vm.Department.OfficeLocation;
+            departmentToUpdate.ManagerUserId = vm.Department.ManagerUserId;
+
             await _db.SaveChangesAsync();
 
-            if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
-            {
-                return RedirectToAction("Details", new { id = d.Id });
-            }
-            else
-            {
-                return RedirectToAction("Index");
-            }
+            TempData["Success"] = "Departamento actualizado correctamente.";
+            return RedirectToAction("Index");
         }
+
 
         //if you check the data base→ use async/await
 

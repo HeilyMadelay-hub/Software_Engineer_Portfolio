@@ -26,7 +26,7 @@ namespace Business_School.Controllers
         private readonly ApplicationDbContext _context;
 
         public AccountController(UserManager<ApplicationUser> userManager,
-                                 SignInManager<ApplicationUser> signInManager, ApplicationDbContext context)
+        SignInManager<ApplicationUser> signInManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -45,7 +45,8 @@ namespace Business_School.Controllers
         public IActionResult Login(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            return View();
+            // Ensure ReturnUrl is preserved in the model so the hidden field posts it back
+            return View(new LoginVM { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
@@ -53,7 +54,10 @@ namespace Business_School.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginVM model, string? returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            // Prefer the value coming from the model, which is posted by the hidden field
+            var targetUrl = string.IsNullOrWhiteSpace(model.ReturnUrl) ? returnUrl : model.ReturnUrl;
+
+            ViewData["ReturnUrl"] = targetUrl;
 
             if (!ModelState.IsValid)
             {
@@ -65,35 +69,47 @@ namespace Business_School.Controllers
                 model.Password,
                 model.RememberMe,
                 lockoutOnFailure: false
-                );
+            );
 
             if (result.Succeeded)
             {
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                // If there is a valid local returnUrl, go there first
+                if (!string.IsNullOrEmpty(targetUrl) && Url.IsLocalUrl(targetUrl))
                 {
-                    return LocalRedirect(returnUrl);
+                    return LocalRedirect(targetUrl);
                 }
 
-                if (User.IsInRole("DepartmentManager"))
+                // Otherwise, redirect based on role
+                if (await _userManager.IsInRoleAsync(user, "Admin"))
                 {
-                    return RedirectToAction("Index", "Departments");
+                    return RedirectToAction("Admin", "Dashboard");
+                }
+                if (await _userManager.IsInRoleAsync(user, "DepartmentManager"))
+                {
+                    return RedirectToAction("DepartmentManager", "Dashboard");
+                }
+                if (await _userManager.IsInRoleAsync(user, "ClubLeader"))
+                {
+                    return RedirectToAction("ClubLeader", "Dashboard");
+                }
+                if (await _userManager.IsInRoleAsync(user, "Student"))
+                {
+                    return RedirectToAction("Student", "Dashboard");
                 }
 
-                return RedirectToAction("Index", "Account");
+                // Default fallback
+                return RedirectToAction("Index", "Dashboard");
             }
 
             if (result.IsLockedOut)
             {
-                ModelState.AddModelError(string.Empty,
-                    "Account locked out. Please try again later.");
+                ModelState.AddModelError(string.Empty, "Account locked out. Please try again later.");
                 return View(model);
             }
 
-            // ModelState stores submitted form values, checks validation attributes, tracks errors, and determines whether the request is valid.
-
-            ModelState.AddModelError(string.Empty,
-                "Invalid login attempt. Please check your email and password.");
-
+            ModelState.AddModelError(string.Empty, "Invalid login attempt. Please check your email and password.");
             return View(model);
         }
 
@@ -132,9 +148,9 @@ namespace Business_School.Controllers
             if (!ModelState.IsValid)
             {
                 var deps = _context.Departments
-                    .OrderBy(d => d.Name)
-                    .Select(d => new { d.Id, d.Name })
-                    .ToList();
+                .OrderBy(d => d.Name)
+                .Select(d => new { d.Id, d.Name })
+                .ToList();
 
                 model.DepartmentList = new SelectList(deps, "Id", "Name");
 
@@ -181,16 +197,16 @@ namespace Business_School.Controllers
             // If CreateAsync fails (e.g., duplicate email, invalid password):
             // - Add errors to ModelState
             // - Repopulate the Department dropdown so the form can be
-            //   redisplayed without losing the user's selection
+            // redisplayed without losing the user's selection
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
 
             var departments = _context.Departments
-                .OrderBy(d => d.Name)
-                .Select(d => new { d.Id, d.Name })
-                .ToList();
+            .OrderBy(d => d.Name)
+            .Select(d => new { d.Id, d.Name })
+            .ToList();
 
             model.DepartmentList = new SelectList(departments, "Id", "Name");
 
@@ -200,22 +216,22 @@ namespace Business_School.Controllers
 
 
         [HttpPost]
-         [ValidateAntiForgeryToken]
-         public async Task<IActionResult> Logout()
-         {
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
 
-             await _signInManager.SignOutAsync();
-             return RedirectToAction("Login", "Account");
-         }
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Account");
+        }
 
 
-         [HttpGet]
-         [AllowAnonymous]
-         public IActionResult AccessDenied()
-         {
-             return RedirectToAction("Login");
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return RedirectToAction("Login");
 
-         }
+        }
 
 
     }

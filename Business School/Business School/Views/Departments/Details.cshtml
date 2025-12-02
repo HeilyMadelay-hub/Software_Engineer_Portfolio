@@ -10,8 +10,10 @@
 <h2 class="mt-4 mb-3">Detalles del Departamento</h2>
 
 <div class="mb-3">
-    <a asp-action="Index" class="btn btn-secondary btn-sm">Volver a la lista</a>
 
+    @if (!User.IsInRole("Admin")){
+    <a asp-action="Index" class="btn btn-secondary btn-sm">Volver a la lista</a>
+    }
     @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
     {
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm ms-2">Editar</a>
@@ -40,7 +42,7 @@
             <dd class="col-sm-9">
                 @if (Model.ManagerUser != null)
                 {
-                    <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.ManagerUser.Id">@Model.ManagerUser.FullName</a>
+                    <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.ManagerUser.Id" asp-route-returnDepartmentId="@Model.Id">@Model.ManagerUser.FullName</a>
                 }
                 else
                 {
@@ -76,16 +78,15 @@
                             foreach (var club in Model.Clubs)
                             {
                                 <tr>
-                                    <td>
-                                        <a asp-controller="Clubs" asp-action="Details" asp-route-id="@club.Id">@club.Name</a>
-                                    </td>
+                                    <td class="text-truncate" style="max-width:200px;">@club.Name</td>
+
                                     <td class="text-truncate" style="max-width:200px;">@club.Description</td>
                                     <td>
                                         <a asp-controller="Clubs" asp-action="Details" asp-route-id="@club.Id" class="btn btn-sm btn-info">Detalles</a>
 
                                         @if (User.IsInRole("Admin") ||
                                                                         (User.IsInRole("ClubLeader") &&
-                                                                        club.LeaderId == int.Parse(User.FindFirst("sub")!.Value)))
+                                                                        club.LeaderId == int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0")))
                                         {
                                             <a asp-controller="Clubs" asp-action="Edit" asp-route-id="@club.Id" class="btn btn-sm btn-warning ms-1">Editar</a>
                                         }
@@ -137,7 +138,7 @@
                                     }
                                     else
                                     {
-                                        <span class="text-muted">—</span>
+                                        <span class="text-muted">-</span>
                                     }
                                 </td>
                                 <td>

@@ -1,1 +1,27 @@
-@* Vista vacía *@
+@model Business_School.ViewModels.Student.StudentListVM
+@{
+ ViewData["Title"] = "Eliminar Estudiante";
+}
+
+<h2>Eliminar Estudiante</h2>
+
+<div class="alert alert-warning">
+ ¿Está seguro de que desea eliminar al estudiante?
+</div>
+
+<dl class="row">
+ <dt class="col-sm-2">Nombre</dt>
+ <dd class="col-sm-10">@Model.FullName</dd>
+
+ <dt class="col-sm-2">Email</dt>
+ <dd class="col-sm-10">@Model.Email</dd>
+
+ <dt class="col-sm-2">Puntos</dt>
+ <dd class="col-sm-10">@Model.Points</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+ <input type="hidden" asp-for="Id" />
+ <button type="submit" class="btn btn-danger">Eliminar</button>
+ <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

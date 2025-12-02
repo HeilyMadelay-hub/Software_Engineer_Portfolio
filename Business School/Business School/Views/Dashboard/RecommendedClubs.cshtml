@@ -1,0 +1,102 @@
+﻿@model List<Business_School.ViewModels.Dashboard.RecommendedClubVM>
+@{
+    ViewData["Title"] = "Clubs Recomendados";
+}
+
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h2>
+                    <i class="bi bi-lightbulb"></i> Clubs Recomendados para Ti
+                </h2>
+                <p class="text-muted">Basado en tu actividad, puntos y tus intereses.</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <a asp-controller="Clubs" asp-action="Index" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-people"></i> Ver Todos los Clubs
+                </a>
+                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="row">
+                @foreach (var club in Model)
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-sm hover-card h-100">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">@club.Name</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>
+                                    @if (!string.IsNullOrEmpty(club.Description))
+                                    {
+                                        @(club.Description.Length > 120 ? club.Description.Substring(0, 120) + "..." : club.Description)
+                                    }
+                                    else
+                                    {
+                                        <em class="text-muted">Sin descripción</em>
+                                    }
+                                </p>
+
+                                <div class="mb-2">
+                                    <i class="bi bi-building text-primary"></i>
+                                    <strong>Departamento:</strong> @club.DepartmentName
+                                </div>
+
+                                <div class="mb-2">
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <strong>Compatibilidad:</strong> @club.MatchPercentage%
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(club.Reason))
+                                {
+                                    <div class="mb-2">
+                                        <i class="bi bi-lightbulb-fill text-secondary"></i>
+                                        <strong>Por qué se recomienda:</strong>
+                                        <p class="mb-0 text-muted">@club.Reason</p>
+                                    </div>
+                                }
+                            </div>
+                            <div class="card-footer bg-light d-flex justify-content-between align-items-center">
+                                <a asp-controller="Clubs" asp-action="Details" asp-route-id="@club.Id" class="btn btn-outline-info btn-sm">
+                                    <i class="bi bi-eye"></i> Ver Detalles
+                                </a>
+                                <form asp-controller="Clubs" asp-action="JoinClub" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="clubId" value="@club.Id" />
+                                    <button type="submit" class="btn btn-outline-success btn-sm">
+                                        <i class="bi bi-person-plus"></i> Unirse
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-circle"></i> No tenemos recomendaciones basadas en tu actividad por ahora.
+                <a asp-controller="Clubs" asp-action="Index" class="alert-link">Explora todos los clubs</a>.
+            </div>
+        }
+    </div>
+
+    <style>
+        .hover-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .hover-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+            }
+    </style>

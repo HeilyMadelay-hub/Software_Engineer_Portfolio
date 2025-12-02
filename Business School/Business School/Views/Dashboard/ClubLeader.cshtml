@@ -1,1 +1,20 @@
-@* Vista vacía *@
+@model Business_School.Models.Club
+@{
+    ViewData["Title"] = "Club Leader";
+}
+@if (Model == null)
+{
+    <div class="alert alert-warning">No lideras ningún club.</div>
+}
+else
+{
+    <h2>@Model.Name</h2>
+    <h4>Estudiantes</h4>
+    <ul>
+        @foreach (var sc in Model.StudentClubs) { <li>@sc.UserStudent.FullName (@sc.UserStudent.Email)</li> }
+    </ul>
+    <h4>Próximos eventos</h4>
+    <ul>
+        @foreach (var ec in Model.EventClubs) { <li>@ec.Event.Title - @ec.Event.StartDate.ToString("dd/MM/yyyy HH:mm")</li> }
+    </ul>
+}

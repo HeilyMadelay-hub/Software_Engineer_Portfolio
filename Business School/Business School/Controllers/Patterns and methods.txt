@@ -1,0 +1,306 @@
+﻿CRUD PATTERNS
+
+Patrón básico de un CRUD
+
+Index (GET) → listar todos los registros
+
+var items = await _db.Table.ToListAsync();
+return View(items);
+
+
+Details (GET) → ver un solo registro
+
+var item = await _db.Table
+    .Include(t => t.Relation) // si necesitas relaciones
+    .FirstOrDefaultAsync(t => t.Id == id);
+return View(item);
+
+
+Create (GET) → mostrar formulario
+
+var vm = new EntityCreateVM();
+vm.Dropdowns = ... // si necesitas SelectLists
+return View(vm);
+
+
+Create (POST) → guardar nuevo registro
+
+if (ModelState.IsValid)
+{
+    _db.Table.Add(entity);
+    await _db.SaveChangesAsync();
+    return RedirectToAction("Index");
+}
+// Si hay error, recargar dropdowns y volver a la vista
+
+
+Edit (GET) → mostrar formulario con datos existentes
+
+var entity = await _db.Table.FindAsync(id);
+return View(entity);
+
+
+Edit (POST) → actualizar registro
+
+if (ModelState.IsValid)
+{
+    _db.Update(entity);
+    await _db.SaveChangesAsync();
+    return RedirectToAction("Index");
+}
+
+
+Delete (GET) → confirmar eliminación
+
+var entity = await _db.Table.FindAsync(id);
+return View(entity);
+
+
+Delete (POST) → eliminar registro
+
+_db.Table.Remove(entity);
+await _db.SaveChangesAsync();
+return RedirectToAction("Index");
+
+🔹 Lo que cambia entre entidades
+
+El ViewModel (si hay dropdowns o campos especiales).
+
+Las relaciones (Include en EF Core).
+
+Las validaciones ([Required], [StringLength], etc.).
+
+Roles y autorizaciones ([Authorize(Roles = "...")]).
+
+
+1️⃣ ¿Por qué existen esos 8 métodos del CRUD?
+
+En ASP.NET Core MVC, un CRUD “clásico” se apoya en un patrón muy fijo:
+
+🔹 1) Index() (GET)
+
+Por qué existe:
+El enunciado dice:
+
+“En la lista de Clubs, el nombre del Department será un enlace hacia los detalles del Departamento.”
+
+Eso implica que tiene que existir una vista donde aparezcan todos los clubs → esa es Index.
+
+Necesitas traer todos los clubs desde la base de datos.
+
+Mostrar nombre, descripción, departamento (con link a Details de Department).
+
+Botón “Create” para Admin / DepartmentManager.
+
+Sin Index(), no hay “lista de clubs”, así que ese requisito no se cumple.
+
+🔹 2) Details(int id) (GET)
+
+Por qué existe:
+El enunciado dice de forma explícita:
+
+“ClubLeader puede ver la lista de Estudiantes inscritos en su Club”
+“Debe mostrar: información del club, lista de estudiantes, líder, eventos, Join/Leave, etc.”
+
+Todo eso no se puede mostrar en un listado general; necesitas una vista de detalle de un club concreto → Details(int id).
+
+Carga un solo club por id.
+
+Incluye:
+
+Club
+
+Department (para link)
+
+StudentClubs → estudiantes
+
+Events
+
+Info de ClubLeader
+
+Calcula si el usuario actual es miembro → para mostrar Join/Leave.
+
+Si no tienes Details, no puedes cumplir nada de esto.
+
+🔹 3) Create() (GET)
+
+Por qué existe:
+El enunciado dice:
+
+“CRUD de Clubs; cada Club pertenece exactamente a un Departamento (dropdown al crear/editar).”
+
+Para crear un club:
+
+Necesitas un formulario vacío.
+
+Necesitas llenar el dropdown de Departments (SelectList).
+
+Este formulario se muestra con Create() GET.
+Aquí no guardas nada, solo preparas el ViewModel.
+
+🔹 4) Create(ClubCreateVM vm) (POST)
+
+Por qué existe:
+Cuando el usuario pulsa Submit en el form:
+
+Los datos del formulario llegan a este método.
+
+Se aplica validación (ModelState.IsValid con [Required], etc.).
+
+Si todo está bien:
+
+Creas el Club en base de datos.
+
+Guardas.
+
+Rediriges a Index.
+
+Si algo está mal:
+
+Vuelves a la vista Create con errores + recargas dropdown.
+
+Sin este POST, tu formulario jamás guardaría nada.
+
+🔹 5) Edit(int id) (GET)
+
+Por qué existe:
+El CRUD incluye actualizar. Para ello:
+
+Necesitas cargar el club existente por id.
+
+Rellenar el formulario con sus valores.
+
+Cargar otra vez el dropdown de Departments.
+
+En el enunciado además se dice:
+
+“ClubLeader puede editar su propio Club”
+
+Por tanto, desde aquí se puede además chequear si el usuario actual tiene permiso para editar.
+
+🔹 6) Edit(int id, ClubEditVM vm) (POST)
+
+Por qué existe:
+
+El usuario edita el formulario y hace Submit.
+
+El servidor recibe los nuevos datos.
+
+Valida → si ok, actualiza y guarda.
+
+No se puede editar solo con GET, necesitas este POST para hacer el cambio real en la DB.
+
+🔹 7) Delete(int id) (GET)
+
+Por qué existe:
+
+Patrón típico MVC:
+
+Antes de borrar, se muestra pantalla de confirmación.
+
+Se carga el club por id, se muestra:
+
+Nombre
+
+Info básica
+
+(Opcional) aviso de que tiene estudiantes/eventos asociados.
+
+El usuario decide si realmente quiere borrarlo.
+
+🔹 8) DeleteConfirmed(int id) (POST)
+
+Por qué existe:
+
+El usuario confirma en la vista de Delete.
+
+Este POST ejecuta la eliminación real.
+
+Se sigue el patrón de seguridad: operaciones destructivas → POST + AntiForgeryToken, no GET.
+
+2️⃣ ¿Por qué hacen falta métodos extra (Join, Leave, etc.)?
+
+Aquí entra lo específico de TU proyecto 👇
+
+El enunciado dice:
+
+“Cada Estudiante puede unirse a uno o varios Clubs.”
+“Gamificación: puntos por unirse a Clubs.”
+“Student puede unirse/salirse.”
+“Relación muchos-a-muchos con Estudiantes.”
+
+Eso no se resuelve solo con CRUD de Club.
+Necesitas acciones que modifiquen la tabla intermedia StudentClub.
+
+🔹 9) Join(int clubId) (POST)
+
+El estudiante pulsa Join Club.
+
+El servidor:
+
+Crea un StudentClub con UserStudentId = usuario actual.
+
+ClubId = clubId.
+
+Asigna puntos (+50).
+
+Sin este método, el botón “Join Club” sería decorativo, no haría nada.
+
+🔹 10) Leave(int clubId) (POST)
+
+El estudiante pulsa Leave Club.
+
+El servidor:
+
+Busca la relación en StudentClub.
+
+La elimina.
+
+Sin este método, no podrías cumplir:
+
+“Student puede unirse/salirse”
+
+🔹 11) MyClub() / MyClubs() (opcional según diseño)
+
+Enunciado:
+
+“ClubLeader puede gestionar un club concreto (editar club, ver lista de estudiantes del club).”
+“Student — perfil, puede unirse a clubs.”
+
+Muchas veces necesitas:
+
+MyClubs() → clubs de un student.
+
+O MyClub() → club del que el user es líder.
+
+No es estrictamente “CRUD”, pero sí para cumplir la parte de Dashboard / zona personal por rol.
+
+🔹 12) Students(int clubId) (opcional helper)
+
+Puedes listar miembros del club en Details, pero si quieres una vista separada tipo:
+
+/Club/Students/3 → miembros del Club 3 para el ClubLeader
+
+tendrías un método específico.
+
+3️⃣ Entonces… ¿por qué entre 10 y 12 métodos?
+
+Porque:
+
+8 son los clásicos de cualquier CRUD MVC completo.
+
+2 (Join/Leave) son totalmente obligatorios por tu enunciado (unirse/salirse + gamificación).
+
+2 más (MyClubs, Students) son muy útiles para cumplir dashboards y vistas por rol, aunque podrías vivir sin ellos si metes todo en otras vistas.
+
+Por eso te dije:
+
+👉 El ClubController debería tener entre 10 y 12 métodos.
+
+No porque “me lo invente”, sino porque:
+
+8 salen del CRUD estándar.
+
+2 salen del requisito de relación muchos-a-muchos + gamificación.
+
+1–2 salen de la parte de roles y dashboards.

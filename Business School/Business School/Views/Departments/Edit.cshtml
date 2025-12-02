@@ -1,7 +1,7 @@
-@model Business_School.Models.Department
+@using Business_School.ViewModels
+@model DepartmentFormViewModel
 @{
     ViewData["Title"] = "Editar Departamento";
-    // ViewBag.Managers should be populated in controller (SelectList)
 }
 
 <h2 class="mt-4 mb-3">Editar Departamento</h2>
@@ -10,38 +10,38 @@
     <div class="card-body">
         <form asp-action="Edit" method="post">
             @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Department.Id" />
 
             <div class="mb-3">
-                <label asp-for="Name" class="form-label">Nombre</label>
-                <input asp-for="Name" class="form-control" placeholder="Nombre del departamento" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Department.Name" class="form-label">Nombre</label>
+                <input asp-for="Department.Name" class="form-control" placeholder="Nombre del departamento" />
+                <span asp-validation-for="Department.Name" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Email" class="form-label">Correo electrónico</label>
-                <input asp-for="Email" class="form-control" type="email" placeholder="correo@empresa.com" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="Department.Email" class="form-label">Correo electrónico</label>
+                <input asp-for="Department.Email" class="form-control" type="email" placeholder="correo@empresa.com" />
+                <span asp-validation-for="Department.Email" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="PhoneNumber" class="form-label">Teléfono</label>
-                <input asp-for="PhoneNumber" class="form-control" placeholder="Ej: +34 600 000 000" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                <label asp-for="Department.PhoneNumber" class="form-label">Teléfono</label>
+                <input asp-for="Department.PhoneNumber" class="form-control" placeholder="Ej: +34 600 000 000" />
+                <span asp-validation-for="Department.PhoneNumber" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="OfficeLocation" class="form-label">Ubicación de la oficina</label>
-                <input asp-for="OfficeLocation" class="form-control" placeholder="Ej: Edificio A, Piso 3" />
-                <span asp-validation-for="OfficeLocation" class="text-danger"></span>
+                <label asp-for="Department.OfficeLocation" class="form-label">Ubicación de la oficina</label>
+                <input asp-for="Department.OfficeLocation" class="form-control" placeholder="Ej: Edificio A, Piso 3" />
+                <span asp-validation-for="Department.OfficeLocation" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Responsable (opcional)</label>
-                <select asp-for="ManagerUserId" class="form-select" asp-items="ViewBag.Managers">
+                <select asp-for="Department.ManagerUserId" class="form-select" asp-items="@(new SelectList(Model.Managers, "Id", "FullName", Model.Department.ManagerUserId))">
                     <option value="">-- Sin responsable --</option>
                 </select>
-                <span asp-validation-for="ManagerUserId" class="text-danger"></span>
+                <span asp-validation-for="Department.ManagerUserId" class="text-danger"></span>
             </div>
 
             <button type="submit" class="btn btn-primary">Guardar</button>

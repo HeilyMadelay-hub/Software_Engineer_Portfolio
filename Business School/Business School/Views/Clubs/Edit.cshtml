@@ -1,1 +1,104 @@
-@* Vista vacía *@
+@model Business_School.ViewModels.Club.ClubEditVM
+
+@{
+    ViewData["Title"] = "Editar Club";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Editar Club</h2>
+
+    @* Mensajes de éxito/error *@
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                Información del Club
+            </div>
+            <div class="card-body">
+
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Nombre del Club</label>
+                    <input asp-for="Name" class="form-control" placeholder="Introduce el nombre del club" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Descripción -->
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Descripción</label>
+                    <textarea asp-for="Description" rows="4" class="form-control" placeholder="Breve descripción del club"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Departamento -->
+                <div class="mb-3">
+                    <label asp-for="DepartmentId" class="form-label">Departamento</label>
+                    <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-select">
+                        <option value="">-- Selecciona un Departamento --</option>
+                    </select>
+                    <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-secondary text-white">
+                Detalles del Club
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="LeaderId" class="form-label">Líder del Club</label>
+                        <select asp-for="LeaderId" asp-items="Model.Leaders" class="form-select">
+                            <option value="">-- Selecciona líder --</option>
+                        </select>
+                        <span asp-validation-for="LeaderId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="MemberCount" class="form-label">Cantidad de Miembros (actual)</label>
+                        <input asp-for="MemberCount" class="form-control" type="number" min="0" readonly />
+                        <div class="form-text">Valor derivado de las membresías actuales.</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Capacity" class="form-label">Capacidad máxima</label>
+                        <input asp-for="Capacity" class="form-control" type="number" min="1" />
+                        <span asp-validation-for="Capacity" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+           @if (!User.IsInRole("Admin"))
+           { 
+               <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Ver Detalles</a>
+           }
+       </div>
+    </form>
+</div>

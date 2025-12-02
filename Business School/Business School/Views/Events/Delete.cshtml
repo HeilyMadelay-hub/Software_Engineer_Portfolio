@@ -1,1 +1,20 @@
-@* Vista vacía *@
+@model Business_School.Models.Event
+@{
+    ViewData["Title"] = "Eliminar Evento";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    if (string.IsNullOrEmpty(returnUrl))
+    {
+        returnUrl = Url.Action("Index", "Clubs");
+    }
+}
+<h2>Eliminar Evento</h2>
+<div class="alert alert-warning">
+    ¿Seguro que deseas eliminar el evento <strong>@Model.Title</strong>?
+</div>
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" name="returnUrl" value="@returnUrl" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a href="@returnUrl" class="btn btn-secondary">Cancelar</a>
+</form>

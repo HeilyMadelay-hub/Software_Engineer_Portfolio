@@ -1,1 +1,149 @@
-@* Vista vac�a *@
+﻿@model Business_School.ViewModels.Dashboard.DashboardAdminVM
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid mt-4">
+
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+        </button>
+    </form>
+
+    <hr />
+    <!-- 1️⃣ Estadísticas generales -->
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-primary h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-subtitle mb-2 text-muted">Estudiantes</h6>
+                    <h3 class="card-title">@Model.TotalStudents</h3>
+                    <a class="btn btn-outline-primary btn-sm mt-2" href="@Url.Action("Index", "Students")">Ver todos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-success h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-subtitle mb-2 text-muted">Clubs</h6>
+                    <h3 class="card-title">@Model.TotalClubs</h3>
+                    <a class="btn btn-outline-success btn-sm mt-2" href="@Url.Action("Index", "Clubs")">Ver todos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-warning h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-subtitle mb-2 text-muted">Departamentos</h6>
+                    <h3 class="card-title">@Model.TotalDepartments</h3>
+                    <a class="btn btn-outline-warning btn-sm mt-2" href="@Url.Action("Index", "Departments")">Ver todos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-info h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-subtitle mb-2 text-muted">Eventos próximos</h6>
+                    <h3 class="card-title">@Model.NextEvents.Count()</h3>
+                    <a class="btn btn-outline-info btn-sm mt-2" href="@Url.Action("Index", "Events")">Ver todos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <!-- 2️⃣ Gestión rápida -->
+    <h4 class="mb-3">Gestión rápida</h4>
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a class="btn btn-primary" href="@Url.Action("Create", "Students")">Crear Estudiante</a>
+        <a class="btn btn-primary" href="@Url.Action("Create", "Clubs")">Crear Club</a>
+        <a class="btn btn-primary" href="@Url.Action("Create", "Departments")">Crear Departamento</a>
+        <a class="btn btn-primary" href="@Url.Action("Create", "Events")">Crear Evento</a>
+        <a class="btn btn-secondary" href="@Url.Action("ManageUsers", "Admin")">Gestionar Usuarios/Roles</a>
+       
+        
+    </div>
+
+    <hr />
+
+    <!-- 3️⃣ Gráfico -->
+    <h4 class="mb-3">Estudiantes por Departamento</h4>
+    <div class="card shadow-sm p-3 mb-4">
+        <canvas id="studentsByDepartmentChart" style="height:300px;"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.StudentsByDepartment.Select(kvp => kvp.Key).ToList()));
+        const data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.StudentsByDepartment.Select(kvp => kvp.Value).ToList()));
+        const ctx = document.getElementById('studentsByDepartmentChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Estudiantes por Departamento',
+                    data: data,
+                    backgroundColor: 'rgba(54,162,235,0.6)',
+                    borderColor: 'rgba(54,162,235,1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+            }
+        });
+    </script>
+
+    <hr />
+
+    <!-- 4️⃣ Próximos eventos -->
+    <h4 class="mb-3">Próximos Eventos</h4>
+    <ul class="list-group mb-4">
+        @foreach (var ev in Model.NextEvents)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@ev.Title - @ev.StartDate.ToString("dd/MM/yyyy HH:mm")</span>
+                <a href="@Url.Action("Edit", "Events", new { id = ev.Id })" class="btn btn-sm btn-outline-primary">Editar</a>
+            </li>
+        }
+    </ul>
+
+    <hr />
+
+    <!-- 5️⃣ Últimos estudiantes -->
+    <h4 class="mb-3">Últimos Estudiantes</h4>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Departamento</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model.RecentStudents)
+                {
+                    <tr>
+                        <td>@student.FullName</td>
+                        <td>@student.Email</td>
+                        <td>@student.Department?.Name</td>
+                        <td>
+                            <a class="btn btn-sm btn-primary me-1" href="@Url.Action("Edit", "Students", new { id = student.Id, returnUrl = Url.Action("Admin", "Dashboard") })">Editar</a>
+                            <a class="btn btn-sm btn-danger" href="@Url.Action("Delete", "Students", new { id = student.Id })">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

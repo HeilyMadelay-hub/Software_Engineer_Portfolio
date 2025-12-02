@@ -16,12 +16,17 @@ namespace Business_School.Models
 
         public Department? Department { get; set; }
 
+        // Leader is optional and can be assigned later
         public int? LeaderId { get; set; }
         public ApplicationUser? Leader { get; set; }
+
+        // Capacity (maximum allowed members)
+        public int? Capacity { get; set; }
 
         // Many-to-many with Student
         public ICollection<StudentClub> StudentClubs { get; set; } = new List<StudentClub>();
 
+        public ICollection<EventClub> EventClubs { get; set; } = new List<EventClub>();
 
     }
 

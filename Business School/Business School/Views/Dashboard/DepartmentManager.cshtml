@@ -1,1 +1,24 @@
-@* Vista vacía *@
+@model Business_School.Models.Department
+@{
+ ViewData["Title"] = "Department Manager";
+}
+<h2>@Model?.Name</h2>
+@if (Model == null)
+{
+ <div class="alert alert-warning">No tienes departamento asignado.</div>
+}
+else
+{
+ <h4>Clubs</h4>
+ <ul>
+ @foreach (var c in Model.Clubs) { <li>@c.Name (@c.StudentClubs.Count miembros)</li> }
+ </ul>
+ <h4>Estudiantes</h4>
+ <ul>
+ @foreach (var s in Model.Students) { <li>@s.FullName (@s.Email)</li> }
+ </ul>
+ <h4>Eventos</h4>
+ <ul>
+ @foreach (var e in Model.Events) { <li>@e.Title - @e.StartDate.ToString("dd/MM/yyyy HH:mm")</li> }
+ </ul>
+}

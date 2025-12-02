@@ -108,6 +108,25 @@ namespace Business_School.Data
                 await db.SaveChangesAsync();
 
             // -----------------------------
+            // 3b) ASSIGN STUDENTS TO DEPARTMENTS (previously missing → chart showed zeros)
+            // -----------------------------
+            // Simple distribution; adjust as needed.
+            async Task AssignDeptIfNull(ApplicationUser stu, int? deptId)
+            {
+                if (deptId.HasValue && stu.DepartmentId != deptId.Value)
+                {
+                    stu.DepartmentId = deptId.Value;
+                    await userManager.UpdateAsync(stu);
+                }
+            }
+
+            await AssignDeptIfNull(s01, dept1?.Id);
+            await AssignDeptIfNull(s02, dept2?.Id);
+            await AssignDeptIfNull(s03, dept3?.Id);
+            await AssignDeptIfNull(s04, dept2?.Id);
+            await AssignDeptIfNull(s05, dept1?.Id);
+
+            // -----------------------------
             // 4) ASSIGN CLUB LEADERS (mappings decided)
             //    Finance Club (1)   -> leader_sports
             //    Marketing (2)      -> leader_music
@@ -125,22 +144,40 @@ namespace Business_School.Data
             if (club3 != null && club3.LeaderId != leader_sports.Id) { club3.LeaderId = leader_sports.Id; changed = true; }
             if (club4 != null && club4.LeaderId != leader_music.Id) { club4.LeaderId = leader_music.Id; changed = true; }
 
+            // Set initial capacities (open seats) if not configured
+            if (club1 != null && club1.Capacity == null) { club1.Capacity = 30; changed = true; }
+            if (club2 != null && club2.Capacity == null) { club2.Capacity = 25; changed = true; }
+            if (club3 != null && club3.Capacity == null) { club3.Capacity = 40; changed = true; }
+            if (club4 != null && club4.Capacity == null) { club4.Capacity = 50; changed = true; }
+
             if (changed)
                 await db.SaveChangesAsync();
 
             // -----------------------------
-            // 5) STUDENT-CLUB MEMBERSHIPS (aleatorio equilibrado acordado)
+            // 5) STUDENT-CLUB MEMBERSHIPS
             //    s01 -> 1,2
             //    s02 -> 3
             //    s03 -> 1,4
             //    s04 -> 2
             //    s05 -> 3,4
             // -----------------------------
+            // Obtén los Ids de clubes existentes en la base de datos
+            var clubIdsExistentes = await db.Clubs.Select(c => c.Id).ToListAsync();
+
             async Task AddStudentClubIfNotExists(int studentId, int clubId, DateTime joinedAt, bool isLeader = false, int points = 0)
             {
+                // Solo agrega la relación si el club existe
+                if (!clubIdsExistentes.Contains(clubId))
+                    return;
+
                 var exists = await db.StudentClubs.AnyAsync(sc => sc.UserStudentId == studentId && sc.ClubId == clubId);
                 if (!exists)
                 {
+                    // Enforce capacity at seeding time
+                    var club = await db.Clubs.Include(c => c.StudentClubs).FirstOrDefaultAsync(c => c.Id == clubId);
+                    if (club?.Capacity != null && club.StudentClubs.Count >= club.Capacity.Value)
+                        return; // skip if full
+
                     db.StudentClubs.Add(new StudentClub
                     {
                         UserStudentId = studentId,
@@ -172,10 +209,6 @@ namespace Business_School.Data
             await AddStudentClubIfNotExists(idMap["student04@businessschool.com"], 2, new DateTime(2025, 10, 5));
             await AddStudentClubIfNotExists(idMap["student05@businessschool.com"], 3, new DateTime(2025, 9, 5));
             await AddStudentClubIfNotExists(idMap["student05@businessschool.com"], 4, new DateTime(2025, 9, 6));
-
-            // mark leaders (we assigned leaders above)
-            // if any student is club leader per StudentClub.IsLeader, you can set it here.
-            // (in our mapping, club leaders are separate users, not students)
 
             // Save student-club additions
             await db.SaveChangesAsync();
