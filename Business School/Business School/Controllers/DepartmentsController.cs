@@ -26,7 +26,7 @@ namespace Business_School.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index()
-        {
+        { 
             // Bring the collection that waits the view(IEnumerable<Department>)
             var departments = await _db.Departments
                 .Include(d => d.ManagerUser)

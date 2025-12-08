@@ -12,15 +12,16 @@
 <div class="mb-3">
 
     @if (!User.IsInRole("Admin")){
-    <a asp-action="Index" class="btn btn-secondary btn-sm">Volver a la lista</a>
-    }
-    @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm ms-2">Editar</a>
-    }
-    @if (User.IsInRole("Admin"))
-    {
-        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm ms-2">Eliminar</a>
+        <a asp-action="Index" class="btn btn-secondary btn-sm">Volver a la lista</a>
+   
+        @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm ms-2">Editar</a>
+        }
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm ms-2">Eliminar</a>
+        }
     }
 </div>
 
