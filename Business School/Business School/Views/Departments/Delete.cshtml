@@ -3,7 +3,7 @@
     ViewData["Title"] = "Delete Department";
     var clubsCount = Model.Clubs?.Count() ?? 0;
     var eventsCount = Model.Events?.Count() ?? 0;
-    var studentsCount = (ViewData["UniqueStudents"] as IEnumerable<Business_School.Models.ApplicationUser>)?.Count() ?? 0;
+    var studentsCount = Model.Students?.Count() ?? 0;
 }
 
 <h2 class="mt-4 mb-3 text-danger">Borrar Departmento</h2>

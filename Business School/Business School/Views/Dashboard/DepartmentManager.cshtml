@@ -1,24 +1,274 @@
-@model Business_School.Models.Department
+@model Business_School.ViewModels.Dashboard.DashboardDepartmentManagerVM
 @{
- ViewData["Title"] = "Department Manager";
+    ViewData["Title"] = "Dashboard - Control del Departamento";
 }
-<h2>@Model?.Name</h2>
-@if (Model == null)
-{
- <div class="alert alert-warning">No tienes departamento asignado.</div>
-}
-else
-{
- <h4>Clubs</h4>
- <ul>
- @foreach (var c in Model.Clubs) { <li>@c.Name (@c.StudentClubs.Count miembros)</li> }
- </ul>
- <h4>Estudiantes</h4>
- <ul>
- @foreach (var s in Model.Students) { <li>@s.FullName (@s.Email)</li> }
- </ul>
- <h4>Eventos</h4>
- <ul>
- @foreach (var e in Model.Events) { <li>@e.Title - @e.StartDate.ToString("dd/MM/yyyy HH:mm")</li> }
- </ul>
-}
+
+<div class="container-fluid mt-4">
+    @if (string.IsNullOrEmpty(Model.DepartmentName))
+    {
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle-fill"></i> No tienes un departamento asignado.
+        </div>
+    }
+    else
+    {
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-building"></i> Control del Departamento</h2>
+            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                </button>
+            </form>
+        </div>
+
+        <!-- A. Tarjeta con datos del Departamento -->
+        <div class="card shadow-sm mb-4 border-primary">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Información del Departamento</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong><i class="bi bi-building"></i> Nombre:</strong> @Model.DepartmentName</p>
+                        <p><strong><i class="bi bi-envelope"></i> Email:</strong> @Model.DepartmentEmail</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="bi bi-telephone"></i> Teléfono:</strong> @Model.DepartmentPhone</p>
+                        <p><strong><i class="bi bi-geo-alt"></i> Ubicación:</strong> @Model.DepartmentOfficeLocation</p>
+                    </div>
+                </div>
+
+                <a class="btn btn-primary"
+                   href="@Url.Action("Edit", "Departments", new { id = Model.DepartmentId, returnUrl = Url.Action("DepartmentManager", "Dashboard") })">
+                    Editar Departamento
+                </a>
+
+              
+
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- B. KPIs del Departamento -->
+        <h4 class="mb-3"><i class="bi bi-graph-up"></i> Estadísticas</h4>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm border-success h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people-fill text-success fs-1"></i>
+                        <h6 class="card-subtitle mb-2 text-muted mt-2">Total Clubs</h6>
+                        <h3 class="card-title text-success">@Model.TotalClubs</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-primary h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-person-badge text-primary fs-1"></i>
+                        <h6 class="card-subtitle mb-2 text-muted mt-2">Estudiantes Asociados</h6>
+                        <h3 class="card-title text-primary">@Model.TotalStudents</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-warning h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-calendar-event text-warning fs-1"></i>
+                        <h6 class="card-subtitle mb-2 text-muted mt-2">Total Eventos</h6>
+                        <h3 class="card-title text-warning">@Model.TotalEvents</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- C. Lista de Clubs del Departamento -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+           <h4><i class="bi bi-collection"></i> Clubs del Departamento</h4>
+           <a class="btn btn-primary" 
+               href="@Url.Action(
+                   "Create", 
+                   "Clubs", 
+                   new { 
+                  
+                       returnUrl = Url.Action("DepartmentManager", "Dashboard") 
+                   }
+               )">
+               Crear Club
+            </a>
+
+        </div>
+        <div class="table-responsive mb-4">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th><i class="bi bi-tag"></i> Nombre</th>
+                        <th><i class="bi bi-person"></i> Líder</th>
+                        <th><i class="bi bi-people"></i> Nº Estudiantes</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Clubs.Any())
+                    {
+                        @foreach (var club in Model.Clubs)
+                        {
+                            <tr>
+                                <td>@club.Name</td>
+                                <td>@club.LeaderName</td>
+                                <td><span class="badge bg-info">@club.StudentCount</span></td>
+                                <td>
+                                    <a href="@Url.Action("Details", "Clubs", new { id = club.Id })" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-gear"></i> Gestionar
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No hay clubs en este departamento.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+
+        <!-- D. Lista de Estudiantes del Departamento -->
+        <h4 class="mb-3"><i class="bi bi-mortarboard"></i> Estudiantes del Departamento</h4>
+        <div class="table-responsive mb-4">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th><i class="bi bi-person"></i> Nombre</th>
+                        <th><i class="bi bi-envelope"></i> Email</th>
+                        <th><i class="bi bi-collection"></i> Clubs</th>
+                        <th><i class="bi bi-star"></i> Puntos</th>
+                        <th><i class="bi bi-bar-chart"></i> Nivel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Students.Any())
+                    {
+                        @foreach (var student in Model.Students)
+                        {
+                            <tr>
+                                <td>@student.FullName</td>
+                                <td>@student.Email</td>
+                                <td>
+                                    @if (student.Clubs.Any())
+                                    {
+                                        @foreach (var clubName in student.Clubs)
+                                        {
+                                            <span class="badge bg-secondary me-1">@clubName</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin clubs</span>
+                                    }
+                                </td>
+                                <td><span class="badge bg-warning text-dark">@student.Points pts</span></td>
+                                <td>
+                                    @{
+                                        var levelClass = student.Level switch
+                                        {
+                                            Business_School.Models.StudentLevel.Principiante => "bg-secondary",
+                                            Business_School.Models.StudentLevel.Intermedio => "bg-info",
+                                            Business_School.Models.StudentLevel.Avanzado => "bg-primary",
+                                            Business_School.Models.StudentLevel.Experto => "bg-success",
+                                            _ => "bg-secondary"
+                                        };
+                                    }
+                                    <span class="badge @levelClass">@student.Level</span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No hay estudiantes en este departamento.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+
+        <!-- E. Eventos del Departamento -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4><i class="bi bi-calendar3"></i> Eventos del Departamento</h4>
+            <a href="@Url.Action("Create", "Events", new { departmentId = Model.DepartmentId })" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Crear Evento
+            </a>
+        </div>
+        <div class="table-responsive mb-4">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th><i class="bi bi-card-heading"></i> Título</th>
+                        <th><i class="bi bi-calendar"></i> Fecha</th>
+                        <th><i class="bi bi-people"></i> Aforo</th>
+                        <th><i class="bi bi-person-check"></i> Inscritos</th>
+                        <th><i class="bi bi-flag"></i> Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Events.Any())
+                    {
+                        @foreach (var ev in Model.Events)
+                        {
+                            <tr>
+                                <td>@ev.Title</td>
+                                <td>@ev.StartDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@(ev.Capacity.HasValue? ev.Capacity.Value.ToString() : "Ilimitado")</td>
+                                <td><span class="badge bg-info">@ev.RegisteredCount</span></td>
+                                <td>
+                                    @{
+                                        var statusClass = ev.Status switch
+                                        {
+                                            "Abierto" => "bg-success",
+                                            "Lleno" => "bg-warning text-dark",
+                                            "Cerrado" => "bg-secondary",
+                                            "En curso" => "bg-primary",
+                                            _ => "bg-secondary"
+                                        };
+                                    }
+                                    <span class="badge @statusClass">@ev.Status</span>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Edit", "Events", new { id = ev.Id })" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="@Url.Action("Details", "Events", new { id = ev.Id })" class="btn btn-sm btn-outline-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No hay eventos en este departamento.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+
+     
+    }
+</div>
+

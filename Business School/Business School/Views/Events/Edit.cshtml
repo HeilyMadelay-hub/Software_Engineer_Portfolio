@@ -1,48 +1,61 @@
 @model Business_School.ViewModels.Event.EventFormVM
 @{
- ViewData["Title"] = "Editar Evento";
+    ViewData["Title"] = "Editar Evento";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    // Formato requerido por datetime-local: yyyy-MM-ddTHH:mm
+    var startDateValue = Model.StartDate != DateTime.MinValue 
+   ? Model.StartDate.ToString("yyyy-MM-ddTHH:mm") 
+        : "";
 }
 <h2>Editar Evento</h2>
 <form asp-action="Edit" method="post">
- <input type="hidden" asp-for="Id" />
- <div class="mb-3">
- <label asp-for="Title" class="form-label"></label>
- <input asp-for="Title" class="form-control" />
- <span asp-validation-for="Title" class="text-danger"></span>
- </div>
- <div class="mb-3">
- <label asp-for="Description" class="form-label"></label>
- <textarea asp-for="Description" class="form-control"></textarea>
- <span asp-validation-for="Description" class="text-danger"></span>
- </div>
- <div class="mb-3">
- <label asp-for="StartDate" class="form-label"></label>
- <input asp-for="StartDate" type="datetime-local" class="form-control" />
- <span asp-validation-for="StartDate" class="text-danger"></span>
- </div>
- <div class="mb-3">
- <label asp-for="DepartmentId" class="form-label">Departamento</label>
- <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-select"></select>
- <span asp-validation-for="DepartmentId" class="text-danger"></span>
- </div>
- <div class="mb-3">
- <label>Clubs</label>
- <div>
- @foreach (var club in Model.Clubs)
- {
- <div class="form-check">
- <input class="form-check-input" type="checkbox" value="@club.Value" name="SelectedClubIds" id="club_@club.Value" @(Model.SelectedClubIds.Contains(int.Parse(club.Value)) ? "checked" : "") />
- <label class="form-check-label" for="club_@club.Value">@club.Text</label>
- </div>
- }
- </div>
- </div>
- <div class="mb-3">
- <label asp-for="MaxCapacity" class="form-label">Aforo Máximo (opcional)</label>
- <input asp-for="MaxCapacity" class="form-control" />
- <span asp-validation-for="MaxCapacity" class="text-danger"></span>
- </div>
- <button type="submit" class="btn btn-primary">Guardar Cambios</button>
- <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancelar</a>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" name="returnUrl" value="@returnUrl" />
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+    <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="StartDate" class="form-label"></label>
+        <input type="datetime-local" name="StartDate" id="StartDate" class="form-control" value="@startDateValue" required />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="DepartmentId" class="form-label">Departamento</label>
+        <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-select"></select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label>Clubs</label>
+        <div>
+            @foreach (var club in Model.Clubs)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="@club.Value" name="SelectedClubIds" id="club_@club.Value" @(Model.SelectedClubIds.Contains(int.Parse(club.Value)) ? "checked" : "") />
+                    <label class="form-check-label" for="club_@club.Value">@club.Text</label>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="MaxCapacity" class="form-label">Aforo Máximo (opcional)</label>
+        <input asp-for="MaxCapacity" class="form-control" />
+        <span asp-validation-for="MaxCapacity" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    @if (!string.IsNullOrEmpty(returnUrl))
+    {
+        <a href="@returnUrl" class="btn btn-secondary">Cancelar</a>
+    }
+    else
+    {
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancelar</a>
+    }
 </form>
 @section Scripts {<partial name="_ValidationScriptsPartial" />}

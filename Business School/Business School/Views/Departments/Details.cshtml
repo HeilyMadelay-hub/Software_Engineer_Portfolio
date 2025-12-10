@@ -5,23 +5,22 @@
     // Controller previously populated unique students into ViewData["UniqueStudents"] (IEnumerable<ApplicationUser>)
     var uniqueStudents = ViewData["UniqueStudents"] as IEnumerable<Business_School.Models.ApplicationUser>
                          ?? Enumerable.Empty<Business_School.Models.ApplicationUser>();
+
+    // Obtener el ID del usuario actual
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    int.TryParse(currentUserId, out int userId);
 }
 
 <h2 class="mt-4 mb-3">Detalles del Departamento</h2>
 
 <div class="mb-3">
-
-    @if (!User.IsInRole("Admin")){
-        <a asp-action="Index" class="btn btn-secondary btn-sm">Volver a la lista</a>
-   
-        @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
-        {
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm ms-2">Editar</a>
-        }
-        @if (User.IsInRole("Admin"))
-        {
-            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm ms-2">Eliminar</a>
-        }
+    @if (!User.IsInRole("Admin") || (User.IsInRole("DepartmentManager") && Model.ManagerUserId == userId))
+    {
+     <a asp-action="Edit" asp-route-id="@Model.Id" asp-route-returnUrl="@($"/Departments/Details/{Model.Id}")" class="btn btn-warning btn-sm ms-2">Editar</a>
+    }
+    @if (User.IsInRole("Admin"))
+    {
+  <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm ms-2">Eliminar</a>
     }
 </div>
 
@@ -59,7 +58,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <strong>Clubs Asociados (@(Model.Clubs?.Count() ?? 0))</strong>
-                @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
+                @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager") && Model.ManagerUserId == userId )
                 {
                     <a asp-controller="Clubs" asp-action="Create" asp-route-departmentId="@Model.Id" class="btn btn-sm btn-success">Crear Club</a>
                 }
@@ -83,8 +82,9 @@
 
                                     <td class="text-truncate" style="max-width:200px;">@club.Description</td>
                                     <td>
-                                        <a asp-controller="Clubs" asp-action="Details" asp-route-id="@club.Id" class="btn btn-sm btn-info">Detalles</a>
-
+                                        @if (User.IsInRole("DepartmentManager") && Model.ManagerUserId == userId){
+                                         <a asp-controller="Clubs" asp-action="Details" asp-route-id="@club.Id" class="btn btn-sm btn-info">Detalles</a>
+                                        }
                                         @if (User.IsInRole("Admin") ||
                                                                         (User.IsInRole("ClubLeader") &&
                                                                         club.LeaderId == int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0")))
@@ -143,8 +143,10 @@
                                     }
                                 </td>
                                 <td>
+                                    @if( User.IsInRole("DepartmentManager") && Model.ManagerUserId == userId){
                                     <a asp-controller="Students" asp-action="Details" asp-route-id="@student.Id"
                                        class="btn btn-sm btn-info">Perfil</a>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -170,7 +172,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Events != null && Model.Events.Any())
+                        @if (Model.Events != null && Model.Events.Any() && User.IsInRole("DepartmentManager") && Model.ManagerUserId == userId)
                         {
                             foreach (var ev in Model.Events.OrderBy(e => e.StartDate))
                             {

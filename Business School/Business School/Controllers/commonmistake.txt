@@ -1,0 +1,148 @@
+﻿Lección clave: Patrón de navegación con returnUrl
+El problema recurrente:
+Cuando tienes flujos de navegación como A → B → C → [Guardar] → B, al pulsar el botón atrás del navegador (←), el usuario vuelve a C en lugar de A, porque C sigue en el historial.
+La solución (patrón a seguir siempre):
+┌─────────────────────────────────────────────────────────────────┐
+│  1. VIEWMODEL: Añadir propiedad ReturnUrl                       │
+├─────────────────────────────────────────────────────────────────┤
+│  public string? ReturnUrl { get; set; }                         │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  2. CONTROLLER GET: Recibir y normalizar returnUrl              │
+├─────────────────────────────────────────────────────────────────┤
+│  public async Task<IActionResult> Create(string? returnUrl)     │
+│  {                                                              │
+│      vm.ReturnUrl = NormalizeReturnUrl(returnUrl);              │
+│  }                                                              │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  3. VISTA: Campo hidden para mantener returnUrl en POST         │
+├─────────────────────────────────────────────────────────────────┤
+│  <input type="hidden" asp-for="ReturnUrl" />                    │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  4. CONTROLLER POST: Redirigir al returnUrl si existe           │
+├─────────────────────────────────────────────────────────────────┤
+│  var normalized = NormalizeReturnUrl(vm.ReturnUrl);             │
+│  if (!string.IsNullOrEmpty(normalized))                         │
+│      return LocalRedirect(normalized);                          │
+│  return RedirectToAction("Index");  // fallback                 │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  5. ENLACE ORIGEN: Pasar returnUrl con la URL actual            │
+├─────────────────────────────────────────────────────────────────┤
+│  <a asp-action="Edit" asp-route-returnUrl="@currentUrl">        │
+│  ó                                                              │
+│  href="@Url.Action("Create", new { returnUrl = ... })"          │
+└─────────────────────────────────────────────────────────────────┘
+
+Método auxiliar (copiar en cada Controller que lo necesite):
+
+private string? NormalizeReturnUrl(string? returnUrl)
+{
+    if (string.IsNullOrWhiteSpace(returnUrl)) return null;
+    if (Url.IsLocalUrl(returnUrl)) return returnUrl;
+    
+    if (Uri.TryCreate(returnUrl, UriKind.Absolute, out var absolute))
+    {
+        var req = HttpContext.Request;
+        var sameHost = string.Equals(absolute.Scheme, req.Scheme, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(absolute.Host, req.Host.Host, StringComparison.OrdinalIgnoreCase);
+        if (sameHost)
+        {
+            var relative = absolute.PathAndQuery;
+            if (Url.IsLocalUrl(relative)) return relative;
+        }
+    }
+    return null;
+}
+
+Checklist rápido para cada formulario Create/Edit:
+✅	Paso
+☐	ViewModel tiene ReturnUrl
+☐	Controller GET recibe string? returnUrl
+☐	Controller GET asigna vm.ReturnUrl = NormalizeReturnUrl(returnUrl)
+☐	Vista tiene <input type="hidden" asp-for="ReturnUrl" />
+☐	Controller POST redirige a vm.ReturnUrl si existe
+☐	Botón Cancelar respeta ReturnUrl
+☐	Enlace origen pasa asp-route-returnUrl
+Regla de oro: Si un formulario puede ser accedido desde múltiples lugares, siempre implementa el patrón returnUrl.
+
+Template para Controllers con navegación correcta
+1. Base Controller (opcional, para no repetir código)
+// Controllers/BaseController.cs
+public abstract class BaseController : Controller
+{
+    protected string? NormalizeReturnUrl(string? returnUrl)
+    {
+        if (string.IsNullOrWhiteSpace(returnUrl)) return null;
+        if (Url.IsLocalUrl(returnUrl)) return returnUrl;
+        
+        if (Uri.TryCreate(returnUrl, UriKind.Absolute, out var absolute))
+        {
+            var req = HttpContext.Request;
+            var sameHost = string.Equals(absolute.Scheme, req.Scheme, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(absolute.Host, req.Host.Host, StringComparison.OrdinalIgnoreCase);
+            if (sameHost && Url.IsLocalUrl(absolute.PathAndQuery))
+                return absolute.PathAndQuery;
+        }
+        return null;
+    }
+}
+2. Cada Controller hereda de BaseController
+public class MiEntidadController : BaseController  // ← Hereda
+{
+    [HttpGet]
+    public async Task<IActionResult> Create(string? returnUrl = null)
+    {
+        var vm = new MiEntidadVM { ReturnUrl = NormalizeReturnUrl(returnUrl) };
+        return View(vm);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(MiEntidadVM vm)
+    {
+        // ... guardar ...
+        
+        var normalized = NormalizeReturnUrl(vm.ReturnUrl);
+        if (!string.IsNullOrEmpty(normalized))
+            return LocalRedirect(normalized);
+        return RedirectToAction("Index");
+    }
+}
+
+3. Cada ViewModel con formulario
+
+public class MiEntidadVM
+{
+    // ... propiedades del modelo ...
+    public string? ReturnUrl { get; set; }  // ← SIEMPRE añadir esto
+}
+
+4. Cada Vista con formulario
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ReturnUrl" />  @* ← SIEMPRE añadir esto *@
+    
+    <!-- campos del formulario -->
+    
+    @if (!string.IsNullOrEmpty(Model.ReturnUrl))
+    {
+        <a href="@Model.ReturnUrl" class="btn btn-secondary">Cancelar</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    }
+</form>
+
+Regla mental simple:
+"¿Este formulario puede abrirse desde más de un lugar?"
+•	Sí → Implementa returnUrl
+•	No → Puedes usar RedirectToAction fijo
+En la práctica, casi siempre la respuesta es Sí, así que mejor implementarlo desde el inicio en todos los Create/Edit.

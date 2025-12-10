@@ -22,5 +22,7 @@ namespace Business_School.ViewModels.Club
         // Dropdown de departamentos: no se debe validar ni enlazar desde el POST
         [ValidateNever]
         public IEnumerable<SelectListItem>? Departments { get; set; }
+
+        public string? ReturnUrl { get; set; }
     }
 }

@@ -2,34 +2,28 @@
 
 @{
     ViewData["Title"] = "Departamentos";
+ // Obtener el ID del usuario actual
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+ int.TryParse(currentUserId, out int userId);
 }
 
 <div class="container mt-4">
 
     <!-- Title+create button-->
     <div class="row mb-4">
-        <div class="col-md-6">
-            <h2>
-                <i class="bi bi-building"></i> Departamentos
-            </h2>
+      <div class="col-md-6">
+          <h2>
+ <i class="bi bi-building"></i> Departamentos
+     </h2>
         </div>
         <div class="col-md-6 text-end">
-            @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
-            {
-                <a asp-action="Create" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Crear Nuevo Departamento
-                </a>
-            }
-       
-     @if (!User.IsInRole("Admin"))
-            {
-        <!-- LOGOUT BUTTON -->
-        <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-            <button type="submit" class="btn btn-danger">
-                <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-            </button>
-        </form>
-            }
+      @if (User.IsInRole("Admin"))
+  {
+        <a asp-action="Create" class="btn btn-primary">
+<i class="bi bi-plus-circle"></i> Crear Nuevo Departamento
+          </a>
+    }
+      
         </div>
     </div>
 
@@ -119,35 +113,35 @@
                                     <td class="text-center">
                                         <div class="btn-group" role="group">
 
-                                            <!-- DETAILS -->
-                                            <a asp-action="Details" asp-route-id="@d.Id"
-                                               class="btn btn-sm btn-outline-info px-2"
-                                               title="Detalles">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
+    <!-- DETAILS -->
+        <a asp-action="Details" asp-route-id="@d.Id"
+       class="btn btn-sm btn-outline-info px-2"
+       title="Detalles">
+                 <i class="bi bi-eye"></i>
+    </a>
 
-                                            <!-- EDIT -->
-                                            @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
-                                            {
-                                                <a asp-action="Edit" asp-route-id="@d.Id"
-                                                   class="btn btn-sm btn-outline-warning px-2 ms-1"
-                                                   title="Editar">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
-                                            }
+   <!-- EDIT - Admin puede editar todos, DepartmentManager solo su departamento -->
+    @if (User.IsInRole("Admin") || (User.IsInRole("DepartmentManager") && d.ManagerUserId == userId))
+           {
+                 <a asp-action="Edit" asp-route-id="@d.Id"
+         class="btn btn-sm btn-outline-warning px-2 ms-1"
+            title="Editar">
+         <i class="bi bi-pencil"></i>
+    </a>
+      }
 
-                                            <!-- DELETE -->
-                                            @if (User.IsInRole("Admin"))
-                                            {
-                                                <a asp-action="Delete" asp-route-id="@d.Id"
-                                                   class="btn btn-sm btn-outline-danger px-2 ms-1"
-                                                   title="Eliminar">
-                                                    <i class="bi bi-trash"></i>
-                                                </a>
-                                            }
+     <!-- DELETE -->
+    @if (User.IsInRole("Admin"))
+        {
+              <a asp-action="Delete" asp-route-id="@d.Id"
+      class="btn btn-sm btn-outline-danger px-2 ms-1"
+      title="Eliminar">
+            <i class="bi bi-trash"></i>
+           </a>
+          }
 
-                                        </div>
-                                    </td>
+    </div>
+       </td>
                                 </tr>
                             }
                         </tbody>

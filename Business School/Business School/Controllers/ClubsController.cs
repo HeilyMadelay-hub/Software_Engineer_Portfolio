@@ -38,6 +38,30 @@ namespace Business_School.Controllers
             _gamificationService = gamificationService;
         }
 
+        private string? NormalizeReturnUrl(string? returnUrl)
+        {
+            if (string.IsNullOrWhiteSpace(returnUrl)) return null;
+
+            // Accept local relative URLs
+            if (Url.IsLocalUrl(returnUrl)) return returnUrl;
+
+            // If absolute but same origin, convert to relative path+query
+            if (Uri.TryCreate(returnUrl, UriKind.Absolute, out var absolute))
+            {
+                var req = HttpContext.Request;
+                var sameHost = string.Equals(absolute.Scheme, req.Scheme, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(absolute.Host, req.Host.Host, StringComparison.OrdinalIgnoreCase)
+                    && (absolute.Port == req.Host.Port || !absolute.IsDefaultPort && req.Host.Port == null);
+                if (sameHost)
+                {
+                    var relative = absolute.PathAndQuery;
+                    if (Url.IsLocalUrl(relative)) return relative;
+                }
+            }
+            // Otherwise, reject
+            return null;
+        }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -52,13 +76,14 @@ namespace Business_School.Controllers
 
         [HttpGet]
         [Authorize(Roles = RoleHelper.Admin + "," + RoleHelper.DepartmentManager + "," + RoleHelper.ClubLeader)] // agregado ClubLeader
-        public async Task<IActionResult> Create(int departmentId)
+        public async Task<IActionResult> Create(int? departmentId, string? returnUrl = null)
         {
             var departmentsList = await _db.Departments.OrderBy(d => d.Name).ToListAsync();
             var vm = new ClubCreateVM
             {
                 Departments = new SelectList(departmentsList, "Id", "Name"),
-                DepartmentId = departmentId
+                DepartmentId = departmentId,
+                ReturnUrl = NormalizeReturnUrl(returnUrl)
             };
             return View(vm);
         }
@@ -126,6 +151,11 @@ namespace Business_School.Controllers
             }
 
             TempData["Success"] = "Club creado correctamente.";
+
+            var normalizedReturn = NormalizeReturnUrl(vm.ReturnUrl);
+            if (!string.IsNullOrEmpty(normalizedReturn))
+                return LocalRedirect(normalizedReturn);
+
             return RedirectToAction("Index");
         }
 

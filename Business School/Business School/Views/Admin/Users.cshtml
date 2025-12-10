@@ -1,23 +1,23 @@
 @model IEnumerable<Business_School.ViewModels.Admin.UserListVM>
 @{
- ViewData["Title"] = "Usuarios";
+    ViewData["Title"] = "Usuarios";
 }
 <h2>Usuarios</h2>
 <table class="table">
- <thead>
- <tr><th>Email</th><th>Nombre</th><th>Roles</th><th></th></tr>
- </thead>
- <tbody>
- @foreach (var u in Model)
- {
- <tr>
- <td>@u.Email</td>
- <td>@u.FullName</td>
- <td>@string.Join(", ", u.Roles)</td>
- <td>
- <a asp-action="AssignRole" asp-route-userId="@u.Id" class="btn btn-sm btn-primary">Asignar roles</a>
- </td>
- </tr>
- }
- </tbody>
+    <thead>
+        <tr><th>Email</th><th>Nombre</th><th>Roles</th><th></th></tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Email</td>
+                <td>@u.FullName</td>
+                <td>@string.Join(", ", u.Roles)</td>
+                <td>
+                    <a asp-action="AssignRole" asp-route-userId="@u.Id" class="btn btn-sm btn-primary">Asignar roles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>

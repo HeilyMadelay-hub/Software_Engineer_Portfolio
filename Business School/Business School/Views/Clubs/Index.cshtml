@@ -10,7 +10,7 @@
             </h2>
         </div>
         <div class="col-md-6 text-end">
-            @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager"))
+            @if (User.IsInRole("Admin"))
             {
                 <a asp-action="Create" class="btn btn-primary">
                     <i class="bi bi-plus-circle"></i> Crear Nuevo Club
@@ -25,25 +25,6 @@
 
 
            
-                @* Ocultar el botón "Volver a Departamentos" si el usuario actual es Admin *@ 
-                @if (!User.IsInRole("Admin")){
-
-                    <!-- Volver a Departamentos -->
-                    <a asp-controller="Departments" asp-action="Index" class="btn btn-outline-secondary ms-2">
-                        <i class="bi bi-arrow-left"></i> Volver a Departamentos
-                    </a>
-
-                    <!-- LOGOUT BUTTON -->
-                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline ms-2">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-                        </button>
-                    </form>
-
-                }
-          
-         
-
             
 
 

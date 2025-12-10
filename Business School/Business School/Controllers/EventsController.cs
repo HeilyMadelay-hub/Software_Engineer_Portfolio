@@ -25,6 +25,32 @@ namespace Business_School.Controllers
             _userManager = userManager;
         }
 
+        // ajax endpoint ,because return json , doesn't return a view and doesnt reload the page 
+
+        [HttpGet]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> GetNextEvents()
+        {
+            var now = DateTime.UtcNow; // Cambiar a UtcNow para consistencia
+            var nextEvents = await _db.Events
+                .Where(e => e.StartDate >= now)
+                .OrderBy(e => e.StartDate)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.Title,
+                    StartDate = e.StartDate.ToString("dd/MM/yyyy HH:mm")
+                })
+                .ToListAsync();
+
+            return Json(new
+            {
+                count = nextEvents.Count,
+                events = nextEvents
+            });
+        }
+
+
         private string? NormalizeReturnUrl(string? returnUrl)
         {
             if (string.IsNullOrWhiteSpace(returnUrl)) return null;
@@ -149,6 +175,7 @@ namespace Business_School.Controllers
             var normalizedReturn = NormalizeReturnUrl(returnUrl);
             if (!string.IsNullOrEmpty(normalizedReturn))
                 return LocalRedirect(normalizedReturn);
+
             return RedirectToAction(nameof(Index));
         }
 

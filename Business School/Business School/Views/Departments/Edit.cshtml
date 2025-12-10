@@ -11,6 +11,7 @@
         <form asp-action="Edit" method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Department.Id" />
+            <input type="hidden" asp-for="ReturnUrl" />
 
             <div class="mb-3">
                 <label asp-for="Department.Name" class="form-label">Nombre</label>
@@ -45,7 +46,14 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Guardar</button>
-            <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+            @if (!string.IsNullOrEmpty(Model.ReturnUrl))
+            {
+                <a href="@Model.ReturnUrl" class="btn btn-secondary ms-2">Cancelar</a>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+            }
         </form>
     </div>
 </div>
