@@ -28,10 +28,6 @@ namespace Business_School.Controllers
             _context = context;
         }
 
-        // ========================================
-        // MANTENIMIENTO DE EVENTOS
-        // ========================================
-
         public async Task<IActionResult> FixInvalidEvents()
         {
             var invalidEvents = await _context.Events

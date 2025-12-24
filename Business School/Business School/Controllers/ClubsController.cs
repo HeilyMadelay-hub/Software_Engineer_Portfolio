@@ -581,5 +581,6 @@ namespace Business_School.Controllers
             var students = club.StudentClubs.Select(sc => sc.UserStudent).ToList();
             return View(students);
         }
+
     }
 }

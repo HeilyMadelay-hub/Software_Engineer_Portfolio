@@ -1,44 +1,56 @@
-@model Business_School.ViewModels.Dashboard.DashboardClubLeaderVM
+Ôªø@model Business_School.ViewModels.Dashboard.DashboardClubLeaderVM
 @{
-    ViewData["Title"] = "Dashboard - GestiÛn del Club";
+    ViewData["Title"] = "Dashboard - Gesti√≥n del Club";
 }
 
 <div class="container-fluid mt-4">
     @if (string.IsNullOrEmpty(Model.ClubName))
     {
-        <div class="alert alert-warning">
-            <i class="bi bi-exclamation-triangle-fill"></i> No lideras ning˙n club actualmente.
+        <div class="alert alert-warning d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+            <div>
+                <strong>No lideras ning√∫n club actualmente.</strong>
+                <p class="mb-0 mt-1">Contacta con el administrador para que te asigne un club.</p>
+            </div>
         </div>
     }
     else
     {
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="bi bi-flag-fill text-primary"></i> GestiÛn del Club</h2>
+            <div>
+                <h2 class="mb-1"><i class="bi bi-flag-fill text-primary"></i> Gesti√≥n del Club</h2>
+                <p class="text-muted mb-0">Panel de control para l√≠deres</p>
+            </div>
             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                 <button type="submit" class="btn btn-danger">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar sesiÛn
+                    <i class="bi bi-box-arrow-right"></i> Cerrar sesi√≥n
                 </button>
             </form>
         </div>
 
-        <!-- A. Tarjeta con informaciÛn del Club -->
+        <!-- A. Tarjeta con informaci√≥n del Club -->
         <div class="card shadow-sm mb-4 border-success">
             <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="bi bi-info-circle"></i> InformaciÛn del Club</h5>
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informaci√≥n del Club</h5>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-8">
-                        <h4 class="text-success">@Model.ClubName</h4>
-                        <p class="text-muted">@Model.ClubDescription</p>
-                        <p>
-                            <strong><i class="bi bi-building"></i> Departamento: @Model.DepartmentName</strong>
+                    <div class="col-lg-8">
+                        <h4 class="text-success mb-3">@Model.ClubName</h4>
+                        <p class="text-muted mb-3">@Model.ClubDescription</p>
+                        <p class="mb-2">
+                            <i class="bi bi-building text-success"></i>
+                            <strong>Departamento: @Model.DepartmentName</strong>
+                          
                         </p>
                     </div>
-                    <div class="col-md-4 text-end">
-                        <a href="@Url.Action("Edit", "Clubs", new { id = Model.ClubId })" class="btn btn-outline-success btn-lg">
+                    <div class="col-lg-4 text-end d-flex flex-column justify-content-center gap-2">
+                        <a asp-controller="Clubs" asp-action="Edit" asp-route-id="@Model.ClubId" class="btn btn-outline-success">
                             <i class="bi bi-pencil"></i> Editar Club
+                        </a>
+                        <a asp-controller="Clubs" asp-action="Details" asp-route-id="@Model.ClubId" class="btn btn-outline-info">
+                            <i class="bi bi-eye"></i> Ver Detalles P√∫blicos
                         </a>
                     </div>
                 </div>
@@ -48,14 +60,15 @@
         <hr />
 
         <!-- B. KPIs del Club -->
-        <h4 class="mb-3"><i class="bi bi-speedometer2"></i> EstadÌsticas del Club</h4>
+        <h4 class="mb-3"><i class="bi bi-speedometer2"></i> Estad√≠sticas del Club</h4>
         <div class="row g-3 mb-4">
             <div class="col-md-4">
                 <div class="card shadow-sm border-primary h-100">
                     <div class="card-body text-center">
                         <i class="bi bi-people-fill text-primary fs-1"></i>
                         <h6 class="card-subtitle mb-2 text-muted mt-2">Total Estudiantes</h6>
-                        <h3 class="card-title text-primary">@Model.TotalStudents</h3>
+                        <h3 class="card-title text-primary mb-0">@Model.TotalStudents</h3>
+                        <small class="text-muted">miembros activos</small>
                     </div>
                 </div>
             </div>
@@ -64,7 +77,8 @@
                     <div class="card-body text-center">
                         <i class="bi bi-calendar-event text-info fs-1"></i>
                         <h6 class="card-subtitle mb-2 text-muted mt-2">Eventos del Club</h6>
-                        <h3 class="card-title text-info">@Model.TotalEvents</h3>
+                        <h3 class="card-title text-info mb-0">@Model.TotalEvents</h3>
+                        <small class="text-muted">eventos organizados</small>
                     </div>
                 </div>
             </div>
@@ -73,7 +87,8 @@
                     <div class="card-body text-center">
                         <i class="bi bi-star-fill text-warning fs-1"></i>
                         <h6 class="card-subtitle mb-2 text-muted mt-2">Puntos Otorgados</h6>
-                        <h3 class="card-title text-warning">@Model.TotalPointsAwarded</h3>
+                        <h3 class="card-title text-warning mb-0">@Model.TotalPointsAwarded</h3>
+                        <small class="text-muted">puntos totales</small>
                     </div>
                 </div>
             </div>
@@ -82,139 +97,79 @@
         <hr />
 
         <!-- C. Estudiantes del Club -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4><i class="bi bi-mortarboard-fill"></i> Estudiantes del Club</h4>
-            <div>
-                <a href="@Url.Action("Index", "Students")" class="btn btn-outline-primary">
-                    <i class="bi bi-person-plus"></i> Agregar Estudiante
-                </a>
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0"><i class="bi bi-mortarboard-fill"></i> Estudiantes del Club</h4>
+                <span class="badge bg-primary fs-6">@Model.Students.Count miembro@(Model.Students.Count != 1 ? "s" : "")</span>
             </div>
-        </div>
-        <div class="table-responsive mb-4">
-            <table class="table table-hover table-bordered align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th><i class="bi bi-person"></i> Nombre</th>
-                        <th><i class="bi bi-envelope"></i> Email</th>
-                        <th><i class="bi bi-star"></i> Puntos</th>
-                        <th><i class="bi bi-bar-chart"></i> Nivel</th>
-                        <th><i class="bi bi-calendar-plus"></i> Fecha de Ingreso</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Students.Any())
-                    {
-                        @foreach (var student in Model.Students)
-                        {
-                            <tr>
-                                <td>
-                                    <strong>@student.FullName</strong>
-                                </td>
-                                <td>@student.Email</td>
-                                <td>
-                                    <span class="badge bg-warning text-dark">
-                                        <i class="bi bi-star-fill"></i> @student.Points pts
-                                    </span>
-                                </td>
-                                <td>
-                                    @{
-                                        var levelClass = student.Level switch
-                                        {
-                                            Business_School.Models.StudentLevel.Principiante => "bg-secondary",
-                                            Business_School.Models.StudentLevel.Intermedio => "bg-info",
-                                            Business_School.Models.StudentLevel.Avanzado => "bg-primary",
-                                            Business_School.Models.StudentLevel.Experto => "bg-success",
-                                            _ => "bg-secondary"
-                                        };
-                                        var levelIcon = student.Level switch
-                                        {
-                                            Business_School.Models.StudentLevel.Principiante => "bi-emoji-smile",
-                                            Business_School.Models.StudentLevel.Intermedio => "bi-emoji-sunglasses",
-                                            Business_School.Models.StudentLevel.Avanzado => "bi-award",
-                                            Business_School.Models.StudentLevel.Experto => "bi-gem",
-                                            _ => "bi-person"
-                                        };
-                                    }
-                                    <span class="badge @levelClass">
-                                        <i class="bi @levelIcon"></i> @student.Level
-                                    </span>
-                                </td>
-                                <td>@student.JoinedAt.ToString("dd/MM/yyyy")</td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="5" class="text-center text-muted">
-                                <i class="bi bi-inbox"></i> No hay estudiantes en este club todavÌa.
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
 
-        <hr />
-
-        <!-- D. PrÛximos Eventos del Club -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4><i class="bi bi-calendar2-week"></i> Eventos del Club</h4>
-            <a href="@Url.Action("Create", "Events", new { clubId = Model.ClubId })" class="btn btn-success btn-lg">
-                <i class="bi bi-plus-circle"></i> Crear Evento del Club
-            </a>
-        </div>
-        <div class="row g-3 mb-4">
-            @if (Model.Events.Any())
+            @if (Model.Students.Any())
             {
-                @foreach (var ev in Model.Events)
-                {
-                    var cardClass = ev.Status switch
-                    {
-                        "Abierto" => "border-success",
-                        "Lleno" => "border-warning",
-                        "Cerrado" => "border-secondary",
-                        "En curso" => "border-primary",
-                        _ => ""
-                    };
-                    var statusBadge = ev.Status switch
-                    {
-                        "Abierto" => "bg-success",
-                        "Lleno" => "bg-warning text-dark",
-                        "Cerrado" => "bg-secondary",
-                        "En curso" => "bg-primary",
-                        _ => "bg-secondary"
-                    };
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card shadow-sm h-100 @cardClass">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <h5 class="card-title">@ev.Title</h5>
-                                    <span class="badge @statusBadge">@ev.Status</span>
-                                </div>
-                                <p class="card-text text-muted">
-                                    <i class="bi bi-calendar"></i> @ev.StartDate.ToString("dd/MM/yyyy HH:mm")
-                                </p>
-                                <p class="card-text">
-                                    <i class="bi bi-people"></i>
-                                    <span class="fw-bold">@ev.RegisteredCount</span> / @(ev.Capacity.HasValue? ev.Capacity.Value.ToString() : "?") inscritos
-                                </p>
-                                <a href="@Url.Action("Edit", "Events", new { id = ev.Id })" class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-pencil"></i> Editar
-                                </a>
-                                <a href="@Url.Action("Details", "Events", new { id = ev.Id })" class="btn btn-outline-info btn-sm">
-                                    <i class="bi bi-eye"></i> Ver Detalles
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                }
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="bi bi-person"></i> Nombre</th>
+                                <th><i class="bi bi-envelope"></i> Email</th>
+                                <th class="text-center"><i class="bi bi-star"></i> Puntos</th>
+                                <th class="text-center"><i class="bi bi-bar-chart"></i> Nivel</th>
+                                <th class="text-center"><i class="bi bi-calendar-plus"></i> Fecha de Ingreso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in Model.Students)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@student.FullName</strong>
+                                    </td>
+                                    <td>
+                                        <a href="mailto:@student.Email" class="text-decoration-none">
+                                            @student.Email
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-warning text-dark fs-6">
+                                            <i class="bi bi-star-fill"></i> @student.Points
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        @{
+                                            var levelClass = student.Level switch
+                                            {
+                                                Business_School.Models.StudentLevel.Principiante => "bg-secondary",
+                                                Business_School.Models.StudentLevel.Intermedio => "bg-info",
+                                                Business_School.Models.StudentLevel.Avanzado => "bg-primary",
+                                                Business_School.Models.StudentLevel.Experto => "bg-success",
+                                                _ => "bg-secondary"
+                                            };
+                                            var levelIcon = student.Level switch
+                                            {
+                                                Business_School.Models.StudentLevel.Principiante => "bi-emoji-smile",
+                                                Business_School.Models.StudentLevel.Intermedio => "bi-emoji-sunglasses",
+                                                Business_School.Models.StudentLevel.Avanzado => "bi-award",
+                                                Business_School.Models.StudentLevel.Experto => "bi-gem",
+                                                _ => "bi-person"
+                                            };
+                                        }
+                                        <span class="badge @levelClass fs-6">
+                                            <i class="bi @levelIcon"></i> @student.Level
+                                        </span>
+                                    </td>
+                                    <td class="text-center">@student.JoinedAt.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             }
             else
             {
-                <div class="col-12">
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> No hay eventos asociados a este club. °Crea uno nuevo!
+                <div class="card border-secondary">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-inbox fs-1 text-muted"></i>
+                        <h5 class="text-muted mt-3">No hay estudiantes en este club todav√≠a</h5>
+                        <p class="text-muted mb-0">Los estudiantes pueden unirse desde la vista p√∫blica del club.</p>
                     </div>
                 </div>
             }
@@ -222,11 +177,144 @@
 
         <hr />
 
-        <!-- E. Gr·fica - Actividad mensual del Club -->
-        <h4 class="mb-3"><i class="bi bi-graph-up-arrow"></i> Actividad Mensual del Club</h4>
-        <div class="card shadow-sm mb-4">
-            <div class="card-body">
-                <canvas id="monthlyActivityChart" style="height:300px;"></canvas>
+        <!-- D. Eventos del Club -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h4 class="mb-1"><i class="bi bi-calendar2-week"></i> Eventos del Club</h4>
+                    <p class="text-muted mb-0 small">Gestiona los eventos que has creado para tu club</p>
+                </div>
+                <a asp-controller="Events" asp-action="Create" asp-route-clubId="@Model.ClubId" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Crear Evento
+                </a>
+            </div>
+
+            @if (Model.Events.Any())
+            {
+                <div class="row g-3">
+                    @foreach (var ev in Model.Events)
+                    {
+                        var cardClass = ev.Status switch
+                        {
+                            "Abierto" => "border-success",
+                            "Lleno" => "border-warning",
+                            "Cerrado" => "border-secondary",
+                            "En curso" => "border-primary",
+                            _ => ""
+                        };
+                        var statusBadge = ev.Status switch
+                        {
+                            "Abierto" => "bg-success",
+                            "Lleno" => "bg-warning text-dark",
+                            "Cerrado" => "bg-secondary",
+                            "En curso" => "bg-primary",
+                            _ => "bg-secondary"
+                        };
+                        var statusIcon = ev.Status switch
+                        {
+                            "Abierto" => "bi-check-circle",
+                            "Lleno" => "bi-exclamation-triangle",
+                            "Cerrado" => "bi-x-circle",
+                            "En curso" => "bi-play-circle",
+                            _ => "bi-circle"
+                        };
+
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card shadow-sm h-100 @cardClass">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">@ev.Title</h5>
+                                        <span class="badge @statusBadge">
+                                            <i class="bi @statusIcon"></i> @ev.Status
+                                        </span>
+                                    </div>
+
+                                    <p class="card-text text-muted small mb-2">
+                                        <i class="bi bi-calendar"></i> @ev.StartDate.ToString("dd/MM/yyyy")
+                                    </p>
+                                    <p class="card-text text-muted small mb-3">
+                                        <i class="bi bi-clock"></i> @ev.StartDate.ToString("HH:mm")
+                                    </p>
+
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <small class="text-muted">Inscripciones:</small>
+                                            <strong>@ev.RegisteredCount / @(ev.Capacity?.ToString() ?? "‚àû")</strong>
+                                        </div>
+                                        @if (ev.Capacity.HasValue)
+                                        {
+                                            var percentage = ev.Capacity > 0 ? (ev.RegisteredCount * 100.0 / ev.Capacity.Value) : 0;
+                                            var progressClass = percentage switch
+                                            {
+                                                >= 100 => "bg-danger",
+                                                >= 75 => "bg-warning",
+                                                >= 50 => "bg-info",
+                                                _ => "bg-success"
+                                            };
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar @progressClass" role="progressbar" style="width: @percentage%" aria-valuenow="@ev.RegisteredCount" aria-valuemin="0" aria-valuemax="@ev.Capacity"></div>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <div class="d-grid gap-2">
+                                        <div class="btn-group" role="group">
+                                            <a asp-controller="Events" asp-action="Edit" asp-route-id="@ev.Id" class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-pencil"></i> Editar
+                                            </a>
+                                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.Id" class="btn btn-outline-info btn-sm">
+                                                <i class="bi bi-eye"></i> Ver
+                                            </a>
+                                            <a asp-controller="Events" asp-action="Attendees" asp-route-id="@ev.Id" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-people"></i> Asistentes
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="alert alert-success d-flex align-items-start mt-3">
+                    <i class="bi bi-lightbulb me-2 mt-1"></i>
+                    <div>
+                        <strong>Gesti√≥n de eventos:</strong>
+                        <ul class="mb-0 mt-2 small">
+                            <li>Puedes <strong>editar</strong> la informaci√≥n de tus eventos en cualquier momento</li>
+                            <li>Revisa la lista de <strong>asistentes</strong> para conocer qui√©n participar√°</li>
+                            <li>Los estudiantes pueden <strong>registrarse</strong> desde la vista p√∫blica del evento</li>
+                        </ul>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card border-info">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-calendar-x fs-1 text-info"></i>
+                        <h5 class="text-muted mt-3">No hay eventos asociados a este club</h5>
+                        <p class="text-muted mb-3">Crea tu primer evento para empezar a involucrar a los miembros</p>
+                        <a asp-controller="Events" asp-action="Create" asp-route-clubId="@Model.ClubId" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Crear Primer Evento
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <hr />
+
+        <!-- E. Gr√°fica - Actividad mensual del Club -->
+        <div class="mb-4">
+            <h4 class="mb-3"><i class="bi bi-graph-up-arrow"></i> Actividad Mensual del Club</h4>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <canvas id="monthlyActivityChart" style="height:300px;"></canvas>
+                </div>
+                <div class="card-footer text-muted small">
+                    <i class="bi bi-info-circle"></i> Muestra las inscripciones a eventos del club en los √∫ltimos 6 meses
+                </div>
             </div>
         </div>
     }
@@ -235,36 +323,72 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-             const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyActivity.Keys.ToList()));
-                const data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyActivity.Values.ToList()));
+        const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyActivity.Keys.ToList()));
+        const data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyActivity.Values.ToList()));
 
-              if (labels.length > 0) {
-             const ctx = document.getElementById('monthlyActivityChart').getContext('2d');
-               new Chart(ctx, {
-        type: 'bar',
-           data: {
-          labels: labels,
-               datasets: [{
-                  label: 'Inscripciones a Eventos',
-                    data: data,
-                 backgroundColor: 'rgba(40, 167, 69, 0.6)',
-              borderColor: 'rgba(40, 167, 69, 1)',
-              borderWidth: 1
-                  }]
-           },
-                 options: {
-                 responsive: true,
-            plugins: {
-            legend: { display: true, position: 'top' }
-              },
-                 scales: {
-           y: { beginAtZero: true, ticks: { precision: 0 } }
-               }
-            }
-                  });
-         } else {
-        document.getElementById('monthlyActivityChart').parentElement.innerHTML =
-                 '<div class="text-center text-muted py-5"><i class="bi bi-bar-chart fs-1"></i><p>No hay datos de actividad disponibles a˙n.</p></div>';
+        if (labels.length > 0) {
+            const ctx = document.getElementById('monthlyActivityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Inscripciones a Eventos',
+                        data: data,
+                        backgroundColor: 'rgba(40, 167, 69, 0.6)',
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        borderWidth: 2,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: { size: 14 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Inscripciones: ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                font: { size: 12 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 12 }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
                 }
+            });
+        } else {
+            document.getElementById('monthlyActivityChart').parentElement.innerHTML =
+                '<div class="text-center text-muted py-5">' +
+                '<i class="bi bi-bar-chart fs-1"></i>' +
+                '<p class="mt-3">No hay datos de actividad disponibles a√∫n.</p>' +
+                '<small>Los datos aparecer√°n cuando los estudiantes se registren en eventos.</small>' +
+                '</div>';
+        }
     </script>
 }

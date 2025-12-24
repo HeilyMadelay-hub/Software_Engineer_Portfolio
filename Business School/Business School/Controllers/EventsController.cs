@@ -97,6 +97,177 @@ namespace Business_School.Controllers
             return View(events);
         }
 
+
+        [Authorize(Roles = RoleHelper.Admin + "," + RoleHelper.DepartmentManager + "," + RoleHelper.ClubLeader)]
+        public async Task<IActionResult> Create(int? clubId, int? departmentId, string? returnUrl = null)
+        {
+            var vm = new EventFormVM
+            {
+                Departments = await _db.Departments
+                    .OrderBy(d => d.Name)
+                    .Select(d => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                    {
+                        Value = d.Id.ToString(),
+                        Text = d.Name
+                    })
+                    .ToListAsync(),
+
+                Clubs = await _db.Clubs
+                    .OrderBy(c => c.Name)
+                    .Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    })
+                    .ToListAsync()
+            };
+
+            // Si es ClubLeader, forzar su propio club y departamento
+            if (User.IsInRole(RoleHelper.ClubLeader))
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var leaderClub = await _db.Clubs
+                    .Include(c => c.Department)
+                    .FirstOrDefaultAsync(c => c.LeaderId == userId);
+
+                if (leaderClub == null)
+                {
+                    TempData["Error"] = "No lideras ningún club.";
+                    return RedirectToAction("ClubLeader", "Dashboard");
+                }
+
+                // Forzar club y departamento del ClubLeader
+                vm.SelectedClubIds = new List<int> { leaderClub.Id };
+                vm.DepartmentId = leaderClub.DepartmentId;
+            }
+            // Si viene con clubId en la URL (desde un botón específico)
+            else if (clubId.HasValue)
+            {
+                var club = await _db.Clubs
+                    .Include(c => c.Department)
+                    .FirstOrDefaultAsync(c => c.Id == clubId.Value);
+
+                if (club != null)
+                {
+                    vm.SelectedClubIds = new List<int> { club.Id };
+                    vm.DepartmentId = club.DepartmentId;
+                }
+            }
+            // Si es DepartmentManager, forzar su departamento
+            else if (User.IsInRole(RoleHelper.DepartmentManager))
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+                var managerDeptId = await _db.Departments
+                    .Where(d => d.ManagerUserId == userId)
+                    .Select(d => d.Id)
+                    .FirstOrDefaultAsync();
+
+                vm.DepartmentId = managerDeptId;
+            }
+            // Si viene con departmentId en la URL
+            else if (departmentId.HasValue)
+            {
+                vm.DepartmentId = departmentId.Value;
+            }
+
+            ViewData["ReturnUrl"] = NormalizeReturnUrl(returnUrl);
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleHelper.Admin + "," + RoleHelper.DepartmentManager + "," + RoleHelper.ClubLeader)]
+        public async Task<IActionResult> Create(EventFormVM model, string? returnUrl = null)
+        {
+            // Si es ClubLeader, forzar su club y departamento
+            if (User.IsInRole(RoleHelper.ClubLeader))
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var leaderClub = await _db.Clubs
+                    .FirstOrDefaultAsync(c => c.LeaderId == userId);
+
+                if (leaderClub == null)
+                {
+                    TempData["Error"] = "No lideras ningún club.";
+                    return RedirectToAction("ClubLeader", "Dashboard");
+                }
+
+                // Forzar club y departamento
+                model.SelectedClubIds = new List<int> { leaderClub.Id };
+                model.DepartmentId = leaderClub.DepartmentId;
+            }
+            // Si es DepartmentManager, forzar su departamento
+            else if (User.IsInRole(RoleHelper.DepartmentManager))
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+                model.DepartmentId = await _db.Departments
+                    .Where(d => d.ManagerUserId == userId)
+                    .Select(d => d.Id)
+                    .FirstOrDefaultAsync();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Departments = await _db.Departments
+                    .OrderBy(d => d.Name)
+                    .Select(d => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                    {
+                        Value = d.Id.ToString(),
+                        Text = d.Name
+                    })
+                    .ToListAsync();
+
+                model.Clubs = await _db.Clubs
+                    .OrderBy(c => c.Name)
+                    .Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    })
+                    .ToListAsync();
+
+                ViewData["ReturnUrl"] = NormalizeReturnUrl(returnUrl);
+                return View(model);
+            }
+
+            var ev = new Event
+            {
+                Title = model.Title,
+                Description = model.Description,
+                StartDate = model.StartDate,
+                EndDate = model.StartDate.AddHours(2), // default duration
+                DepartmentId = model.DepartmentId,
+                Capacity = model.MaxCapacity,
+                OrganizerId = int.Parse(_userManager.GetUserId(User)!)
+            };
+
+            _db.Events.Add(ev);
+            await _db.SaveChangesAsync();
+
+            // Clubs relations
+            foreach (var clubId in model.SelectedClubIds.Distinct())
+            {
+                _db.EventClubs.Add(new EventClub { EventId = ev.Id, ClubId = clubId });
+            }
+            await _db.SaveChangesAsync();
+
+            TempData["Success"] = $"Evento '{ev.Title}' creado correctamente.";
+
+            var normalizedReturn = NormalizeReturnUrl(returnUrl);
+            if (!string.IsNullOrEmpty(normalizedReturn))
+                return LocalRedirect(normalizedReturn);
+
+            if (User.IsInRole(RoleHelper.DepartmentManager))
+                return RedirectToAction("DepartmentManager", "Dashboard");
+
+            if (User.IsInRole(RoleHelper.ClubLeader))
+                return RedirectToAction("ClubLeader", "Dashboard");
+
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task<IActionResult> Details(int? id, string? returnUrl = null)
         {
             if (id == null) return NotFound();
@@ -128,107 +299,6 @@ namespace Business_School.Controllers
             return View(vm);
         }
 
-        /*
-         * When we create an event from the department  dashboard 
-         * and you selected edit an event the department selector should not be visible.
-         */
-
-        [Authorize(Roles = RoleHelper.Admin + "," + RoleHelper.DepartmentManager + "," + RoleHelper.ClubLeader)]
-        public async Task<IActionResult> Create(string? returnUrl = null)
-        {
-            var vm = new EventFormVM
-            {
-                Departments = await _db.Departments.
-                OrderBy(d => d.Name).
-                Select(d => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = d.Id.ToString(), Text = d.Name }).
-                ToListAsync(),
-
-                Clubs = await _db.Clubs.OrderBy(c => c.Name).
-                Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem 
-                { Value = c.Id.ToString(), Text = c.Name }).ToListAsync()
-            };
-
-
-            //if the role is departmentmanager , add the department to the vm  so it will appear automatically in the form.
-
-            if (User.IsInRole(RoleHelper.DepartmentManager))
-            {
-                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
-                var departmentId = await _db.Departments
-                    .Where(d => d.ManagerUserId == userId)
-                    .Select(d => d.Id)
-                    .FirstOrDefaultAsync();
-
-                vm.DepartmentId = departmentId;
-            }
-
-
-
-            ViewData["ReturnUrl"] = NormalizeReturnUrl(returnUrl);
-
-
-            return View(vm);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = RoleHelper.Admin + "," + RoleHelper.DepartmentManager + "," + RoleHelper.ClubLeader)]
-        public async Task<IActionResult> Create(EventFormVM model, string? returnUrl = null)
-        {
-            // If the user is a DepartmentManager, force the DepartmentId to their own department in this way can not create events outside of this appartment 
-
-            if (User.IsInRole(RoleHelper.DepartmentManager))
-            {
-                var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
-
-                model.DepartmentId = await _db.Departments
-                    .Where(d => d.ManagerUserId == userId)
-                    .Select(d => d.Id)
-                    .FirstOrDefaultAsync();
-            }
-
-
-            if (!ModelState.IsValid)
-            {
-                model.Departments = await _db.Departments.OrderBy(d => d.Name).Select(d => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = d.Id.ToString(), Text = d.Name }).ToListAsync();
-                model.Clubs = await _db.Clubs.OrderBy(c => c.Name).Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = c.Id.ToString(), Text = c.Name }).ToListAsync();
-                ViewData["ReturnUrl"] = NormalizeReturnUrl(returnUrl);
-                return View(model);
-            }
-            var ev = new Event
-            {
-                Title = model.Title,
-                Description = model.Description,
-                StartDate = model.StartDate,
-                EndDate = model.StartDate.AddHours(2), // default duration
-                DepartmentId = model.DepartmentId,
-                Capacity = model.MaxCapacity,
-                OrganizerId = int.Parse(_userManager.GetUserId(User))
-            };
-            _db.Events.Add(ev);
-            await _db.SaveChangesAsync();
-            // Clubs relations
-            foreach (var clubId in model.SelectedClubIds.Distinct())
-            {
-                _db.EventClubs.Add(new EventClub { EventId = ev.Id, ClubId = clubId });
-            }
-            await _db.SaveChangesAsync();
-
-            var normalizedReturn = NormalizeReturnUrl(returnUrl);
-            if (!string.IsNullOrEmpty(normalizedReturn))
-                return LocalRedirect(normalizedReturn);
-
-            if (User.IsInRole(RoleHelper.DepartmentManager))
-                return RedirectToAction("DepartmentManager", "Dashboard");
-
-            if (User.IsInRole(RoleHelper.ClubLeader))
-            {
-                return RedirectToAction("ClubLeader", "Dashboard");
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
 
         [Authorize(Roles = RoleHelper.Admin + "," + RoleHelper.DepartmentManager + "," + RoleHelper.ClubLeader)]
         public async Task<IActionResult> Edit(int? id, string? returnUrl = null)
@@ -474,6 +544,56 @@ namespace Business_School.Controllers
                 RegisteredCount = e.EventAttendances.Count
             }).ToListAsync();
             return View(events);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = RoleHelper.Admin + "," + RoleHelper.DepartmentManager + "," + RoleHelper.ClubLeader)]
+        public async Task<IActionResult> Attendees(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var evento = await _db.Events
+                .Include(e => e.EventAttendances)
+                    .ThenInclude(ea => ea.UserStudent)
+                .Include(e => e.Department)
+                .Include(e => e.EventClubs)
+                    .ThenInclude(ec => ec.Club)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (evento == null) return NotFound();
+
+            // Si es ClubLeader, verificar que el evento pertenece a su club
+            if (User.IsInRole(RoleHelper.ClubLeader))
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var leaderClub = await _db.Clubs
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(c => c.LeaderId == userId);
+
+                if (leaderClub == null || !evento.EventClubs.Any(ec => ec.ClubId == leaderClub.Id))
+                {
+                    TempData["Error"] = "No tienes permiso para ver los asistentes de este evento.";
+                    return RedirectToAction("ClubLeader", "Dashboard");
+                }
+            }
+
+            // Si es DepartmentManager, verificar que el evento pertenece a su departamento
+            if (User.IsInRole(RoleHelper.DepartmentManager))
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var managerDept = await _db.Departments
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(d => d.ManagerUserId == userId);
+
+                if (managerDept == null || evento.DepartmentId != managerDept.Id)
+                {
+                    TempData["Error"] = "No tienes permiso para ver los asistentes de este evento.";
+                    return RedirectToAction("DepartmentManager", "Dashboard");
+                }
+            }
+
+            return View(evento);
         }
     }
 }

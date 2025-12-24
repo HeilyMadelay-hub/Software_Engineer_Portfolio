@@ -1,0 +1,309 @@
+﻿@model Business_School.Models.Event
+@{
+    ViewData["Title"] = $"Asistentes - {Model.Title}";
+}
+
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-people-fill text-primary"></i> Asistentes del Evento</h2>
+            <p class="text-muted mb-0">@Model.Title</p>
+        </div>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Volver al Evento
+        </a>
+    </div>
+
+    <!-- Información del Evento -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-2">
+                        <i class="bi bi-calendar text-primary"></i>
+                        <strong>Fecha:</strong> @Model.StartDate.ToString("dd/MM/yyyy HH:mm")
+                    </p>
+                    <p class="mb-2">
+                        <i class="bi bi-building text-primary"></i>
+                        <strong>Departamento:</strong> @Model.Department?.Name
+                    </p>
+                    @if (Model.EventClubs.Any())
+                    {
+                        <p class="mb-2">
+                            <i class="bi bi-flag text-primary"></i>
+                            <strong>Clubs:</strong>
+                            @string.Join(", ", Model.EventClubs.Select(ec => ec.Club?.Name))
+                        </p>
+                    }
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-2">
+                        <i class="bi bi-people text-primary"></i>
+                        <strong>Capacidad:</strong>
+                        @Model.EventAttendances.Count / @(Model.Capacity?.ToString() ?? "∞")
+                    </p>
+                    @if (Model.Capacity.HasValue)
+                    {
+                        var percentage = Model.Capacity > 0 ? (Model.EventAttendances.Count * 100.0 / Model.Capacity.Value) : 0;
+                        var progressClass = percentage switch
+                        {
+                            >= 100 => "bg-danger",
+                            >= 75 => "bg-warning",
+                            >= 50 => "bg-info",
+                            _ => "bg-success"
+                        };
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar @progressClass" role="progressbar" style="width: @percentage%">
+                                @percentage.ToString("F0")%
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-primary h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-check-fill text-primary fs-1"></i>
+                    <h6 class="card-subtitle mb-2 text-muted mt-2">Total Inscritos</h6>
+                    <h3 class="card-title text-primary mb-0">@Model.EventAttendances.Count</h3>
+                    <small class="text-muted">participantes registrados</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-success h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                    <h6 class="card-subtitle mb-2 text-muted mt-2">Asistieron</h6>
+                    <h3 class="card-title text-success mb-0">
+                        @Model.EventAttendances.Count(ea => ea.HasAttended)
+                    </h3>
+                    <small class="text-muted">confirmados</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-warning h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-clock-fill text-warning fs-1"></i>
+                    <h6 class="card-subtitle mb-2 text-muted mt-2">Pendientes</h6>
+                    <h3 class="card-title text-warning mb-0">
+                        @Model.EventAttendances.Count(ea => !ea.HasAttended)
+                    </h3>
+                    <small class="text-muted">sin confirmar</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Asistentes -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-list-ul"></i> Lista de Asistentes</h5>
+            <span class="badge bg-light text-dark">@Model.EventAttendances.Count participante@(Model.EventAttendances.Count != 1 ? "s" : "")</span>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.EventAttendances.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="bi bi-hash"></i></th>
+                                <th><i class="bi bi-person"></i> Nombre</th>
+                                <th><i class="bi bi-envelope"></i> Email</th>
+                                <th class="text-center"><i class="bi bi-star"></i> Puntos</th>
+                                <th class="text-center"><i class="bi bi-bar-chart"></i> Nivel</th>
+                                <th class="text-center"><i class="bi bi-calendar-plus"></i> Inscrito</th>
+                                <th class="text-center"><i class="bi bi-check-circle"></i> Estado</th>
+                                <th class="text-center"><i class="bi bi-trophy"></i> Pts. Otorgados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var index = 1;
+                            }
+                            @foreach (var attendance in Model.EventAttendances.OrderBy(ea => ea.RegisteredAt))
+                            {
+                                <tr class="@(attendance.HasAttended ? "table-success" : "")">
+                                    <td class="text-muted fw-bold">@index</td>
+                                    <td>
+                                        <strong>@attendance.UserStudent?.FullName</strong>
+                                    </td>
+                                    <td>
+                                        <a href="mailto:@attendance.UserStudent?.Email" class="text-decoration-none">
+                                            @attendance.UserStudent?.Email
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-star-fill"></i> @attendance.UserStudent?.Points
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        @{
+                                            var level = attendance.UserStudent?.Level;
+                                            var levelClass = level switch
+                                            {
+                                                Business_School.Models.StudentLevel.Principiante => "bg-secondary",
+                                                Business_School.Models.StudentLevel.Intermedio => "bg-info",
+                                                Business_School.Models.StudentLevel.Avanzado => "bg-primary",
+                                                Business_School.Models.StudentLevel.Experto => "bg-success",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @levelClass">
+                                            @level
+                                        </span>
+                                    </td>
+                                    <td class="text-center text-muted small">
+                                        <div>@attendance.RegisteredAt.ToString("dd/MM/yyyy")</div>
+                                        <div class="text-muted">@attendance.RegisteredAt.ToString("HH:mm")</div>
+                                    </td>
+                                    <td class="text-center">
+                                        @if (attendance.HasAttended)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle-fill"></i> Asistió
+                                            </span>
+                                            @if (attendance.AttendedAt.HasValue)
+                                            {
+                                                <div class="small text-muted mt-1">
+                                                    @attendance.AttendedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-dash-circle"></i> Pendiente
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (attendance.PointsAwarded > 0)
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-trophy-fill"></i> @attendance.PointsAwarded
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <td colspan="7" class="text-end fw-bold">Total Puntos Otorgados:</td>
+                                <td class="text-center fw-bold">
+                                    <span class="badge bg-warning text-dark fs-6">
+                                        <i class="bi bi-trophy-fill"></i> @Model.EventAttendances.Sum(ea => ea.PointsAwarded)
+                                    </span>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox fs-1 text-muted"></i>
+                    <h5 class="text-muted mt-3">No hay asistentes registrados todavía</h5>
+                    <p class="text-muted">Los estudiantes pueden inscribirse desde la vista pública del evento.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Estadísticas adicionales -->
+    @if (Model.EventAttendances.Any())
+    {
+        <div class="row g-3 mt-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0"><i class="bi bi-graph-up"></i> Tasa de Asistencia</h6>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            var attendanceRate = Model.EventAttendances.Count > 0
+                            ? (Model.EventAttendances.Count(ea => ea.HasAttended) * 100.0 / Model.EventAttendances.Count)
+                            : 0;
+                            var rateClass = attendanceRate switch
+                            {
+                                >= 80 => "bg-success",
+                                >= 60 => "bg-info",
+                                >= 40 => "bg-warning",
+                                _ => "bg-danger"
+                            };
+                        }
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>Porcentaje de asistencia:</span>
+                            <strong class="fs-4">@attendanceRate.ToString("F1")%</strong>
+                        </div>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar @rateClass" role="progressbar" style="width: @attendanceRate%">
+                                @attendanceRate.ToString("F0")%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h6 class="mb-0"><i class="bi bi-trophy"></i> Gamificación</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-muted small">Total de puntos otorgados:</div>
+                                <div class="fs-3 fw-bold text-warning">
+                                    @Model.EventAttendances.Sum(ea => ea.PointsAwarded)
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-muted small">Promedio por asistente:</div>
+                                <div class="fs-3 fw-bold text-info">
+                                    @{
+                                        var avgPoints = Model.EventAttendances.Count(ea => ea.HasAttended) > 0
+                                        ? Model.EventAttendances.Where(ea => ea.HasAttended).Average(ea => ea.PointsAwarded)
+                                        : 0;
+                                    }
+                                    @avgPoints.ToString("F1")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Botones de acción adicionales -->
+    @if (User.IsInRole("Admin") || User.IsInRole("DepartmentManager") || User.IsInRole("ClubLeader"))
+    {
+        <div class="mt-4 d-flex gap-2 justify-content-end">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Editar Evento
+            </a>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">
+                <i class="bi bi-eye"></i> Ver Detalles del Evento
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-list"></i> Ver Todos los Eventos
+            </a>
+        </div>
+    }
+</div>
