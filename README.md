@@ -553,11 +553,12 @@ This is a portfolio project. Suggestions and feedback are welcome!
 ## 📬 Contact
 
 For questions or collaboration:
-- **GitHub:** [Your Profile](https://github.com/yourusername)
-- **LinkedIn:** [Your Profile](https://linkedin.com/in/yourprofile)
-- **Email:** your.email@example.com
+- **GitHub:** [Heily Madelay](https://github.com/HeilyMadelay-hub/Master-Proyects)
+- **LinkedIn:** [Heily Madelay](https://www.linkedin.com/in/heilymajtan/)
+- **Email:** heilymadelayajtan@icloud.com
 
 ---
 
 
 **Built with ❤️ using ASP.NET Core**
+
