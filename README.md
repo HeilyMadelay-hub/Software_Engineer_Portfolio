@@ -1,6 +1,3 @@
-Here's the updated README with the Sign Language Translator project added:
-
-```markdown
 # 🎓 Master's Program Portfolio
 
 ### *Advanced Software Engineering Projects & Technical Excellence*
