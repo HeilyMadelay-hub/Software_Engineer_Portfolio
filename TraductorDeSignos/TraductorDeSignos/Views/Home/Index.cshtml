@@ -1,0 +1,222 @@
+﻿@{
+    ViewData["Title"] = "Detector";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/Home/index.css">
+}
+
+<div class="container-fluid px-4 py-4">
+    <div class="row g-4">
+        <!-- ========== COLUMNA PRINCIPAL ========== -->
+        <div class="col-lg-8">
+            <!-- HEADER -->
+            <div class="card header-card shadow-lg mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div class="header-content">
+                            <h1 class="header-title mb-2">
+                                <i class="bi bi-broadcast me-3"></i>Traductor de Señas
+                            </h1>
+                            <p class="header-subtitle mb-0">
+                                <i class="bi bi-cpu me-2"></i>Sistema de Detección en Tiempo Real
+                            </p>
+                        </div>
+                        <div class="status-indicator">
+                            <div class="status-dot"></div>
+                            <span class="status-text">Activo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIDEO FEED -->
+            <div class="card video-card shadow-lg mb-4">
+                <div class="card-body p-0">
+                    <div class="video-container">
+                        <video id="webcam-video" autoplay playsinline muted></video>
+                        <canvas id="tracking-canvas"></canvas>
+
+                        <!-- Gesture Display Overlay -->
+                        <div id="gesture-display" class="gesture-display">
+                            <div class="gesture-content">
+                                <i class="bi bi-hand-index-thumb"></i>
+                                <span class="gesture-text">Esperando...</span>
+                            </div>
+                        </div>
+
+                        <!-- Corner Decorations -->
+                        <div class="video-overlay">
+                            <div class="corner-decoration top-left"></div>
+                            <div class="corner-decoration top-right"></div>
+                            <div class="corner-decoration bottom-left"></div>
+                            <div class="corner-decoration bottom-right"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL DE CONTROL -->
+            <div class="card control-card shadow-lg">
+                <div class="card-body p-4">
+                    <div class="controls-header mb-4">
+                        <h5 class="mb-0">
+                            <i class="bi bi-sliders me-2"></i>Panel de Control
+                        </h5>
+                    </div>
+                    <div class="controls-grid">
+                        <button id="btnDebugMode" class="btn-control btn-debug">
+                            <i class="bi bi-bug-fill"></i>
+                            <span>Modo Debug</span>
+                        </button>
+                        <button id="btnToggleLabels" class="btn-control btn-labels">
+                            <i class="bi bi-tags-fill"></i>
+                            <span>Etiquetas</span>
+                        </button>
+                        <button id="btnToggleLines" class="btn-control btn-lines">
+                            <i class="bi bi-bezier2"></i>
+                            <span>Conexiones</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PANEL LATERAL DEBUG ========== -->
+        <div class="col-lg-4" id="debugPanel" style="display: none;">
+            <!-- MÉTRICAS EN TIEMPO REAL -->
+            <div class="card metric-card shadow-lg mb-4">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-activity text-primary me-2"></i>Métricas en Vivo
+                        </h5>
+                        <span class="badge-live">
+                            <span class="live-dot"></span>
+                            LIVE
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-icon-wrapper bg-primary">
+                                <i class="bi bi-speedometer2"></i>
+                            </div>
+                            <div class="metric-content">
+                                <span class="metric-label">FPS</span>
+                                <span id="debugFps" class="metric-value">0</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-icon-wrapper bg-success">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                                <span class="metric-label">Landmarks</span>
+                                <span id="debugLandmarkCount" class="metric-value">0</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-icon-wrapper bg-info">
+                                <i class="bi bi-hand-index-thumb-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                                <span class="metric-label">Manos</span>
+                                <span id="debugHandsCount" class="metric-value">0</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-icon-wrapper bg-warning">
+                                <i class="bi bi-chat-square-text-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                                <span class="metric-label">Gesto</span>
+                                <span id="debugLastGesture" class="metric-value">-</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-icon-wrapper bg-danger">
+                                <i class="bi bi-percent"></i>
+                            </div>
+                            <div class="metric-content">
+                                <span class="metric-label">Confianza</span>
+                                <span id="debugConfidence" class="metric-value">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-icon-wrapper bg-secondary">
+                                <i class="bi bi-rulers"></i>
+                            </div>
+                            <div class="metric-content">
+                                <span class="metric-label">Distancia</span>
+                                <span id="debugDistance" class="metric-value">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEYENDA DE CONFIANZA -->
+            <div class="card legend-card shadow-lg mb-4">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-palette-fill text-info me-2"></i>Leyenda de Confianza
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="legend-grid">
+                        <div class="legend-item">
+                            <span class="legend-indicator legend-high"></span>
+                            <div class="legend-text">
+                                <div class="legend-label">Alta</div>
+                                <div class="legend-range">&gt; 80%</div>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-indicator legend-medium"></span>
+                            <div class="legend-text">
+                                <div class="legend-label">Media</div>
+                                <div class="legend-range">60-80%</div>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-indicator legend-low"></span>
+                            <div class="legend-text">
+                                <div class="legend-label">Baja</div>
+                                <div class="legend-range">&lt; 60%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATOS DE LANDMARKS -->
+            <div class="card data-card shadow-lg">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-code-slash text-warning me-2"></i>Datos de Landmarks
+                    </h6>
+                </div>
+                <div class="card-body p-3">
+                    <div class="data-container">
+                        <pre id="debugLandmarkData" class="data-output">Esperando datos de detección...</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- MediaPipe Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script type="module" src="/js/main.js"></script>
+}

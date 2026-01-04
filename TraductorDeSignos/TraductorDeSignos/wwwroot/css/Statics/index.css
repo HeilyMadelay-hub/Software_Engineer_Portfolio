@@ -1,0 +1,891 @@
+:root {
+    /* Gradiente principal de azul/morado */
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Sombra estándar para tarjetas */
+    --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    /* Sombra más pronunciada para efecto hover en tarjetas */
+    --card-hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== BASE STYLES ===== */
+/* Reseteo universal de estilos */
+* {
+    /* Elimina márgenes por defecto */
+    margin: 0;
+    /* Elimina padding por defecto */
+    padding: 0;
+    /* Incluye borde y padding en el cálculo del ancho/alto */
+    box-sizing: border-box;
+}
+
+/* Estilos base del body */
+body {
+    /* Gradiente de fondo de gris claro a gris medio */
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+    /* Altura mínima de toda la ventana del navegador */
+    min-height: 100vh;
+    /* Familia de fontes do sistema */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== CARD ANIMATIONS ===== */
+/* Estilo base para todas las tarjetas */
+.card {
+    /* Transición suave con curva de aceleración personalizada */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Bordes redondeados */
+    border-radius: 16px;
+    /* Sin borde */
+    border: none;
+    /* Oculta contenido que sobresale */
+    overflow: hidden;
+}
+
+    /* Efecto hover para tarjetas */
+    .card:hover {
+        /* Mueve la tarjeta 5px hacia arriba */
+        transform: translateY(-5px);
+    }
+
+/* ===== METRIC CARDS ===== */
+/* Estilo para tarjetas de métricas */
+.metric-card {
+    /* Fondo blanco */
+    background: white;
+    /* Bordes redondeados */
+    border-radius: 16px;
+    /* Sin borde */
+    border: none;
+    /* Sombra usando variable CSS */
+    box-shadow: var(--card-shadow);
+    /* Transición suave de todas las propiedades */
+    transition: all 0.3s ease;
+    /* Oculta contenido que sobresale */
+    overflow: hidden;
+    /* Posicionamiento relativo para elementos absolutos hijos */
+    position: relative;
+}
+
+    /* Efecto hover para tarjetas de métricas */
+    .metric-card:hover {
+        /* Mueve la tarjeta 8px hacia arriba */
+        transform: translateY(-8px);
+        /* Sombra más pronunciada usando variable CSS */
+        box-shadow: var(--card-hover-shadow);
+    }
+
+    /* Contenedor del icono dentro de tarjetas de métricas */
+    .metric-card .icon-wrapper {
+        /* Ancho fijo */
+        width: 60px;
+        /* Altura fija */
+        height: 60px;
+        /* Bordes redondeados */
+        border-radius: 16px;
+        /* Contenedor flex */
+        display: flex;
+        /* Centra horizontalmente */
+        align-items: center;
+        /* Centra verticalmente */
+        justify-content: center;
+        /* Transición suave de todas las propiedades */
+        transition: all 0.3s ease;
+    }
+
+    /* Efecto hover para el icono */
+    .metric-card:hover .icon-wrapper {
+        /* Escala el icono 1.1x y rota 5 grados */
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Estilo para el valor numérico de la métrica */
+    .metric-card .metric-value {
+        /* Tamaño de fuente grande */
+        font-size: 2.5rem;
+        /* Peso de fuente extra-negrita */
+        font-weight: 800;
+        /* Altura de línea de 1 (sin espacio extra) */
+        line-height: 1;
+        /* Gradiente de gris oscuro a gris medio */
+        background: linear-gradient(135deg, #333 0%, #666 100%);
+        /* Aplica el gradiente al texto (webkit) */
+        -webkit-background-clip: text;
+        /* Hace el texto transparente para mostrar el gradiente (webkit) */
+        -webkit-text-fill-color: transparent;
+        /* Aplica el gradiente al texto (estándar) */
+        background-clip: text;
+    }
+
+    /* Estilo para la etiqueta de la métrica */
+    .metric-card .metric-label {
+        /* Tamaño de fuente pequeño */
+        font-size: 0.75rem;
+        /* Texto en mayúsculas */
+        text-transform: uppercase;
+        /* Espaciado entre letras */
+        letter-spacing: 1px;
+        /* Color gris */
+        color: #6b7280;
+        /* Peso de fuente semi-negrita */
+        font-weight: 600;
+    }
+
+/* ===== CHART CARDS ===== */
+/* Estilo para tarjetas de gráficos */
+.chart-card {
+    /* Fondo blanco */
+    background: white;
+    /* Bordes redondeados */
+    border-radius: 16px;
+    /* Sin borde */
+    border: none;
+    /* Sombra usando variable CSS */
+    box-shadow: var(--card-shadow);
+    /* Transición suave de todas las propiedades */
+    transition: all 0.3s ease;
+}
+
+    /* Efecto hover para tarjetas de gráficos */
+    .chart-card:hover {
+        /* Sombra más pronunciada usando variable CSS */
+        box-shadow: var(--card-hover-shadow);
+    }
+
+    /* Encabezado de tarjetas de gráficos */
+    .chart-card .card-header {
+        /* Fondo transparente */
+        background: transparent;
+        /* Borde inferior sutil */
+        border-bottom: 1px solid #f0f0f0;
+        /* Relleno interno */
+        padding: 1.5rem;
+    }
+
+    /* Canvas (elemento de gráfico) dentro de tarjetas */
+    .chart-card canvas {
+        /* Ancho máximo del 100% del contenedor */
+        max-width: 100%;
+    }
+
+/* ===== HISTORY TABLE ===== */
+/* Estilo para tarjetas de historial */
+.history-card {
+    /* Fondo blanco */
+    background: white;
+    /* Bordes redondeados */
+    border-radius: 16px;
+    /* Sin borde */
+    border: none;
+    /* Sombra usando variable CSS */
+    box-shadow: var(--card-shadow);
+    /* Oculta contenido que sobresale */
+    overflow: hidden;
+}
+
+    /* Tabla dentro de tarjetas de historial */
+    .history-card .table {
+        /* Sin margen inferior */
+        margin-bottom: 0;
+    }
+
+        /* Encabezado de tabla en tarjetas de historial */
+        .history-card .table thead {
+            /* Gradiente de fondo gris claro */
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+            /* Celdas de encabezado de tabla */
+            .history-card .table thead th {
+                /* Sin borde */
+                border: none;
+                /* Peso de fuente semi-negrita */
+                font-weight: 600;
+                /* Texto en mayúsculas */
+                text-transform: uppercase;
+                /* Tamaño de fuente muy pequeño */
+                font-size: 0.7rem;
+                /* Espaciado entre letras */
+                letter-spacing: 1px;
+                /* Color gris */
+                color: #6b7280;
+                /* Relleno interno */
+                padding: 1rem 1.5rem;
+            }
+
+        /* Celdas del cuerpo de tabla */
+        .history-card .table tbody td {
+            /* Relleno interno */
+            padding: 1rem 1.5rem;
+            /* Alineación vertical centrada */
+            vertical-align: middle;
+            /* Borde inferior sutil */
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* Efecto hover para filas de tabla */
+        .history-card .table tbody tr:hover {
+            /* Gradiente de fondo azul/morado semi-transparente */
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        }
+
+/* ===== PROGRESS BARS ===== */
+/* Contenedor de barra de progreso */
+.progress {
+    /* Altura de la barra */
+    height: 6px;
+    /* Bordes redondeados */
+    border-radius: 10px;
+    /* Color de fondo gris claro */
+    background: #e5e7eb;
+    /* Oculta contenido que sobresale */
+    overflow: hidden;
+}
+
+/* Barra de progreso rellenada */
+.progress-bar {
+    /* Bordes redondeados */
+    border-radius: 10px;
+    /* Transición suave del ancho */
+    transition: width 0.6s ease;
+}
+
+/* ===== CONFIDENCE BADGES ===== */
+/* Estilo base para badges de confianza */
+.confidence-badge {
+    /* Relleno interno */
+    padding: 6px 14px;
+    /* Bordes completamente redondeados (píldora) */
+    border-radius: 50px;
+    /* Tamaño de fuente */
+    font-size: 0.85rem;
+    /* Peso de fuente semi-negrita */
+    font-weight: 600;
+}
+
+/* Badge de confianza alta (verde) */
+.confidence-high {
+    /* Gradiente verde semi-transparente */
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+    /* Texto verde */
+    color: #059669;
+}
+
+/* Badge de confianza media (amarillo/naranja) */
+.confidence-medium {
+    /* Gradiente amarillo semi-transparente */
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.15) 100%);
+    /* Texto naranja */
+    color: #d97706;
+}
+
+/* Badge de confianza baja (rojo) */
+.confidence-low {
+    /* Gradiente rojo semi-transparente */
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+    /* Texto rojo */
+    color: #dc2626;
+}
+
+/* ===== CONTROL BUTTONS ===== */
+/* Tarjeta de controles */
+.control-card {
+    /* Fondo blanco */
+    background: white;
+    /* Bordes redondeados */
+    border-radius: 16px;
+    /* Sin borde */
+    border: none;
+    /* Sombra usando variable CSS */
+    box-shadow: var(--card-shadow);
+}
+
+/* Estilo base para botones de control */
+.btn-control {
+    /* Bordes redondeados */
+    border-radius: 12px;
+    /* Relleno interno */
+    padding: 12px 24px;
+    /* Peso de fuente semi-negrita */
+    font-weight: 600;
+    /* Transición suave de todas las propiedades */
+    transition: all 0.3s ease;
+    /* Sin borde */
+    border: none;
+}
+
+    /* Efecto hover para botones de control */
+    .btn-control:hover {
+        /* Mueve el botón 3px hacia arriba */
+        transform: translateY(-3px);
+        /* Añade sombra al hacer hover */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+/* Botón de resetear (rojo) */
+.btn-reset {
+    /* Gradiente rojo */
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    /* Texto blanco */
+    color: white;
+}
+
+/* Botón de exportar (verde) */
+.btn-export {
+    /* Gradiente verde */
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    /* Texto blanco */
+    color: white;
+}
+
+/* Botón de pausa (amarillo/naranja) */
+.btn-pause {
+    /* Gradiente amarillo/naranja */
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    /* Texto blanco */
+    color: white;
+}
+
+/* ===== STATUS INDICATOR ===== */
+/* Indicador de estado */
+.status-indicator {
+    /* Contenedor flex */
+    display: flex;
+    /* Centra verticalmente */
+    align-items: center;
+    /* Espacio de 8px entre elementos */
+    gap: 8px;
+    /* Relleno interno */
+    padding: 8px 16px;
+    /* Fondo verde semi-transparente */
+    background: rgba(16, 185, 129, 0.1);
+    /* Bordes completamente redondeados (píldora) */
+    border-radius: 50px;
+}
+
+/* Punto animado dentro del indicador de estado */
+.status-dot {
+    /* Ancho del punto */
+    width: 8px;
+    /* Altura del punto */
+    height: 8px;
+    /* Fondo verde */
+    background: #10b981;
+    /* Forma circular */
+    border-radius: 50%;
+    /* Animación de parpadeo que se repite infinitamente */
+    animation: blink 1.5s ease-in-out infinite;
+}
+
+/* Animación de parpadeo para el punto de estado */
+@keyframes blink {
+    /* Estado inicial y final - completamente visible */
+    0%, 100% {
+        opacity: 1;
+    }
+    /* Estado intermedio - semi-transparente */
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* ===== EMPTY STATE ===== */
+/* Estado vacío (cuando no hay datos) */
+.empty-state {
+    /* Relleno interno grande */
+    padding: 4rem 2rem;
+    /* Texto centrado */
+    text-align: center;
+}
+
+    /* Icono en estado vacío */
+    .empty-state i {
+        /* Tamaño de fuente muy grande */
+        font-size: 4rem;
+        /* Color gris claro */
+        color: #d1d5db;
+        /* Margen inferior */
+        margin-bottom: 1rem;
+    }
+
+    /* Texto en estado vacío */
+    .empty-state p {
+        /* Color gris */
+        color: #9ca3af;
+        /* Tamaño de fuente */
+        font-size: 1rem;
+    }
+
+/* ===== BADGE STYLES ===== */
+/* Estilo base para badges */
+.badge {
+    /* Peso de fuente semi-negrita */
+    font-weight: 600;
+    /* Espaciado entre letras */
+    letter-spacing: 0.5px;
+    /* Relleno interno */
+    padding: 8px 16px;
+    /* Bordes completamente redondeados (píldora) */
+    border-radius: 50px;
+}
+
+/* Badge "LIVE" con efecto glassmorphism */
+.badge-live {
+    /* Fondo blanco semi-transparente */
+    background: rgba(255, 255, 255, 0.2);
+    /* Efecto de desenfoque de fondo */
+    backdrop-filter: blur(10px);
+    /* Relleno interno */
+    padding: 10px 20px;
+    /* Bordes completamente redondeados (píldora) */
+    border-radius: 50px;
+    /* Peso de fuente semi-negrita */
+    font-weight: 600;
+    /* Espaciado entre letras */
+    letter-spacing: 0.5px;
+    /* Animación de pulso con brillo que se repite infinitamente */
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Animación de pulso con brillo para badge LIVE */
+@keyframes pulse-glow {
+    /* Estado inicial y final - sin sombra */
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    }
+    /* Estado intermedio - sombra expandida */
+    50% {
+        box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* ===== HEADER CARD ===== */
+/* Tarjeta de encabezado con gradiente */
+.header-card {
+    /* Gradiente usando variable CSS */
+    background: var(--primary-gradient);
+    /* Bordes redondeados */
+    border-radius: 20px;
+    /* Sin borde */
+    border: none;
+    /* Oculta contenido que sobresale */
+    overflow: hidden;
+    /* Posicionamiento relativo para pseudo-elementos */
+    position: relative;
+    /* z-index para que esté por encima de otros elementos */
+    z-index: 1;
+}
+
+    /* Pseudo-elemento decorativo superior derecho */
+    .header-card::before {
+        /* Contenido vacío requerido para pseudo-elementos */
+      content: '';
+   /* Posicionamiento absoluto */
+        position: absolute;
+        /* Posicionado 50% arriba (fuera de vista) */
+        top: -50%;
+        /* Posicionado 20% a la derecha (parcialmente fuera) */
+        right: -20%;
+        /* Ancho del círculo decorativo */
+        width: 300px;
+     /* Altura del círculo decorativo */
+        height: 300px;
+   /* Fondo blanco semi-transparente */
+        background: rgba(255, 255, 255, 0.1);
+    /* Forma circular */
+        border-radius: 50%;
+        /* z-index negativo para que esté detrás del contenido */
+ z-index: -1;
+    }
+
+    /* Pseudo-elemento decorativo inferior izquierdo */
+    .header-card::after {
+        /* Contenido vacío requerido para pseudo-elementos */
+      content: '';
+    /* Posicionamiento absoluto */
+        position: absolute;
+        /* Posicionado 30% abajo (parcialmente fuera) */
+    bottom: -30%;
+        /* Posicionado 10% a la izquierda (parcialmente fuera) */
+   left: -10%;
+        /* Ancho del círculo decorativo */
+        width: 200px;
+      /* Altura del círculo decorativo */
+        height: 200px;
+        /* Fondo blanco muy semi-transparente */
+        background: rgba(255, 255, 255, 0.05);
+        /* Forma circular */
+     border-radius: 50%;
+        /* z-index negativo para que esté detrás del contenido */
+        z-index: -1;
+    }
+
+    /* Contenido del header-card */
+    .header-card .card-body {
+        /* Posición relativa para z-index */
+position: relative;
+        /* z-index para que el contenido esté visible */
+        z-index: 2;
+    }
+
+/* ===== VIDEO STATS CARD ===== */
+/* Tarjeta de video para estadísticas */
+.video-stats-card {
+    background: white;
+    border-radius: 16px;
+    border: none;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+}
+
+    /* Efecto de sombra al pasar el cursor sobre las tarjetas de estadísticas de video */
+    .video-stats-card:hover {
+        box-shadow: var(--card-hover-shadow);
+    }
+
+
+/* Contenedor principal del video en la sección de estadísticas */
+.video-container-stats {
+    position: relative; /* Permite posicionar elementos hijos de forma absoluta */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    aspect-ratio: 4/3; /* Mantiene una proporción de 4:3 (ancho:alto) */
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); /* Gradiente de fondo azul oscuro */
+    border-radius: 12px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta cualquier contenido que se salga del contenedor */
+}
+
+    /* Elemento de video dentro del contenedor de estadísticas */
+    .video-container-stats video {
+        width: 100%; /* Ocupa todo el ancho del contenedor */
+        height: 100%; /* Ocupa toda la altura del contenedor */
+        object-fit: cover; /* Recorta el video para cubrir todo el espacio sin deformarse */
+        transform: scaleX(-1); /* Voltea el video horizontalmente (efecto espejo) */
+    }
+
+
+    /* Canvas para dibujar sobre el video (landmarks, detecciones, etc.) */
+.video-container-stats canvas {
+    position: absolute; /* Se posiciona sobre el video */
+    top: 0; /* Alineado al borde superior */
+    left: 0; /* Alineado al borde izquierdo */
+    width: 100%; /* Ocupa todo el ancho */
+    height: 100%; /* Ocupa toda la altura */
+    transform: scaleX(-1); /* Voltea el canvas horizontalmente para coincidir con el video */
+    pointer-events: none; /* No intercepta eventos del ratón, permite interactuar con elementos debajo */
+}
+
+/* Display del gesto detectado en la sección de estadísticas */
+.gesture-display-stats {
+    position: absolute; /* Posicionado sobre el video */
+    bottom: 12px; /* 12px desde el borde inferior */
+    left: 50%; /* Comienza desde el centro horizontal */
+    transform: translateX(-50%); /* Centra perfectamente el elemento */
+    background: rgba(0, 0, 0, 0.7); /* Fondo negro semi-transparente */
+    backdrop-filter: blur(10px); /* Efecto de desenfoque en el fondo */
+    padding: 8px 16px; /* Espaciado interno */
+    border-radius: 25px; /* Bordes muy redondeados (forma de píldora) */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Borde blanco semi-transparente */
+    z-index: 10; /* Se muestra por encima de otros elementos */
+}
+
+
+    /* Contenido interno del display de gestos */
+    .gesture-display-stats .gesture-content {
+        display: flex; /* Layout flexible */
+        align-items: center; /* Alinea verticalmente al centro */
+        gap: 8px; /* Espacio de 8px entre elementos hijos */
+        color: white; /* Texto blanco */
+        font-weight: 600; /* Texto semi-negrita */
+        font-size: 0.9rem; /* Tamaño de fuente ligeramente más pequeño */
+    }
+
+        /* Iconos dentro del display de gestos */
+        .gesture-display-stats .gesture-content i {
+            color: #667eea; /* Color morado/azul para los iconos */
+        }
+
+/* Capa de overlay sobre el video para decoraciones */
+.video-overlay-stats {
+    position: absolute; /* Se posiciona sobre el video */
+    top: 0; /* Cubre desde el borde superior */
+    left: 0; /* Cubre desde el borde izquierdo */
+    width: 100%; /* Ocupa todo el ancho */
+    height: 100%; /* Ocupa toda la altura */
+    pointer-events: none; /* No intercepta eventos del ratón */
+}
+
+    /* Decoraciones en las esquinas del video */
+    .video-overlay-stats .corner-decoration {
+        position: absolute; /* Posicionado en esquinas específicas */
+        width: 20px; /* Ancho de la decoración */
+        height: 20px; /* Alto de la decoración */
+        border: 2px solid rgba(102, 126, 234, 0.6); /* Borde morado/azul semi-transparente */
+    }
+
+
+        /* Decoración en la esquina superior izquierda */
+        .video-overlay-stats .corner-decoration.top-left {
+            top: 10px; /* 10px desde arriba */
+            left: 10px; /* 10px desde la izquierda */
+            border-right: none; /* Sin borde derecho */
+            border-bottom: none; /* Sin borde inferior (forma una L invertida) */
+        }
+
+        /* Decoración en la esquina superior derecha */
+        .video-overlay-stats .corner-decoration.top-right {
+            top: 10px; /* 10px desde arriba */
+            right: 10px; /* 10px desde la derecha */
+            border-left: none; /* Sin borde izquierdo */
+            border-bottom: none; /* Sin borde inferior (forma una L volteada) */
+        }
+
+        /* Decoración en la esquina inferior izquierda */
+        .video-overlay-stats .corner-decoration.bottom-left {
+            bottom: 10px; /* 10px desde abajo */
+            left: 10px; /* 10px desde la izquierda */
+            border-right: none; /* Sin borde derecho */
+            border-top: none; /* Sin borde superior (forma una L normal) */
+        }
+
+        /* Decoración en la esquina inferior derecha */
+        .video-overlay-stats .corner-decoration.bottom-right {
+            bottom: 10px; /* 10px desde abajo */
+            right: 10px; /* 10px desde la derecha */
+            border-left: none; /* Sin borde izquierdo */
+            border-top: none; /* Sin borde superior (forma una L invertida horizontal) */
+        }
+
+
+/* Estadísticas rápidas mostradas debajo del video */
+.quick-stats {
+    display: flex; /* Layout flexible */
+    justify-content: space-around; /* Distribuye items uniformemente con espacio alrededor */
+    padding: 12px; /* Espaciado interno */
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); /* Gradiente gris claro */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+/* Cada item individual de estadística rápida */
+.quick-stat-item {
+    display: flex; /* Layout flexible */
+    align-items: center; /* Alinea verticalmente al centro */
+    gap: 6px; /* Espacio de 6px entre icono y texto */
+}
+
+    /* Iconos en los items de estadísticas */
+    .quick-stat-item i {
+        font-size: 1rem; /* Tamaño estándar de fuente */
+    }
+
+
+    /* Valor numérico en las estadísticas rápidas */
+    .quick-stat-item .quick-value {
+        font-weight: 700; /* Texto en negrita */
+        font-size: 0.9rem; /* Tamaño de fuente ligeramente más pequeño */
+        color: #333; /* Color gris oscuro */
+    }
+
+/* Badge o insignia de cámara (indicador de grabación) */
+.camera-badge {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); /* Gradiente rojo */
+    color: white; /* Texto blanco */
+    font-size: 0.7rem; /* Fuente pequeña */
+    padding: 4px 10px; /* Espaciado interno compacto */
+    animation: pulse-rec 1.5s ease-in-out infinite; /* Animación de pulso infinita */
+}
+
+/* Animación de pulso para el badge de cámara (simula grabación) */
+@keyframes pulse-rec {
+    0%, 100% {
+        opacity: 1; /* Opacidad completa al inicio y final */
+    }
+
+    50% {
+        opacity: 0.6; /* Opacidad reducida a la mitad de la animación */
+    }
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+/* Media query para tablets grandes y pantallas medianas */
+@media (max-width: 992px) {
+    /* Reduce el tamaño del valor de métrica */
+    .metric-card .metric-value {
+        font-size: 2rem;
+    }
+
+    /* Reduce el padding del cuerpo de la tarjeta de encabezado */
+    .header-card .card-body {
+        /* !important para sobrescribir otros estilos */
+        padding: 1.5rem !important;
+    }
+
+    /* Ajusta el padding y tamaño de fuente de botones de control */
+    .btn-control {
+        padding: 12px 20px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Media query para tablets y móviles */
+@media (max-width: 768px) {
+    /* Reduce aún más el tamaño del valor de métrica */
+    .metric-card .metric-value {
+        font-size: 1.8rem;
+    }
+
+    /* Reduce el padding de la navbar */
+    .navbar {
+        padding: 0.75rem 1rem;
+    }
+
+    /* Reduce padding y tamaño de fuente de celdas de tabla */
+    .history-card .table thead th,
+    .history-card .table tbody td {
+        padding: 1rem;
+        font-size: 0.8rem;
+    }
+
+    /* Reduce padding y tamaño de fuente del badge LIVE */
+    .badge-live {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+
+    /* Media query para el contenedor de video en estadísticas */
+.video-container-stats {
+        aspect-ratio: 16/9;
+    }
+    
+    .quick-stats {
+      flex-wrap: wrap;
+    gap: 10px;
+    }
+    
+    .quick-stat-item {
+        flex: 1 1 30%;
+        justify-content: center;
+    }
+}
+
+/* Media query para móviles pequeños */
+@media (max-width: 576px) {
+    /* Reduce significativamente el tamaño del valor de métrica */
+    .metric-card .metric-value {
+        font-size: 1.5rem;
+    }
+
+    /* Oculta el indicador de estado en pantallas muy pequeñas */
+    .status-indicator {
+        display: none;
+    }
+
+    /* Centra los elementos flex con gap */
+    .d-flex.flex-wrap.gap-3 {
+        justify-content: center;
+    }
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+/* Ancho de la barra de scroll */
+::-webkit-scrollbar {
+    /* Ancho de scroll vertical */
+    width: 8px;
+    /* Altura de scroll horizontal */
+    height: 8px;
+}
+
+/* Pista de la barra de scroll */
+::-webkit-scrollbar-track {
+    /* Fondo gris claro */
+    background: #f1f1f1;
+    /* Bordes redondeados */
+    border-radius: 10px;
+}
+
+/* Thumb (parte móvil) de la barra de scroll */
+::-webkit-scrollbar-thumb {
+    /* Gradiente azul/morado */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Bordes redondeados */
+    border-radius: 10px;
+}
+
+    /* Hover sobre el thumb de la barra de scroll */
+    ::-webkit-scrollbar-thumb:hover {
+        /* Gradiente más oscuro al hacer hover */
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    }
+
+/* ===== SMOOTH SCROLLING ===== */
+/* Desplazamiento suave en toda la página */
+html {
+    /* Comportamiento de scroll suave */
+    scroll-behavior: smooth;
+}
+
+/* ===== SELECTION STYLING ===== */
+/* Estilo para texto seleccionado */
+::selection {
+    /* Fondo azul/morado semi-transparente */
+    background: rgba(102, 126, 234, 0.3);
+    /* Color del texto seleccionado */
+    color: #1f2937;
+}
+
+/* ===== FOCUS STATES ===== */
+/* Estado de foco para botones */
+.btn:focus,
+.btn-control:focus {
+    /* Sin contorno predeterminado */
+    outline: none;
+    /* Sombra azul/morado para indicar foco */
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.3);
+}
+
+/* ===== TOOLTIP ENHANCEMENT ===== */
+/* Elemento con tooltip personalizado */
+[data-tooltip] {
+    /* Posicionamiento relativo para el tooltip */
+    position: relative;
+}
+
+    /* Pseudo-elemento que muestra el tooltip */
+    [data-tooltip]::after {
+        /* Contenido del tooltip desde el atributo data-tooltip */
+        content: attr(data-tooltip);
+        /* Posicionamiento absoluto */
+        position: absolute;
+        /* Posicionado arriba del elemento */
+        bottom: 100%;
+        /* Centrado horizontalmente */
+        left: 50%;
+        /* Ajuste para centrado perfecto */
+        transform: translateX(-50%);
+        /* Fondo oscuro */
+        background: #1f2937;
+        /* Texto blanco */
+        color: white;
+        /* Relleno interno */
+        padding: 8px 16px;
+        /* Bordes redondeados */
+        border-radius: 8px;
+        /* Tamaño de fuente pequeño */
+        font-size: 0.8rem;
+        /* Evita que el texto se rompa en múltiples líneas */
+        white-space: nowrap;
+        /* Comienza invisible */
+        opacity: 0;
+        /* Comienza oculto */
+        visibility: hidden;
+        /* Transición suave de todas las propiedades */
+        transition: all 0.3s ease;
+    }
+
+    /* Muestra el tooltip al hacer hover */
+    [data-tooltip]:hover::after {
+        /* Hace visible el tooltip */
+        opacity: 1;
+        /* Muestra el tooltip */
+        visibility: visible;
+        /* Mueve el tooltip 10px más arriba */
+        bottom: calc(100% + 10px);
+    }

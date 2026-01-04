@@ -1,0 +1,1272 @@
+﻿/* Selector :root define variables CSS globales accesibles en todo el documento */
+:root {
+    /* Gradiente morado-azul usado como color principal de la aplicación */
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Gradiente verde para indicar éxito o estados positivos */
+    --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    /* Gradiente naranja para advertencias o estados de atención */
+    --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    /* Gradiente rojo para errores o estados peligrosos */
+    --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    /* Gradiente cian/azul claro para información general */
+    --info-gradient: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    /* Gradiente gris para elementos secundarios o menos importantes */
+    --secondary-gradient: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    /* Sombra estándar para tarjetas (combina dos sombras para mayor profundidad) */
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* Sombra más pronunciada para efecto hover en tarjetas */
+    --card-hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    /* Fondo semi-transparente blanco para efecto de vidrio (glassmorphism) */
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    /* Borde semi-transparente blanco para efecto de vidrio */
+    --glass-border: rgba(255, 255, 255, 0.2);
+}
+
+/* ===== RESET & BASE STYLES ===== */
+/* Selector universal que aplica a todos los elementos HTML */
+* {
+    /* Elimina el margen predeterminado del navegador */
+    margin: 0;
+    /* Elimina el padding predeterminado del navegador */
+    padding: 0;
+    /* Incluye border y padding en el cálculo del ancho/alto total */
+    box-sizing: border-box;
+}
+
+/* Estilos del elemento raíz HTML */
+html {
+    /* Activa el desplazamiento suave al hacer clic en anclas (#) */
+    scroll-behavior: smooth;
+}
+
+/* Estilos del body principal */
+body {
+    /* Gradiente de fondo suave de gris claro a gris medio */
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+    /* Asegura que el body ocupe al menos toda la altura de la ventana */
+    min-height: 100vh;
+    /* Pila de fuentes con múltiples alternativas según el sistema operativo */
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+    /* Suaviza las fuentes en navegadores WebKit (Chrome, Safari) */
+    -webkit-font-smoothing: antialiased;
+    /* Suaviza las fuentes en Firefox en macOS */
+    -moz-osx-font-smoothing: grayscale;
+    /* Color de texto principal gris oscuro */
+    color: #1f2937;
+    /* Evita el scroll horizontal (oculta desbordamiento en eje X) */
+    overflow-x: hidden;
+}
+
+/* ==================== CARDS BASE ==================== */
+.card {
+    /* Elimina el borde predeterminado de Bootstrap */
+    border: none;
+    /* Bordes muy redondeados para aspecto moderno */
+    border-radius: 20px;
+    /* Fondo blanco sólido */
+    background: white;
+    /* Transición suave con curva de aceleración (efecto elástico al final) */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Aplica la sombra estándar definida en variables CSS */
+    box-shadow: var(--card-shadow);
+}
+
+    .card:hover {
+        /* Eleva la tarjeta 5px hacia arriba al pasar el mouse */
+        transform: translateY(-5px);
+        /* Aplica la sombra más pronunciada para efecto de elevación */
+        box-shadow: var(--card-hover-shadow);
+    }
+
+/* ==================== HEADER CARD ==================== */
+
+/* Tarjeta de encabezado con gradiente */
+.header-card {
+    /* Aplica el gradiente principal morado-azul */
+    background: var(--primary-gradient);
+    /* Posicionamiento relativo para los pseudo-elementos */
+    position: relative;
+    /* Oculta los círculos decorativos que sobresalen */
+    overflow: hidden;
+}
+
+    /* Pseudo-elemento decorativo (círculo grande superior derecho) */
+    .header-card::before {
+        /* Crea un elemento vacío */
+        content: '';
+        /* Posicionamiento absoluto respecto al header-card */
+        position: absolute;
+        /* Posicionado 50% fuera por arriba (mitad oculta) */
+        top: -50%;
+        /* Posicionado 20% fuera por la derecha */
+        right: -20%;
+        /* Ancho del círculo decorativo */
+        width: 400px;
+        /* Altura del círculo decorativo */
+        height: 400px;
+        /* Fondo blanco semi-transparente (10% opacidad) */
+        background: rgba(255, 255, 255, 0.1);
+        /* Forma circular perfecta */
+        border-radius: 50%;
+        /* Animación de rotación continua de 20 segundos */
+        animation: rotate 20s linear infinite;
+    }
+
+    /* Pseudo-elemento decorativo (círculo mediano inferior izquierdo) */
+    .header-card::after {
+        /* Crea un elemento vacío */
+        content: '';
+        /* Posicionamiento absoluto respecto al header-card */
+        position: absolute;
+        /* Posicionado 40% fuera por abajo */
+        bottom: -40%;
+        /* Posicionado 15% fuera por la izquierda */
+        left: -15%;
+        /* Ancho del círculo decorativo */
+        width: 300px;
+        /* Altura del círculo decorativo */
+        height: 300px;
+        /* Fondo blanco muy transparente (5% opacidad) */
+        background: rgba(255, 255, 255, 0.05);
+        /* Forma circular perfecta */
+        border-radius: 50%;
+        /* Animación de rotación inversa de 15 segundos */
+        animation: rotate 15s linear infinite reverse;
+    }
+
+/* Definición de la animación de rotación completa */
+@keyframes rotate {
+    /* Estado inicial: sin rotación */
+    from {
+        transform: rotate(0deg);
+    }
+    /* Estado final: rotación completa de 360 grados */
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Contenedor del contenido del encabezado */
+.header-content {
+    /* Posicionamiento relativo para control del z-index */
+    position: relative;
+    /* Z-index alto para aparecer sobre los círculos decorativos */
+    z-index: 2;
+}
+
+/* Título principal del encabezado */
+.header-title {
+    /* Color blanco para el texto */
+    color: white;
+    /* Tamaño de fuente grande */
+    font-size: 2rem;
+    /* Peso de fuente extra negrita */
+    font-weight: 800;
+    /* Elimina el margen predeterminado */
+    margin: 0;
+    /* Sombra de texto para mejor legibilidad */
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    /* Activa flexbox */
+    display: flex;
+    /* Centra verticalmente los elementos internos */
+    align-items: center;
+}
+
+/* Subtítulo del encabezado */
+.header-subtitle {
+    /* Color blanco casi opaco (90%) */
+    color: rgba(255, 255, 255, 0.9);
+    /* Tamaño de fuente mediano-grande */
+    font-size: 1.1rem;
+    /* Peso de fuente medio */
+    font-weight: 500;
+    /* Activa flexbox */
+    display: flex;
+    /* Centra verticalmente los elementos internos */
+    align-items: center;
+}
+
+/* Contenedor del indicador de estado */
+.status-indicator {
+    /* Activa flexbox */
+    display: flex;
+    /* Centra verticalmente el contenido */
+    align-items: center;
+    /* Espacio de 10px entre elementos hijos */
+    gap: 10px;
+    /* Fondo blanco semi-transparente (20% opacidad) */
+    background: rgba(255, 255, 255, 0.2);
+    /* Efecto de desenfoque del fondo (glassmorphism) */
+    backdrop-filter: blur(10px);
+    /* Espaciado interno */
+    padding: 12px 24px;
+    /* Bordes completamente redondeados (forma de píldora) */
+    border-radius: 50px;
+    /* Sombra sutil */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Posicionamiento relativo para z-index */
+    position: relative;
+    /* Aparece sobre los círculos decorativos */
+    z-index: 2;
+    /* Borde blanco semi-transparente */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Punto indicador de estado (circulo verde pulsante) */
+.status-dot {
+    /* Ancho del punto */
+    width: 12px;
+    /* Altura del punto */
+    height: 12px;
+    /* Color verde para indicar estado activo */
+    background: #10b981;
+    /* Forma circular perfecta */
+    border-radius: 50%;
+    /* Animación de pulso de 2 segundos infinita */
+    animation: pulse 2s ease-in-out infinite;
+    /* Sombra con efecto de brillo verde */
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+}
+
+/* Definición de la animación de pulso para el punto de estado */
+@keyframes pulse {
+    /* Estado inicial y final: tamaño y opacidad normales */
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    /* Estado medio: ligeramente más pequeño y transparente con más brillo */
+    50% {
+        opacity: 0.7;
+        transform: scale(0.95);
+        box-shadow: 0 0 25px rgba(16, 185, 129, 0.8);
+    }
+}
+
+/* Texto del indicador de estado */
+.status-text {
+    /* Color blanco */
+    color: white;
+    /* Texto en negrita */
+    font-weight: 700;
+    /* Tamaño de fuente pequeño */
+    font-size: 0.9rem;
+    /* Aumenta el espaciado entre letras */
+    letter-spacing: 0.05em;
+    /* Convierte el texto a mayúsculas */
+    text-transform: uppercase;
+}
+
+/* ==================== VIDEO CARD ==================== */
+/* Tarjeta contenedora del video */
+.video-card {
+    /* Fondo negro para el área del video */
+    background: #000;
+    /* Oculta contenido que sobresale de los bordes */
+    overflow: hidden;
+    /* Bordes muy redondeados */
+    border-radius: 20px;
+}
+
+/* Contenedor principal del video con relación de aspecto */
+.video-container {
+    /* Posicionamiento relativo para elementos absolutos hijos */
+    position: relative;
+    /* Ancho completo del contenedor padre */
+    width: 100%;
+    /* Mantiene proporción 16:9 automáticamente */
+    aspect-ratio: 16 / 9;
+    /* Altura máxima del contenedor */
+    max-height: 600px;
+    /* Gradiente radial desde gris oscuro al centro hacia negro en bordes */
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+    /* Oculta contenido que sobresale */
+    overflow: hidden;
+    /* Bordes redondeados */
+    border-radius: 20px;
+}
+
+    /* Capa decorativa con efecto de brillo sobre el video */
+    .video-container::before {
+        /* Crea un elemento vacío */
+        content: '';
+        /* Posicionamiento absoluto */
+        position: absolute;
+        /* Cubre todo el contenedor (shorthand: top, right, bottom, left a 0) */
+        inset: 0;
+        /* Gradiente diagonal con colores del tema muy transparentes */
+        background: linear-gradient( 45deg, rgba(102, 126, 234, 0.05) 0%, transparent 50%, rgba(118, 75, 162, 0.05) 100% );
+        /* No interfiere con eventos de mouse/click */
+        pointer-events: none;
+        /* Aparece sobre el video pero bajo otros elementos */
+        z-index: 1;
+        /* Animación de brillo pulsante de 3 segundos */
+        animation: shimmer 3s ease-in-out infinite;
+    }
+
+/* Animación de brillo que cambia la opacidad */
+@keyframes shimmer {
+    /* Estado inicial y final: 50% de opacidad */
+    0%, 100% {
+        opacity: 0.5;
+    }
+    /* Estado medio: 100% de opacidad (más visible) */
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Elemento de video de la webcam */
+#webcam-video {
+    /* Posicionamiento absoluto respecto al contenedor */
+    position: absolute;
+    /* Posicionado en la esquina superior izquierda */
+    top: 0;
+    left: 0;
+    /* Ocupa todo el ancho del contenedor */
+    width: 100%;
+    /* Ocupa toda la altura del contenedor */
+    height: 100%;
+    /* Mantiene proporciones sin recortar ni distorsionar */
+    object-fit: contain;
+    /* Invierte horizontalmente (efecto espejo) */
+    transform: scaleX(-1);
+    /* Nivel de capa por encima del fondo */
+    z-index: 1;
+}
+
+/* Canvas para dibujar el seguimiento de manos */
+#tracking-canvas {
+    /* Posicionamiento absoluto respecto al contenedor */
+    position: absolute;
+    /* Posicionado en la esquina superior izquierda */
+    top: 0;
+    left: 0;
+    /* Ocupa todo el ancho */
+    width: 100%;
+    /* Ocupa toda la altura */
+    height: 100%;
+    /* Mantiene proporciones del video */
+    object-fit: contain;
+    /* No interfiere con eventos de mouse */
+    pointer-events: none;
+    /* Aparece sobre el video */
+    z-index: 2;
+    /* Invierte horizontalmente para coincidir con el video */
+    transform: scaleX(-1);
+}
+
+/* Video Overlay Decorations */
+/* Contenedor de decoraciones superpuestas al video */
+.video-overlay {
+    /* Posicionamiento absoluto */
+    position: absolute;
+    /* Cubre todo el contenedor */
+    inset: 0;
+    /* Aparece sobre el video y el canvas */
+    z-index: 3;
+    /* No interfiere con interacciones del usuario */
+    pointer-events: none;
+}
+
+/* Decoraciones de esquina (marcos en L) */
+.corner-decoration {
+    /* Posicionamiento absoluto para colocar en esquinas */
+    position: absolute;
+    /* Ancho de cada esquina */
+    width: 50px;
+    /* Altura de cada esquina */
+    height: 50px;
+    /* Borde de 3px con color del tema semi-transparente */
+    border: 3px solid rgba(102, 126, 234, 0.6);
+    /* Transición suave para efectos hover */
+    transition: all 0.3s ease;
+}
+
+/* Efecto hover en las decoraciones de esquina */
+.video-container:hover .corner-decoration {
+    /* Borde completamente opaco al hacer hover */
+    border-color: rgba(102, 126, 234, 1);
+    /* Aumenta el ancho */
+    width: 60px;
+    /* Aumenta la altura */
+    height: 60px;
+}
+
+/* Esquina superior izquierda */
+.top-left {
+    /* 20px desde arriba */
+    top: 20px;
+    /* 20px desde la izquierda */
+    left: 20px;
+    /* Elimina borde derecho (forma de L) */
+    border-right: none;
+    /* Elimina borde inferior (forma de L) */
+    border-bottom: none;
+    /* Redondea solo la esquina superior izquierda */
+    border-radius: 12px 0 0 0;
+}
+
+/* Esquina superior derecha */
+.top-right {
+    /* 20px desde arriba */
+    top: 20px;
+    /* 20px desde la derecha */
+    right: 20px;
+    /* Elimina borde izquierdo (forma de L invertida) */
+    border-left: none;
+    /* Elimina borde inferior */
+    border-bottom: none;
+    /* Redondea solo la esquina superior derecha */
+    border-radius: 0 12px 0 0;
+}
+
+/* Esquina inferior izquierda */
+.bottom-left {
+    /* 20px desde abajo */
+    bottom: 20px;
+    /* 20px desde la izquierda */
+    left: 20px;
+    /* Elimina borde derecho */
+    border-right: none;
+    /* Elimina borde superior (forma de L) */
+    border-top: none;
+    /* Redondea solo la esquina inferior izquierda */
+    border-radius: 0 0 0 12px;
+}
+
+/* Esquina inferior derecha */
+.bottom-right {
+    /* 20px desde abajo */
+    bottom: 20px;
+    /* 20px desde la derecha */
+    right: 20px;
+    /* Elimina borde izquierdo */
+    border-left: none;
+    /* Elimina borde superior (forma de L invertida) */
+    border-top: none;
+    /* Redondea solo la esquina inferior derecha */
+    border-radius: 0 0 12px 0;
+}
+
+/* ==================== GESTURE DISPLAY ==================== */
+/* Indicador flotante que muestra el gesto detectado */
+.gesture-display {
+    /* Posicionamiento absoluto respecto al contenedor */
+    position: absolute;
+    /* 30px desde la parte superior */
+    top: 30px;
+    /* Centrado horizontalmente al 50% */
+    left: 50%;
+    /* Centra y reduce ligeramente el tamaño inicial */
+    transform: translateX(-50%) scale(0.9);
+    /* Fondo negro casi opaco */
+    background: rgba(0, 0, 0, 0.85);
+    /* Efecto de desenfoque del fondo (glassmorphism) */
+    backdrop-filter: blur(20px);
+    /* Borde de 2px transparente (se sobrescribe con border-image) */
+    border: 2px solid transparent;
+    /* Aplica gradiente al borde */
+    border-image: var(--primary-gradient) 1;
+    /* Bordes redondeados */
+    border-radius: 20px;
+    /* Espaciado interno generoso */
+    padding: 1.5rem 3rem;
+    /* Aparece sobre todo lo demás */
+    z-index: 10;
+    /* No interfiere con interacciones */
+    pointer-events: none;
+    /* Invisible por defecto */
+    opacity: 0;
+    /* Transición suave con curva de aceleración elástica */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Sombra con color del tema */
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+}
+
+    /* Estado activo del indicador de gesto */
+    .gesture-display.active {
+        /* Completamente visible */
+        opacity: 1;
+        /* Tamaño normal y centrado */
+        transform: translateX(-50%) scale(1);
+    }
+
+    /* Contenido interno del indicador de gesto */
+    .gesture-content {
+        /* Activa flexbox */
+        display: flex;
+        /* Centra verticalmente */
+        align-items: center;
+        /* Espacio de 15px entre elementos */
+        gap: 15px;
+    }
+
+        /* Icono dentro del indicador de gesto */
+        .gesture-content i {
+            /* Tamaño grande del icono */
+            font-size: 2.5rem;
+            /* Aplica gradiente como fondo */
+            background: var(--primary-gradient);
+            /* Recorta el fondo al texto (efecto texto con gradiente) */
+            -webkit-background-clip: text;
+            /* Hace el texto transparente para mostrar el gradiente */
+            -webkit-text-fill-color: transparent;
+            /* Versión estándar del background-clip */
+            background-clip: text;
+            /* Animación de pulso del icono */
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+    /* Animación de pulso para el icono */
+    @keyframes iconPulse {
+        /* Estado inicial y final: tamaño normal */
+        0%, 100% {
+            transform: scale(1);
+        }
+        /* Estado medio: 10% más grande */
+        50% {
+            transform: scale(1.1);
+        }
+    }
+
+    /* Texto del gesto detectado */
+    .gesture-text {
+        /* Tamaño de fuente grande */
+        font-size: 2.5rem;
+        /* Texto extra negrita */
+        font-weight: 800;
+        /* Aplica gradiente como fondo */
+        background: var(--primary-gradient);
+        /* Recorta el fondo al texto */
+        -webkit-background-clip: text;
+        /* Hace el texto transparente para mostrar el gradiente */
+        -webkit-text-fill-color: transparent;
+        /* Versión estándar del background-clip */
+        background-clip: text;
+        /* Espaciado negativo entre letras para aspecto más compacto */
+        letter-spacing: -0.02em;
+    }
+
+/* ==================== CONTROL CARD ==================== */
+/* Estilo para el cuerpo de la tarjeta de control */
+.control-card .card-body {
+    /* Gradiente de fondo de blanco a gris muy claro */
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    /* Bordes redondeados de 20px */
+    border-radius: 20px;
+}
+
+/* Estilo para el encabezado de los controles */
+.controls-header h5 {
+    /* Color de texto gris oscuro */
+    color: #1e293b;
+    /* Peso de fuente en negrita */
+    font-weight: 700;
+    /* Contenedor flex para alinear elementos */
+    display: flex;
+    /* Alinea elementos verticalmente al centro */
+    align-items: center;
+}
+
+/* Grid responsivo para los controles */
+.controls-grid {
+    /* Establece un contenedor de cuadrícula */
+    display: grid;
+    /* Columnas que se ajustan automáticamente con mínimo 150px y máximo 1 fracción */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* Espacio de 1.5rem entre elementos */
+    gap: 1.5rem;
+}
+
+/* Estilo base para botones de control */
+.btn-control {
+    /* Contenedor flex */
+    display: flex;
+    /* Dirección de columna (vertical) */
+    flex-direction: column;
+    /* Centra elementos horizontalmente */
+    align-items: center;
+    /* Espacio de 10px entre elementos */
+    gap: 10px;
+    /* Relleno interno: 1.5rem arriba/abajo, 1rem izquierda/derecha */
+    padding: 1.5rem 1rem;
+    /* Bordes redondeados de 16px */
+    border-radius: 16px;
+    /* Sin borde */
+    border: none;
+    /* Peso de fuente en negrita */
+    font-weight: 700;
+    /* Transición suave de 0.3s con curva de aceleración personalizada */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Posicionamiento relativo para el pseudo-elemento */
+    position: relative;
+    /* Oculta contenido que sobresale */
+    overflow: hidden;
+    /* Sombra de caja con desenfoque */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Cursor de puntero al pasar sobre el botón */
+    cursor: pointer;
+}
+
+    /* Pseudo-elemento para efecto de brillo al hacer hover */
+    .btn-control::before {
+        /* Contenido vacío requerido para pseudo-elementos */
+        content: '';
+        /* Posicionamiento absoluto dentro del botón */
+        position: absolute;
+        /* Alineado en la parte superior */
+        top: 0;
+        /* Comienza 100% a la izquierda (fuera de vista) */
+        left: -100%;
+        /* Ancho completo del botón */
+        width: 100%;
+        /* Altura completa del botón */
+        height: 100%;
+        /* Gradiente de transparente a blanco semi-transparente */
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        /* Transición suave de la propiedad left en 0.5s */
+        transition: left 0.5s;
+    }
+
+    /* Anima el pseudo-elemento al hacer hover */
+    .btn-control:hover::before {
+        /* Mueve el brillo hacia la derecha (fuera por el otro lado) */
+        left: 100%;
+    }
+
+    /* Estilo para los iconos dentro del botón */
+    .btn-control i {
+        /* Tamaño de fuente grande para el icono */
+        font-size: 1.8rem;
+        /* Transición suave de transformación en 0.3s */
+        transition: transform 0.3s ease;
+    }
+
+    /* Efecto de escalado y rotación del icono al hacer hover */
+    .btn-control:hover i {
+        /* Escala el icono 1.2x y rota 5 grados */
+        transform: scale(1.2) rotate(5deg);
+    }
+
+    /* Estilo para el texto dentro del botón */
+    .btn-control span {
+        /* Tamaño de fuente del texto */
+        font-size: 0.9rem;
+    }
+
+    /* Efecto de elevación al hacer hover sobre el botón */
+    .btn-control:hover {
+        /* Mueve el botón 5px hacia arriba */
+        transform: translateY(-5px);
+        /* Aumenta la sombra para dar efecto de elevación */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Efecto al hacer clic en el botón */
+    .btn-control:active {
+        /* Reduce ligeramente la elevación */
+        transform: translateY(-2px);
+    }
+
+    /* Estilo específico para botón de debug con gradiente verde */
+    .btn-debug {
+        /* Gradiente verde (variable CSS) */
+        background: var(--success-gradient);
+        /* Texto blanco */
+        color: white;
+    }
+
+        /* Hover del botón debug con gradiente verde más oscuro */
+        .btn-debug:hover {
+            /* Gradiente de verde a verde oscuro */
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            /* Mantiene el texto blanco */
+            color: white;
+        }
+
+        /* Estado activo del botón debug (rojo con animación) */
+        .btn-debug.active {
+            /* Gradiente rojo (variable CSS) */
+            background: var(--danger-gradient);
+            /* Animación de pulso que se repite infinitamente */
+            animation: buttonPulse 1s ease-in-out infinite;
+        }
+
+    /* Animación de pulso para el botón debug activo */
+    @keyframes buttonPulse {
+        /* Estado inicial y final */
+        0%, 100% {
+            /* Sombra normal */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Estado intermedio de la animación */
+        50% {
+            /* Sombra más grande y rojiza */
+            box-shadow: 0 8px 16px rgba(239, 68, 68, 0.4);
+        }
+    }
+
+    /* Estilo para botón de etiquetas con gradiente azul/morado */
+    .btn-labels {
+        /* Gradiente azul/morado (variable CSS) */
+        background: var(--primary-gradient);
+        /* Texto blanco */
+        color: white;
+    }
+
+        /* Hover del botón de etiquetas */
+        .btn-labels:hover {
+            /* Gradiente de índigo a índigo oscuro */
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            /* Mantiene el texto blanco */
+            color: white;
+        }
+
+    /* Estilo para botón de líneas con gradiente cyan */
+    .btn-lines {
+        /* Gradiente cyan (variable CSS) */
+        background: var(--info-gradient);
+        /* Texto blanco */
+        color: white;
+    }
+
+        /* Hover del botón de líneas */
+        .btn-lines:hover {
+            /* Gradiente de cyan a cyan oscuro */
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            /* Mantiene el texto blanco */
+            color: white;
+        }
+
+/* ==================== METRIC CARD ==================== */
+/* Estilo base para tarjetas de métricas, leyenda y datos */
+.metric-card,
+.legend-card,
+.data-card {
+    /* Fondo blanco */
+    background: white;
+    /* Bordes redondeados de 20px */
+    border-radius: 20px;
+}
+
+    /* Estilo para el encabezado de las tarjetas */
+    .metric-card .card-header,
+    .legend-card .card-header,
+    .data-card .card-header {
+        /* Gradiente de gris muy claro a gris claro */
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        /* Borde inferior sutil */
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        /* Relleno interno del encabezado */
+        padding: 1.25rem 1.5rem;
+        /* Bordes redondeados solo en la parte superior */
+        border-radius: 20px 20px 0 0;
+    }
+
+/* Estilo para títulos de tarjetas */
+.card-title {
+    /* Peso de fuente en negrita */
+    font-weight: 700;
+    /* Color de texto gris oscuro */
+    color: #1e293b;
+    /* Sin margen */
+    margin: 0;
+    /* Contenedor flex */
+    display: flex;
+    /* Alinea elementos verticalmente al centro */
+    align-items: center;
+}
+
+/* Badge "LIVE" animado */
+.badge-live {
+    /* Contenedor flex inline para alinear contenido */
+    display: inline-flex;
+    /* Centra verticalmente */
+    align-items: center;
+    /* Espacio de 8px entre elementos */
+    gap: 8px;
+    /* Fondo verde semi-transparente */
+    background: rgba(16, 185, 129, 0.1);
+    /* Texto verde */
+    color: #059669;
+    /* Relleno interno */
+    padding: 8px 16px;
+    /* Bordes completamente redondeados (píldora) */
+    border-radius: 50px;
+    /* Peso de fuente en negrita */
+    font-weight: 700;
+    /* Tamaño de fuente pequeño */
+    font-size: 0.75rem;
+    /* Espaciado entre letras */
+    letter-spacing: 0.05em;
+    /* Borde verde semi-transparente */
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Punto animado dentro del badge LIVE */
+.live-dot {
+    /* Ancho del punto */
+    width: 8px;
+    /* Altura del punto */
+    height: 8px;
+    /* Fondo verde */
+    background: #10b981;
+    /* Forma circular */
+    border-radius: 50%;
+    /* Animación de pulso que se repite infinitamente */
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* ==================== METRICS GRID ==================== */
+/* Grid responsivo para mostrar métricas */
+.metrics-grid {
+    /* Establece un contenedor de cuadrícula */
+    display: grid;
+    /* Columnas que se ajustan automáticamente con mínimo 160px */
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    /* Espacio de 1rem entre elementos */
+    gap: 1rem;
+}
+
+/* Estilo individual para cada métrica */
+.metric-item {
+    /* Contenedor flex */
+    display: flex;
+    /* Centra verticalmente */
+    align-items: center;
+    /* Espacio de 12px entre elementos */
+    gap: 12px;
+    /* Relleno interno */
+    padding: 1.2rem;
+    /* Gradiente de fondo de gris claro a blanco */
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    /* Bordes redondeados */
+    border-radius: 16px;
+    /* Transición suave de todas las propiedades */
+    transition: all 0.3s ease;
+    /* Borde sutil */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+    /* Efecto hover para métrica */
+    .metric-item:hover {
+        /* Mueve la métrica 3px hacia arriba */
+        transform: translateY(-3px);
+        /* Añade sombra al hacer hover */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        /* Cambia el color del borde */
+        border-color: rgba(102, 126, 234, 0.2);
+    }
+
+/* Contenedor del icono de la métrica */
+.metric-icon-wrapper {
+    /* Ancho fijo */
+    width: 48px;
+    /* Altura fija */
+    height: 48px;
+    /* Bordes redondeados */
+    border-radius: 14px;
+    /* Contenedor flex */
+    display: flex;
+    /* Centra horizontalmente */
+    align-items: center;
+    /* Centra verticalmente */
+    justify-content: center;
+    /* Tamaño del icono */
+    font-size: 1.3rem;
+    /* Color del icono en blanco */
+    color: white;
+    /* Evita que el elemento se encoja */
+    flex-shrink: 0;
+    /* Sombra del icono */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    /* Icono con fondo primario (azul/morado) */
+    .metric-icon-wrapper.bg-primary {
+        /* Gradiente primario (variable CSS) */
+        background: var(--primary-gradient);
+    }
+
+    /* Icono con fondo success (verde) */
+    .metric-icon-wrapper.bg-success {
+        /* Gradiente verde (variable CSS) */
+        background: var(--success-gradient);
+    }
+
+    /* Icono con fondo info (cyan) */
+    .metric-icon-wrapper.bg-info {
+        /* Gradiente cyan (variable CSS) */
+        background: var(--info-gradient);
+    }
+
+    /* Icono con fondo warning (amarillo/naranja) */
+    .metric-icon-wrapper.bg-warning {
+        /* Gradiente amarillo (variable CSS) */
+        background: var(--warning-gradient);
+    }
+
+    /* Icono con fondo danger (rojo) */
+    .metric-icon-wrapper.bg-danger {
+        /* Gradiente rojo (variable CSS) */
+        background: var(--danger-gradient);
+    }
+
+    /* Icono con fondo secundario (gris) */
+    .metric-icon-wrapper.bg-secondary {
+        /* Gradiente gris (variable CSS) */
+        background: var(--secondary-gradient);
+    }
+
+        /* Contenedor del contenido de la métrica */
+        .metric-content {
+    /* Contenedor flex */
+    display: flex;
+    /* Dirección de columna (vertical) */
+    flex-direction: column;
+    /* Espacio de 4px entre elementos */
+    gap: 4px;
+    /* Ocupa el espacio restante */
+    flex: 1;
+}
+
+/* Etiqueta de la métrica */
+.metric-label {
+    /* Tamaño de fuente pequeño */
+    font-size: 0.75rem;
+    /* Color gris */
+    color: #64748b;
+    /* Peso de fuente semi-negrita */
+    font-weight: 600;
+    /* Texto en mayúsculas */
+    text-transform: uppercase;
+    /* Espaciado entre letras */
+    letter-spacing: 0.05em;
+}
+
+/* Valor numérico de la métrica */
+.metric-value {
+    /* Tamaño de fuente grande */
+    font-size: 1.4rem;
+    /* Peso de fuente extra-negrita */
+    font-weight: 800;
+    /* Color de texto gris oscuro */
+    color: #1e293b;
+    /* Fuente monoespaciada para números */
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+/* ==================== LEGEND ==================== */
+/* Contenedor de la leyenda */
+.legend-grid {
+    /* Contenedor flex */
+    display: flex;
+    /* Dirección de columna (vertical) */
+    flex-direction: column;
+    /* Espacio de 1rem entre elementos */
+    gap: 1rem;
+}
+
+/* Elemento individual de la leyenda */
+.legend-item {
+    /* Contenedor flex */
+    display: flex;
+    /* Centra verticalmente */
+    align-items: center;
+    /* Espacio de 15px entre elementos */
+    gap: 15px;
+    /* Relleno interno */
+    padding: 1rem;
+    /* Gradiente de fondo de gris claro a blanco */
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    /* Bordes redondeados */
+    border-radius: 12px;
+    /* Transición suave de todas las propiedades */
+    transition: all 0.3s ease;
+    /* Borde sutil */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+    /* Efecto hover para elemento de leyenda */
+    .legend-item:hover {
+        /* Mueve el elemento 5px a la derecha */
+        transform: translateX(5px);
+        /* Añade sombra al hacer hover */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+/* Indicador visual de color en la leyenda */
+.legend-indicator {
+    /* Ancho del indicador */
+    width: 32px;
+    /* Altura del indicador */
+    height: 32px;
+    /* Bordes redondeados */
+    border-radius: 10px;
+    /* Sombra del indicador */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    /* Evita que el elemento se encoja */
+    flex-shrink: 0;
+}
+
+/* Indicador de nivel alto (verde) */
+.legend-high {
+    /* Gradiente verde (variable CSS) */
+    background: var(--success-gradient);
+}
+
+/* Indicador de nivel medio (amarillo) */
+.legend-medium {
+    /* Gradiente amarillo (variable CSS) */
+    background: var(--warning-gradient);
+}
+
+/* Indicador de nivel bajo (rojo) */
+.legend-low {
+    /* Gradiente rojo (variable CSS) */
+    background: var(--danger-gradient);
+}
+
+/* Contenedor del texto de la leyenda */
+.legend-text {
+    /* Contenedor flex */
+    display: flex;
+    /* Dirección de columna (vertical) */
+    flex-direction: column;
+    /* Espacio de 2px entre elementos */
+    gap: 2px;
+}
+
+/* Etiqueta de la leyenda */
+.legend-label {
+    /* Peso de fuente en negrita */
+    font-weight: 700;
+    /* Color de texto gris oscuro */
+    color: #1e293b;
+    /* Tamaño de fuente */
+    font-size: 0.95rem;
+}
+
+/* Rango de valores de la leyenda */
+.legend-range {
+    /* Tamaño de fuente pequeño */
+    font-size: 0.8rem;
+    /* Color gris */
+    color: #64748b;
+    /* Peso de fuente medio */
+    font-weight: 500;
+}
+
+/* ==================== DATA CARD ==================== */
+/* Contenedor de datos tipo consola */
+.data-container {
+    /* Fondo oscuro tipo terminal */
+    background: #1e293b;
+    /* Bordes redondeados */
+    border-radius: 12px;
+    /* Relleno interno */
+    padding: 1rem;
+    /* Altura máxima de 300px */
+    max-height: 300px;
+    /* Permite scroll vertical si el contenido excede la altura */
+    overflow-y: auto;
+}
+
+/* Texto de salida de datos */
+.data-output {
+    /* Fuente monoespaciada tipo código */
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    /* Tamaño de fuente pequeño */
+    font-size: 11px;
+    /* Color verde tipo terminal */
+    color: #10b981;
+    /* Sin margen */
+    margin: 0;
+    /* Permite que el texto se ajuste con saltos de línea */
+    white-space: pre-wrap;
+    /* Permite romper palabras largas */
+    word-break: break-all;
+    /* Altura de línea para mejor legibilidad */
+    line-height: 1.6;
+}
+
+/* Scrollbar - barra de desplazamiento vertical */
+.data-container::-webkit-scrollbar {
+    /* Ancho de la barra de scroll */
+    width: 8px;
+}
+
+/* Pista de la barra de scroll */
+.data-container::-webkit-scrollbar-track {
+    /* Fondo oscuro de la pista */
+    background: #0f172a;
+    /* Bordes redondeados */
+    border-radius: 8px;
+}
+
+/* Thumb (parte móvil) de la barra de scroll */
+.data-container::-webkit-scrollbar-thumb {
+    /* Color gris del thumb */
+    background: #334155;
+    /* Bordes redondeados */
+    border-radius: 8px;
+}
+
+    /* Hover sobre el thumb de la barra de scroll */
+    .data-container::-webkit-scrollbar-thumb:hover {
+        /* Color gris más claro al hacer hover */
+        background: #475569;
+    }
+
+/* ==================== ANIMATIONS ==================== */
+/* Animación de entrada para el panel de debug */
+#debugPanel {
+    /* Animación slideIn de 0.4s con curva personalizada */
+    animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Definición de la animación slideIn */
+@keyframes slideIn {
+    /* Estado inicial de la animación */
+    from {
+        /* Comienza transparente */
+        opacity: 0;
+        /* Comienza desplazado 30px a la derecha */
+        transform: translateX(30px);
+    }
+    /* Estado final de la animación */
+    to {
+        /* Termina completamente visible */
+        opacity: 1;
+        /* Termina en su posición original */
+        transform: translateX(0);
+    }
+}
+
+/* ==================== RESPONSIVE ==================== */
+/* Media query para pantallas medianas (tablets) */
+@media (max-width: 992px) {
+    /* Reduce el tamaño del título del encabezado */
+    .header-title {
+        font-size: 1.5rem;
+    }
+
+    /* Reduce el tamaño del subtítulo del encabezado */
+    .header-subtitle {
+        font-size: 0.9rem;
+    }
+
+    /* Ajusta el grid de controles para pantallas más pequeñas */
+    .controls-grid {
+        /* Columnas con mínimo 120px en lugar de 150px */
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+    /* Reduce las columnas de métricas a 2 */
+    .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Media query para tablets y móviles */
+@media (max-width: 768px) {
+    /* Reduce el tamaño del título de marca */
+    .brand-title {
+        font-size: 1.1rem;
+    }
+
+    /* Reduce el tamaño del subtítulo de marca */
+    .brand-subtitle {
+        font-size: 0.65rem;
+    }
+
+    /* Reduce aún más el título del encabezado */
+    .header-title {
+        font-size: 1.3rem;
+    }
+
+    /* Reduce el tamaño del texto de gestos */
+    .gesture-text {
+        font-size: 2rem;
+    }
+
+    /* Limita la altura del contenedor de video */
+    .video-container {
+        max-height: 400px;
+    }
+
+    /* Reduce el padding del display de gestos */
+    .gesture-display {
+        padding: 1rem 2rem;
+    }
+
+    /* Reduce el tamaño de las decoraciones de esquina */
+    .corner-decoration {
+        /* Ancho reducido */
+        width: 35px;
+        /* Altura reducida */
+        height: 35px;
+    }
+}
+
+/* Media query para móviles pequeños */
+@media (max-width: 576px) {
+    /* Cambia los controles a una sola columna */
+    .controls-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Cambia las métricas a una sola columna */
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Ajusta el padding del indicador de estado */
+    .status-indicator {
+        padding: 10px 18px;
+    }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+/* Media query para usuarios que prefieren movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    /* Selecciona todos los elementos y pseudo-elementos */
+    *,
+    *::before,
+    *::after {
+        /* Reduce drásticamente la duración de animaciones */
+        animation-duration: 0.01ms !important;
+        /* Reduce drásticamente la duración de transiciones */
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Text Selection - estilo para texto seleccionado */
+::selection {
+    /* Fondo azul semi-transparente al seleccionar texto */
+    background: rgba(102, 126, 234, 0.2);
+    /* Color del texto seleccionado */
+    color: #1e293b;
+}
+
+/* Focus Styles - estilos para elementos enfocados */
+button:focus,
+.btn-control:focus {
+    /* Contorno azul visible al enfocar con teclado */
+    outline: 2px solid rgba(102, 126, 234, 0.5);
+    /* Separación entre el elemento y el contorno */
+    outline-offset: 2px;
+}
+
+/* Print Styles - estilos para impresión */
+@media print {
+    /* Oculta elementos innecesarios al imprimir */
+    .navbar,
+    .controls-grid,
+    #debugPanel {
+        /* No se muestran al imprimir */
+        display: none;
+    }
+}
+

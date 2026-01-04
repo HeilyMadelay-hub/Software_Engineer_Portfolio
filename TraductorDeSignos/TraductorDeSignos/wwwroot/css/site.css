@@ -1,0 +1,50 @@
+﻿/* ============================================
+   ESTILOS DEL NAVBAR
+   ============================================ */
+
+/* Aplica un degradado de fondo al navbar principal
+   - linear-gradient: crea una transición suave entre colores
+   - 135deg: ángulo diagonal del degradado (de esquina superior izquierda a inferior derecha)
+   - #667eea: color inicial (azul-púrpura claro)
+   - #764ba2: color final (púrpura más oscuro) */
+.navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Estilos para el título/logo del navbar (elemento con clase "brand-title")
+   que está dentro de un elemento con clase "navbar-brand" */
+.navbar-brand .brand-title {
+    font-size: 1.5rem; /* Tamaño de fuente de 1.5 veces el tamaño base (24px aprox) */
+    font-weight: bold; /* Texto en negrita para mayor énfasis */
+    color: white; /* Color del texto blanco para contrastar con el fondo oscuro */
+}
+
+/* Estilos para cada enlace de navegación en el navbar
+   - Se aplica a elementos <a> con clase "nav-link" dentro de "navbar-nav" */
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85); /* Color blanco con 85% de opacidad (ligeramente transparente) */
+    padding: 0.5rem 1rem; /* Espaciado interno: 0.5rem arriba/abajo, 1rem izquierda/derecha */
+    border-radius: 8px; /* Esquinas redondeadas de 8 píxeles para suavizar el diseño */
+    transition: all 0.3s ease; /* Transición suave de 0.3 segundos para TODAS las propiedades que cambien */
+}
+
+    /* Estilos cuando el usuario pasa el cursor sobre un enlace (hover)
+   - :hover es un pseudo-selector que se activa al pasar el mouse */
+    .navbar-nav .nav-link:hover {
+        background: rgba(255, 255, 255, 0.15); /* Fondo blanco semi-transparente (15% opacidad) para indicar interacción */
+        color: white; /* Color del texto cambia a blanco sólido (100% opacidad) */
+    }
+
+    /* Estilos para el enlace de la página actual/activa
+   - La clase "active" se añade dinámicamente según la página en la que estás */
+    .navbar-nav .nav-link.active {
+        background: rgba(255, 255, 255, 0.25); /* Fondo más visible (25% opacidad) para destacar la página actual */
+        color: white; /* Texto en blanco sólido para máximo contraste */
+        font-weight: 500; /* Peso de fuente medio (más grueso que normal, menos que bold) */
+    }
+
+    /* Estilos para los iconos dentro de los enlaces del navbar
+   - Se aplica a elementos <i> (iconos de Bootstrap Icons) dentro de "nav-link" */
+    .navbar-nav .nav-link i {
+        font-size: 1.1rem; /* Tamaño del icono ligeramente mayor (1.1 veces el tamaño base) para mejor visibilidad */
+    }

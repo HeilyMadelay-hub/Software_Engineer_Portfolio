@@ -1,0 +1,260 @@
+:root {
+    /* Gradiente principal usado en varios elementos de la aplicación */
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Estilos del body principal */
+body {
+    /* Gradiente de fondo suave de gris claro a gris medio */
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+    /* Asegura que el body ocupe al menos toda la altura de la ventana */
+  min-height: 100vh;
+    /* Define la familia de fuentes con alternativas de respaldo */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ==================== CARDS ==================== */
+.card {
+    /* Elimina el borde predeterminado de Bootstrap */
+    border: none;
+  /* Bordes muy redondeados para las tarjetas */
+    border-radius: 16px;
+    /* Sombra sutil para efecto de elevación */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    /* Oculta cualquier contenido que se salga de los bordes redondeados */
+ overflow: hidden;
+}
+
+.gesture-btn {
+    /* Tamaño de fuente grande para los emojis de gestos */
+    font-size: 24px;
+    /* Texto en negrita */
+    font-weight: bold;
+    /* Espaciado interno generoso */
+    padding: 15px 25px;
+    /* Bordes redondeados */
+    border-radius: 12px;
+    /* Transición suave para efectos hover y active */
+    transition: all 0.3s ease;
+}
+
+    /* Efecto hover en botones de gestos */
+    .gesture-btn:hover {
+        /* Eleva el botón 3px hacia arriba */
+        transform: translateY(-3px);
+        /* Agrega sombra más pronunciada al hacer hover */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Estado activo del botón de gesto (cuando está seleccionado) */
+    .gesture-btn.active {
+        /* Aplica el gradiente principal morado/azul */
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        /* Texto blanco para contraste */
+        color: white;
+        /* Elimina el borde cuando está activo */
+        border-color: transparent;
+    }
+
+.video-container {
+    /* Fondo negro para el área del video */
+    background: #000;
+    /* Bordes redondeados */
+    border-radius: 12px;
+    /* Oculta contenido que sobresale */
+    overflow: hidden;
+    /* Permite posicionamiento absoluto de elementos hijos */
+    position: relative;
+}
+
+.reference-container {
+    /* Gradiente oscuro similar a la navbar */
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    /* Bordes redondeados */
+    border-radius: 12px;
+    /* Oculta contenido que sobresale */
+    overflow: hidden;
+    /* Permite posicionamiento absoluto de elementos hijos */
+    position: relative;
+}
+
+.status-badge {
+    /* Posicionamiento absoluto respecto al contenedor padre */
+    position: absolute;
+    /* 15px desde la parte superior */
+    top: 15px;
+    /* 15px desde la izquierda */
+    left: 15px;
+    /* Asegura que aparezca sobre otros elementos */
+    z-index: 10;
+    /* Tamaño de fuente ligeramente reducido */
+    font-size: 0.9rem;
+    /* Espaciado interno */
+    padding: 8px 16px;
+    /* Bordes completamente redondeados (forma de píldora) */
+    border-radius: 50px;
+}
+
+.similarity-circle {
+    /* Ancho del contenedor del círculo */
+    width: 160px;
+    /* Altura del contenedor del círculo */
+    height: 160px;
+    /* Centra horizontalmente el círculo */
+    margin: 0 auto;
+    /* Permite posicionamiento absoluto del texto interior */
+    position: relative;
+}
+
+    /* SVG del círculo de progreso */
+    .similarity-circle svg {
+        /* Rota -90 grados para que el progreso comience desde arriba */
+        transform: rotate(-90deg);
+    }
+
+    /* Texto del valor de similitud dentro del círculo */
+.similarity-value {
+    /* Posicionamiento absoluto */
+    position: absolute;
+    /* Posiciona al 50% desde arriba */
+    top: 50%;
+    /* Posiciona al 50% desde la izquierda */
+    left: 50%;
+    /* Centra perfectamente el texto usando transform */
+    transform: translate(-50%, -50%);
+}
+
+.feedback-emoji {
+    /* Tamaño grande para el emoji de feedback */
+    font-size: 80px;
+    /* Altura de línea 1:1 para centrado perfecto */
+    line-height: 1;
+    /* Aplica animación de pulso infinita */
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* Definición de la animación de pulso */
+@keyframes pulse {
+    /* Al inicio y al final: tamaño normal */
+    0%, 100% {
+        transform: scale(1);
+    }
+    /* En el medio: 10% más grande */
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.btn-control {
+    /* Bordes redondeados */
+    border-radius: 12px;
+    /* Espaciado interno generoso */
+    padding: 12px 28px;
+    /* Texto en semi-negrita */
+    font-weight: 600;
+    /* Tamaño de fuente aumentado */
+    font-size: 1.1rem;
+    /* Transición suave para efectos */
+    transition: all 0.3s ease;
+}
+
+    /* Efecto hover en botones de control */
+    .btn-control:hover {
+        /* Eleva el botón 3px */
+        transform: translateY(-3px);
+        /* Sombra pronunciada al hacer hover */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+
+.header-card {
+    /* Aplica el gradiente principal definido en :root */
+    background: var(--primary-gradient);
+}
+
+.diff-item {
+    /* Espaciado interno */
+    padding: 8px 12px;
+    /* Fondo amarillo semi-transparente (advertencia) */
+    background: rgba(255, 193, 7, 0.1);
+    /* Bordes redondeados */
+    border-radius: 8px;
+    /* Espaciado inferior entre items */
+    margin-bottom: 8px;
+    /* Borde izquierdo amarillo de 3px de grosor */
+    border-left: 3px solid #ffc107;
+}
+
+    /* Variante de éxito para elementos de diferencia */
+    .diff-item.success {
+        /* Fondo verde semi-transparente */
+        background: rgba(40, 167, 69, 0.1);
+        /* Cambia el borde izquierdo a verde */
+        border-left-color: #28a745;
+    }
+
+
+@media (max-width: 768px) {
+    /* Reduce el tamaño de los botones de gestos en pantallas pequeñas */
+    .gesture-btn {
+        /* Tamaño de fuente reducido */
+        font-size: 18px;
+        /* Espaciado interno reducido */
+        padding: 10px 15px;
+    }
+
+    /* Reduce el tamaño del círculo de similitud en móviles */
+    .similarity-circle {
+        /* Ancho reducido */
+        width: 120px;
+        /* Altura reducida */
+        height: 120px;
+    }
+
+    /* Reduce el tamaño del emoji de feedback en móviles */
+    .feedback-emoji {
+        /* Tamaño de fuente reducido */
+        font-size: 60px;
+    }
+}
+
+/* Botones del header más compactos */
+.header-card .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Badge de conexión más destacado */
+#connectionStatus {
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+}
+
+    /* Animación del punto de estado */
+    #connectionStatus i {
+        animation: pulse 2s infinite;
+    }
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+    .header-card .d-flex.flex-wrap {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .header-card .btn {
+        width: 100%;
+    }
+}

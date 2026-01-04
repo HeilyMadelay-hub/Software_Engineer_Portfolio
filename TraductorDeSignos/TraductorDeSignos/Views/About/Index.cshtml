@@ -1,0 +1,296 @@
+﻿@{
+    ViewData["Title"] = "Acerca de";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/About/index.css">
+}
+
+<div class="about-page">
+    <!-- Hero Section -->
+    <section class="hero-section text-center py-5">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-3 hero-title">
+                Traductor de Lenguaje de Señas
+            </h1>
+            <p class="lead mb-4 hero-subtitle">
+                Proyecto MVC con Inteligencia Artificial para reconocimiento de gestos en tiempo real
+            </p>
+            <div class="tech-badges">
+                <span class="badge bg-primary me-2">ASP.NET Core 8.0</span>
+                <span class="badge bg-success me-2">TensorFlow.js</span>
+                <span class="badge bg-info me-2">SignalR</span>
+                <span class="badge bg-warning text-dark me-2">MediaPipe</span>
+                <span class="badge bg-danger">Machine Learning</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Motivación -->
+    <section class="motivation-section py-5">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-lg-8 mb-4">
+                    <h2 class="h1 fw-bold mb-4">
+                        <i class="bi bi-lightbulb text-warning me-2"></i>
+                        ¿Por qué este proyecto?
+                    </h2>
+                    <p class="lead mb-3">
+                        Este proyecto nace de la necesidad de <strong>facilitar la comunicación</strong>
+                        entre personas con discapacidad auditiva y el resto de la sociedad.
+                    </p>
+                    <div class="stats-box p-4 bg-light rounded mb-3">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <h3 class="text-primary fw-bold">466M</h3>
+                                <p class="small text-muted">Personas con pérdida auditiva (OMS)</p>
+                            </div>
+                            <div class="col-4">
+                                <h3 class="text-success fw-bold">70M</h3>
+                                <p class="small text-muted">Usuarios de lenguaje de señas</p>
+                            </div>
+                            <div class="col-4">
+                                <h3 class="text-danger fw-bold">&lt;1%</h3>
+                                <p class="small text-muted">Población que conoce lenguaje de señas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted">
+                        La tecnología puede <strong>reducir esta brecha de comunicación</strong>,
+                        haciendo el lenguaje de señas más accesible y comprensible para todos.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Por qué es un Proyecto MVC -->
+    <section class="mvc-section py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="h1 fw-bold mb-3">
+                    <i class="bi bi-diagram-3 text-primary me-2"></i>
+                    ¿Por qué es un Proyecto MVC?
+                </h2>
+                <p class="lead text-muted">
+                    Este proyecto implementa <strong>correctamente el patrón MVC (Model-View-Controller)</strong> en ASP.NET Core
+                </p>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <!-- Model -->
+                <div class="col-lg-4">
+                    <div class="mvc-card h-100">
+                        <div class="mvc-card-header model-header">
+                            <div class="mvc-letter">M</div>
+                            <h3>Model (Modelos)</h3>
+                        </div>
+                        <div class="mvc-card-body">
+                            <ul class="mvc-list">
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><code>Models/GestureSignature.cs</code> - Modelo de datos para firmas de gestos</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><code>Models/DetectionResult.cs</code> - Modelo para resultados de detección</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Lógica de negocio encapsulada en servicios</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Separación clara de la representación de datos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View -->
+                <div class="col-lg-4">
+                    <div class="mvc-card h-100">
+                        <div class="mvc-card-header view-header">
+                            <div class="mvc-letter">V</div>
+                            <h3>View (Vistas)</h3>
+                        </div>
+                        <div class="mvc-card-body">
+                            <ul class="mvc-list">
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><code>Views/Home/Index.cshtml</code> - Vista principal con Razor</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><code>Views/About/Index.cshtml</code> - Vista de documentación</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><code>wwwroot/</code> - Recursos estáticos (CSS, JS, imágenes)</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Layout compartido (<code>_Layout.cshtml</code>)</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Interfaz de usuario reactiva e interactiva</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controller -->
+                <div class="col-lg-4">
+                    <div class="mvc-card h-100">
+                        <div class="mvc-card-header controller-header">
+                            <div class="mvc-letter">C</div>
+                            <h3>Controller (Controladores)</h3>
+                        </div>
+                        <div class="mvc-card-body">
+                            <ul class="mvc-list">
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><code>Controllers/HomeController.cs</code> - Controlador HTTP tradicional</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><code>Hubs/CameraHub.cs</code> - Controlador en tiempo real (SignalR)</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Manejo de rutas y lógica de presentación</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Orquestación entre servicios y vistas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stack Tecnológico -->
+            <div class="stack-section mt-5">
+                <div class="text-center mb-4">
+                    <h3 class="h2 fw-bold stack-title">
+                        <i class="bi bi-stack text-info me-2"></i>
+                        Stack Tecnológico
+                    </h3>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Backend -->
+                    <div class="col-lg-4">
+                        <div class="stack-card backend-card h-100">
+                            <div class="stack-card-header">
+                                <i class="bi bi-server fs-2 mb-2"></i>
+                                <h4>Backend (MVC)</h4>
+                            </div>
+                            <ul class="stack-list">
+                                <li><span class="tech-tag dotnet">.NET 8</span> ASP.NET Core MVC</li>
+                                <li><span class="tech-tag signalr">SignalR</span> WebSockets bidireccionales</li>
+                                <li><i class="bi bi-arrow-right-circle me-2"></i>Inyección de Dependencias</li>
+                                <li><i class="bi bi-arrow-right-circle me-2"></i>Servicios con interfaces (Repository Pattern)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Frontend -->
+                    <div class="col-lg-4">
+                        <div class="stack-card frontend-card h-100">
+                            <div class="stack-card-header">
+                                <i class="bi bi-window-stack fs-2 mb-2"></i>
+                                <h4>Frontend (View)</h4>
+                            </div>
+                            <ul class="stack-list">
+                                <li><span class="tech-tag js">JavaScript ES6+</span></li>
+                                <li><span class="tech-tag bootstrap">Bootstrap 5</span></li>
+                                <li><span class="tech-tag tensorflow">MediaPipe Hands</span> (TensorFlow.js)</li>
+                                <li><span class="tech-tag signalr">SignalR</span> JavaScript Client</li>
+                                <li><span class="tech-tag chartjs">Chart.js</span> visualización de estadísticas</li>
+                                <li><i class="bi bi-arrow-right-circle me-2"></i>Canvas 2D API (debug visual)</li>
+                                <li><i class="bi bi-arrow-right-circle me-2"></i>Web Speech API (TTS)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Persistencia -->
+                    <div class="col-lg-4">
+                        <div class="stack-card persistence-card h-100">
+                            <div class="stack-card-header">
+                                <i class="bi bi-database fs-2 mb-2"></i>
+                                <h4>Persistencia (Model)</h4>
+                            </div>
+                            <ul class="stack-list">
+                                <li><span class="tech-tag json">JSON</span> firmas de gestos</li>
+                                <li><span class="tech-tag csharp">C#</span> Modelos tipados (POCO classes)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería de Gestos -->
+    <section class="gestures-section py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="h1 fw-bold mb-3">
+                    <i class="bi bi-collection text-primary me-2"></i>
+                    Alfabeto de Señas
+                </h2>
+                <p class="lead text-muted">
+                    Aprende las vocales del lenguaje de señas con nuestro sistema de reconocimiento
+                </p>
+            </div>
+            <div class="row g-4">
+                <!-- Letra A -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="gesture-card hover-lift">
+                        <div class="gesture-image-wrapper">
+                            <img src="/img/About/a_pf.png" alt="Gesto letra A">
+                        </div>
+                        <div class="text-center">
+                            <div class="gesture-letter">A</div>
+                            <p class="gesture-name">Letra A</p>
+                            <span class="gesture-badge">Vocal</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Letra E -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="gesture-card hover-lift">
+                        <div class="gesture-image-wrapper">
+                            <img src="/img/About/e.png" alt="Gesto letra E">
+                        </div>
+                        <div class="text-center">
+                            <div class="gesture-letter">E</div>
+                            <p class="gesture-name">Letra E</p>
+                            <span class="gesture-badge">Vocal</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Letra I -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="gesture-card hover-lift">
+                        <div class="gesture-image-wrapper">
+                            <img src="/img/About/i.png" alt="Gesto letra I">
+                        </div>
+                        <div class="text-center">
+                            <div class="gesture-letter">I</div>
+                            <p class="gesture-name">Letra I</p>
+                            <span class="gesture-badge">Vocal</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Letra O -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="gesture-card hover-lift">
+                        <div class="gesture-image-wrapper">
+                            <img src="/img/About/o.png" alt="Gesto letra O">
+                        </div>
+                        <div class="text-center">
+                            <div class="gesture-letter">O</div>
+                            <p class="gesture-name">Letra O</p>
+                            <span class="gesture-badge">Vocal</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Letra U -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="gesture-card hover-lift">
+                        <div class="gesture-image-wrapper">
+                            <img src="/img/About/u.png" alt="Gesto letra U">
+                        </div>
+                        <div class="text-center">
+                            <div class="gesture-letter">U</div>
+                            <p class="gesture-name">Letra U</p>
+                            <span class="gesture-badge">Vocal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section py-5 text-white text-center">
+        <div class="container">
+            <h2 class="h1 fw-bold mb-3">¿Listo para probarlo?</h2>
+            <p class="lead mb-4">
+                Experimenta el reconocimiento de gestos en tiempo real
+            </p>
+            <a href="/" class="btn btn-primary btn-lg">
+                <i class="bi bi-play-circle-fill me-2"></i>
+                Probar Ahora
+            </a>
+        </div>
+    </section>
+</div>
+

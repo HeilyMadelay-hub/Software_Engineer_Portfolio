@@ -25,3 +25,140 @@ obj/
 
 # Configs
 appsettings.Development.json
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+
+# User-specific files
+*.user
+*.suo
+*.userossc
+*.userprefs
+*.rsuser
+
+# Build outputs
+[Bb]in/
+[Oo]bj/
+artifacts/
+publish/
+
+# Rider / JetBrains
+*.iml
+
+# NuGet
+packages/
+*.nupkg
+.nuget/
+
+# Dotnet tools and SDK artifacts
+project.lock.json
+project.fragment.lock.json
+runtimes/
+
+# Logs and test results
+*.log
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# ASP.NET / app settings / secrets
+secrets.json
+appsettings.*.Local.json
+.env
+.env.*
+
+# Static files / node
+node_modules/
+npm-debug.log
+yarn-error.log
+wwwroot/lib/
+
+# Database
+*.mdf
+*.ldf
+
+# OS generated files
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Native / ML model files (opcional: versiona con LFS si las necesitas)
+models/
+*.onnx
+*.pb
+*.tflite
+
+# Generated files / temporary
+*.tmp
+*.temp
+*.bak
+*.swp
+*.cache
+
+# Docker overrides (usually developer specific)
+docker-compose.override.yml
+
+# Entorno virtual Python
+.venv/
+venv/
+env/
+ENV/
+
+# Archivos de cache de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.Python
+
+# Archivos de distribución / instalación
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Videos (archivos grandes que no deben subirse al repo)
+videos/
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wmv
+
+# Archivos JSON generados (firmas de gestos)
+*_firma.json
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# IDE / Editores
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp

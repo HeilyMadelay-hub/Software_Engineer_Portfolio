@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Traductor de Señas</title>
+
+    <!-- Bootstrap y Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- CSS Global del sitio -->
+    <link rel="stylesheet" href="~/css/site.css">
+
+    <!-- CSS específico de la página -->
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- ========== NAVBAR UNIFICADO ========== -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-lg">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <div>
+                    <div class="brand-title">Menu</div>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                           href="/">
+                            <i class="bi bi-camera-video-fill me-2"></i>Detector
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Statistics" ? "active" : "")"
+                           href="/Statistics">
+                            <i class="bi bi-graph-up-arrow me-2"></i>Panel de Estadísticas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Comparador" ? "active" : "")"
+                           href="/Comparador">
+                            <i class="bi bi-layout-split me-2"></i>Comparador de Gestos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "About" ? "active" : "")"
+                           href="/About">
+                            <i class="bi bi-info-circle me-2"></i>Acerca de
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== CONTENIDO DE LA PÁGINA ========== -->
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- ========== SCRIPTS GLOBALES ========== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/signalr-manager.js"></script>
+
+    <!-- Scripts específicos de cada página -->
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
