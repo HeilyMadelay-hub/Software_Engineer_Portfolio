@@ -744,12 +744,6 @@ detector.showConnections = true
 
 ---
 
-## 📜 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
 ## 🙏 Acknowledgments
 
 - **MediaPipe**: Google's computer vision framework
@@ -765,4 +759,5 @@ This project is licensed under the [MIT License](LICENSE).
 - [SignalR ASP.NET Core Documentation](https://docs.microsoft.com/en-us/aspnet/core/signalr/)
 - [Speech Synthesis API](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)
 - [Chart.js Documentation](https://www.chartjs.org/docs/latest/)
+
 - [ASP.NET Core MVC Pattern](https://docs.microsoft.com/en-us/aspnet/core/mvc/overview)
