@@ -41,7 +41,7 @@ Browser-based AI demo detecting 80 object classes in real time via webcam.
 * Performance and memory optimizations recommended (interval cleanup, canvas reset).
 * Improvements: camera selection, screenshots, detection history, PWA support.
 
-**Stack:** React · TensorFlow.js · COCO-SSD · React Webcam · JavaScript.
+**Stack:** React · TensorFlow.js · COCO-SSD · React Webcam · JavaScript
 
 ---
 
