@@ -33,14 +33,15 @@ REST API with Node.js, TypeScript, and MongoDB for real-time event management an
 
 ### 🕵️‍♀️ Real-Time Object Detection with TensorFlow.js
 
-* Browser-based AI demo detecting 80 object classes in real time via webcam.
+Browser-based AI demo detecting 80 object classes in real time via webcam.
+
 * Client-side ML with TensorFlow.js and COCO-SSD integrated in React.
 * Demonstrates live video capture, canvas rendering, and ML best practices.
 * Correct COCO-SSD implementation with functional React integration.
 * Performance and memory optimizations recommended (interval cleanup, canvas reset).
 **Stack:** React · TensorFlow.js · COCO-SSD · React Webcam · JavaScript.
-* Run locally: yarn install → yarn start → http://localhost:3000
 
+* Run locally: yarn install → yarn start → http://localhost:3000
 * Improvements: camera selection, screenshots, detection history, PWA support.
 
 ---
