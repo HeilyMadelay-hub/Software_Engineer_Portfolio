@@ -1,104 +1,101 @@
-# 🎓 Master's Program Portfolio
+# 🎓 Software Engineer Portfolio
 
-Software Engineer focused on backend systems, real-time architectures, and applied AI.
+Backend & Real-Time Engineer focused on scalable systems and applied AI.
 
-# ⭐ Flagship Projects
+---
+
+## ⭐ Flagship Projects
 
 ### 🧏‍♂️ Real-Time Sign Language Translator
 
-AI-powered computer vision system for sign language recognition.
+[sign-language-translator](https://github.com/HeilyMadelay-hub/Software_Engineer_Portfolio/tree/sign-language-translator)
 
-* 30–60 FPS real-time hand detection with MediaPipe
-* SignalR WebSocket communication (<100ms latency)
-* ML gesture classification with Python training pipeline
+Real-time computer vision system for sign language recognition with low-latency streaming.
 
-**Stack:** ASP.NET Core MVC · SignalR · MediaPipe · TensorFlow.js · Python · OpenCV
+**Highlights**
+
+* 30–60 FPS real-time hand detection
+* <100ms latency via SignalR WebSockets
+* ML gesture classification pipeline
+
+**Stack:** ASP.NET Core · SignalR · MediaPipe · TensorFlow.js · Python · OpenCV
 
 ---
 
 ### 🎫 Real-Time Event Management & Ticketing System
 
-REST API with Node.js, TypeScript, and MongoDB for real-time event management and ticket sales.
+[event-ticketing-api](https://github.com/HeilyMadelay-hub/Software_Engineer_Portfolio/tree/event-ticketing-api)
 
-* Ticket reservations with 10-minute timeout
-* Overselling prevention via transactions and optimistic locking
-* Real-time notifications with Socket.io
-* Background jobs for automatic order expiration
-* JWT authentication with role-based access
-* Dockerized, with validation and tests included
+Scalable backend system for real-time ticket sales and event management.
+
+**Highlights**
+
+* Overselling prevention with transactions
+* Real-time notifications
+* JWT auth & role-based access
+* Dockerized API
 
 **Stack:** Node.js · TypeScript · MongoDB · Socket.io · Docker
 
 ---
 
-### 🕵️‍♀️ Real-Time Object Detection with TensorFlow.js
+### 🕵️‍♀️ Real-Time Object Detection (Web AI)
 
-Browser-based AI demo detecting 80 object classes in real time via webcam.
+[capturing-object-detection-history](https://github.com/HeilyMadelay-hub/Software_Engineer_Portfolio/tree/capturing-object-detection-history)
 
-* Client-side ML with TensorFlow.js and COCO-SSD integrated in React.
-* Demonstrates live video capture, canvas rendering, and ML best practices.
-* Correct COCO-SSD implementation with functional React integration.
-* Performance and memory optimizations recommended (interval cleanup, canvas reset).
-* Improvements: camera selection, screenshots, detection history, PWA support.
+Client-side real-time object detection running entirely in the browser.
 
-**Stack:** React · TensorFlow.js · COCO-SSD · React Webcam · JavaScript
+**Highlights**
+
+* TensorFlow.js + COCO-SSD
+* Webcam video stream & canvas overlay
+* Performance-aware detection loop
+
+**Stack:** React · TensorFlow.js · JavaScript
 
 ---
 
-# 🛠 Additional Projects
+## 🛠 Additional Projects
 
 ### 🎓 Business School Management System
 
-Full-stack academic management platform with gamification.
+[business-school-aspnet-core-mvc-identity](https://github.com/HeilyMadelay-hub/Software_Engineer_Portfolio/tree/business-school-aspnet-core-mvc-identity)
 
-* AI-powered club recommendation engine
-* Complete gamification system (points, levels, achievements)
-* Role-based dashboards and Docker deployment
+Academic management platform with AI-based recommendations and gamification.
 
-**Stack:** ASP.NET Core MVC · Entity Framework · SQL Server · Docker
+**Stack:** ASP.NET Core MVC · EF Core · SQL Server · Docker
 
 ---
 
-### 🔧 Backend Advanced Development Exam
+### 🔧 Backend Advanced Development
 
-Enterprise-grade MVC & Web API systems.
+[backend-advanced-module3-exam](https://github.com/HeilyMadelay-hub/Software_Engineer_Portfolio/tree/backend-advanced-module3-exam)
 
-* Laboratory device reservation system
-* Inventory & orders management API
-* Advanced EF Core queries with transaction management
+Enterprise-grade MVC & Web API systems with transactional consistency.
 
-**Stack:** ASP.NET Core 8.0 · Entity Framework Core · SQL Server · Swagger
+**Stack:** ASP.NET Core 8 · EF Core · SQL Server · Swagger
 
 ---
 
-## 💻 Key Technologies
+## 💻 Core Technologies
 
-**Backend:** ASP.NET Core, Node.js, Python
-**Frontend:** React, JavaScript, HTML/CSS
-**AI/ML:** MediaPipe, TensorFlow.js, OpenCV
-**Real-Time:** SignalR, WebSockets
-**DevOps:** Docker, Git, Azure
-
----
-
-## 🎯 What This Demonstrates
-
-✅ Production-ready code with clean architecture
-✅ AI/ML integration in real-time systems
-✅ Complex business logic and database design
-✅ Modern tech stack and best practices
-✅ Complete documentation and Docker deployment
+**Backend:** ASP.NET Core · Node.js · Python
+**Frontend:** React · JavaScript
+**AI/ML:** TensorFlow.js · MediaPipe · OpenCV
+**Real-Time:** SignalR · WebSockets
+**DevOps:** Docker · Git · Azure
 
 ---
 
-## 📬 Connect
+## 📬 Contact
 
-**GitHub:** [@HeilyMadelay-hub](https://github.com/HeilyMadelay-hub)
-**LinkedIn:** [linkedin.com/in/heilymajtan](https://www.linkedin.com/in/heilymajtan/)
+**GitHub:** [https://github.com/HeilyMadelay-hub](https://github.com/HeilyMadelay-hub)
+**LinkedIn:** [https://www.linkedin.com/in/heilymajtan/](https://www.linkedin.com/in/heilymajtan/)
 **Email:** [heilymadelayajtan@icloud.com](mailto:heilymadelayajtan@icloud.com)
 
 ---
 
-> *Enterprise-grade projects built during Master's program in Full Stack Development & Cloud Architectures*
+> *Projects developed during a Master’s program in Full Stack Development & Cloud Architectures*
 
 ---
+
