@@ -1,490 +1,245 @@
-\# Real-Time Object Detection with TensorFlow.js
+# Real-Time Object Detection with TensorFlow.js
 
-
-
-\## 📝 Project Overview
-
-
-
-This project implements a \*\*real-time object detection system\*\* using a browser webcam. Originally created as a TensorFlow.js demo, it leverages the \*\*COCO-SSD pre-trained model\*\* to identify everyday objects in video frames.
-
-
+> **Demo project for a talk on “Artificial Intelligence on the Web with React and TensorFlow.js”**
+> This demo demonstrates real-time object detection in the browser using a webcam.
+> You can access the accompanying article here: [Medium Article](https://medium.com/@madcodlife)
 
 ---
 
+## 📝 Project Overview
 
+This project implements a **real-time object detection system** in the browser using TensorFlow.js and the pre-trained COCO-SSD model. Originally created several years ago as a demo, it identifies everyday objects through the webcam.
 
-\## 🔍 Code Analysis
-
-
-
-\### Current Project Status
-
-
-
-The code is \*\*functional\*\* but has some inconsistencies and areas for improvement.
-
-
-
-\*\*✅ Strengths:\*\*
-
-
-
-\* Correct basic implementation of COCO-SSD
-
-\* Functional React integration with TensorFlow.js
-
-\* Well-structured video capture and canvas rendering
-
-
-
-\*\*⚠️ Issues Identified:\*\*
-
-
-
-1\. \*\*Typo in logging\*\*
-
-
-
-```javascript
-
-console.log("Handpose model loaded."); // ❌ Misleading message; should reference COCO-SSD
-
-```
-
-
-
-2\. \*\*Performance issues\*\*
-
-
-
-\* Detection runs every 10ms (~100 fps) → CPU overload
-
-\* Canvas is not cleared between frames → visual artifacts
-
-
-
-3\. \*\*Memory leak\*\*
-
-
-
-\* `setInterval` not cleaned up on component unmount
-
-
-
-```javascript
-
-useEffect(() => { runCoco() }, \[]);
-
-// ❌ Missing cleanup function to clear interval
-
-```
-
-
-
-4\. \*\*CSS styling\*\*
-
-
-
-```javascript
-
-zindex: 9; // ❌ Should be `zIndex` in React (camelCase)
-
-```
-
-
-
-5\. \*\*Random colors\*\*
-
-
-
-\* Colors generated dynamically may be too light or hard to read
-
-\* No consistency between detections of the same object class
-
-
+The demo showcases the ability to run machine learning entirely client-side and illustrates best practices for integrating ML models with React applications.
 
 ---
 
+## 🔍 Code Analysis
 
+### Project Status
 
-\## 🛠️ Technology Stack
+The project is **functional**, but there were some inconsistencies and areas for improvement:
 
+**✅ Strengths**
 
+* Correct basic implementation of COCO-SSD
+* Functional integration of React with TensorFlow.js
+* Well-structured video capture and canvas rendering
 
-\### Frontend
+**⚠️ Issues Identified**
 
+1. **Typographical errors**
 
+```javascript
+console.log("Handpose model loaded."); // ❌ Incorrect label, COCO-SSD is loaded
+```
 
-\* \*\*React\*\* 16.13.1 (primary framework)
+2. **Performance concerns**
 
-\* \*\*React Webcam\*\* 5.2.0 (camera capture)
+* Detection every 10ms (~100 FPS) → too fast, can overload CPU
+* Canvas not cleared between frames → bounding boxes accumulate visually
 
+3. **Memory leak**
 
+```javascript
+useEffect(() => { runCoco() }, []);
+// ❌ No cleanup function to clear interval
+```
 
-\### Machine Learning
+4. **CSS style issues**
 
+```javascript
+zindex: 9; // ❌ Should be zIndex (React camelCase)
+```
 
+5. **Random colors**
 
-\* \*\*TensorFlow.js\*\* 2.4.0 (in-browser ML runtime)
-
-\* \*\*COCO-SSD\*\* 2.1.0 (pre-trained object detection model)
-
-
-
-&nbsp; \* Detects 80 object classes (people, vehicles, animals, furniture, etc.)
-
-&nbsp; \* Based on COCO (Common Objects in Context) dataset
-
-&nbsp; \* Optimized for browser execution
-
-
-
-\### Development Tools
-
-
-
-\* \*\*Create React App\*\* 3.4.3
-
-\* \*\*Yarn\*\* (preferred over npm)
-
-
+* Generated colors may be too light or inconsistent
+* No visual consistency for the same object class
 
 ---
 
+## 🛠️ Technologies
 
+### Frontend
 
-\## 🎯 How the Code Works
+* **React** 16.13.1 – main framework
+* **React Webcam** 5.2.0 – camera video capture
 
+### Machine Learning
 
+* **TensorFlow.js** 2.4.0 – client-side ML runtime
+* **COCO-SSD** 2.1.0 – pre-trained object detection model
 
-\### Architecture Overview
+  * Detects **80 object classes** (people, vehicles, animals, furniture, etc.)
+  * Based on the **COCO dataset** (Common Objects in Context)
+  * Optimized for browser execution
 
+### Development Tools
 
+* **Create React App** 3.4.3 – project scaffolding
+* **Yarn** – preferred package manager for this project
+
+---
+
+## 🎯 Code Architecture
 
 ```
-
 ┌─────────────┐
-
 │   Webcam    │ ← Captures real-time video
-
 └──────┬──────┘
-
-&nbsp;      │
-
-&nbsp;      ▼
-
+       ▼
 ┌─────────────────┐
-
-│  COCO-SSD Model │ ← Object detection every 10ms
-
+│  COCO-SSD Model │ ← Detects objects every 10ms
 └──────┬──────────┘
-
-&nbsp;      │
-
-&nbsp;      ▼
-
+       ▼
 ┌─────────────────┐
-
 │ Canvas Overlay  │ ← Draws bounding boxes
-
 └─────────────────┘
-
 ```
 
+### Main Components
 
-
-\### Key Components
-
-
-
-\#### 1. \*\*App.js\*\* – Main Component
-
-
+#### **App.js**
 
 ```javascript
-
 const webcamRef = useRef(null);
-
 const canvasRef = useRef(null);
 
-
-
 const runCoco = async () => {
-
-&nbsp; const net = await cocossd.load();
-
-&nbsp; setInterval(() => detect(net), 10); // Detection loop
-
+  const net = await cocossd.load();
+  setInterval(() => detect(net), 10); // Detection loop
 };
-
 ```
 
-
-
-\#### 2. \*\*detect()\*\* – Detection Engine
-
-
+#### **detect()** – Detection Engine
 
 ```javascript
-
 const detect = async (net) => {
+  if (webcamRef.current?.video.readyState === 4) {
+    const video = webcamRef.current.video;
+    const videoWidth = video.videoWidth;
+    const videoHeight = video.videoHeight;
+    canvasRef.current.width = videoWidth;
+    canvasRef.current.height = videoHeight;
 
-&nbsp; if (webcamRef.current?.video.readyState === 4) {
+    const obj = await net.detect(video);
 
-&nbsp;   const video = webcamRef.current.video;
-
-&nbsp;   const videoWidth = video.videoWidth;
-
-&nbsp;   const videoHeight = video.videoHeight;
-
-
-
-&nbsp;   canvasRef.current.width = videoWidth;
-
-&nbsp;   canvasRef.current.height = videoHeight;
-
-
-
-&nbsp;   const objects = await net.detect(video);
-
-
-
-&nbsp;   const ctx = canvasRef.current.getContext("2d");
-
-&nbsp;   drawRect(objects, ctx);
-
-&nbsp; }
-
+    const ctx = canvasRef.current.getContext("2d");
+    drawRect(obj, ctx);
+  }
 };
-
 ```
 
-
-
-\#### 3. \*\*utilities.js\*\* – Drawing Utility
-
-
+#### **utilities.js** – Drawing Function
 
 ```javascript
-
 export const drawRect = (detections, ctx) => {
+  detections.forEach(prediction => {
+    const [x, y, width, height] = prediction['bbox'];
+    const text = prediction['class'];
 
-&nbsp; detections.forEach(prediction => {
+    const color = Math.floor(Math.random()*16777215).toString(16);
 
-&nbsp;   const \[x, y, width, height] = prediction\['bbox'];
-
-&nbsp;   const text = prediction\['class'];
-
-
-
-&nbsp;   const color = Math.floor(Math.random() \* 16777215).toString(16);
-
-
-
-&nbsp;   ctx.strokeStyle = '#' + color;
-
-&nbsp;   ctx.fillStyle = '#' + color;
-
-&nbsp;   ctx.font = '18px Arial';
-
-&nbsp;   ctx.fillText(text, x, y);
-
-&nbsp;   ctx.rect(x, y, width, height);
-
-&nbsp;   ctx.stroke();
-
-&nbsp; });
-
+    ctx.strokeStyle = '#' + color;
+    ctx.fillStyle = '#' + color;
+    ctx.font = '18px Arial';
+    ctx.fillText(text, x, y);
+    ctx.rect(x, y, width, height);
+    ctx.stroke();
+  });
 };
-
 ```
 
+### Execution Flow
 
+1. **Mount:** `App` component mounts
+2. **Load:** `useEffect` calls `runCoco()` to load COCO-SSD
+3. **Loop:** `setInterval` triggers `detect()` every 10ms
+4. **Detection:** The model analyzes the current video frame
+5. **Render:** Bounding boxes drawn on canvas
+6. **Repeat:** Continuous detection cycle
 
-\### Execution Flow
+### Detectable Objects (80 COCO Classes)
 
-
-
-1\. Component mounts → `useEffect` calls `runCoco()`
-
-2\. COCO-SSD model loads asynchronously
-
-3\. Detection loop runs via `setInterval` (every 10ms)
-
-4\. Model analyzes the current video frame
-
-5\. Bounding boxes are rendered on canvas
-
-6\. Process repeats continuously
-
-
-
-\### Detectable Objects (COCO 80 Classes)
-
-
-
-\* \*\*People:\*\* person
-
-\* \*\*Vehicles:\*\* car, truck, bus, motorcycle, bicycle, airplane, train, boat
-
-\* \*\*Animals:\*\* cat, dog, horse, sheep, cow, elephant, bear, zebra, giraffe
-
-\* \*\*Everyday Objects:\*\* bottle, cup, fork, knife, spoon, bowl, chair, couch, tv, laptop, mouse, keyboard, cell phone, book
-
-\* And many more…
-
-
+* **People:** person
+* **Vehicles:** car, truck, bus, motorcycle, bicycle, airplane, train, boat
+* **Animals:** cat, dog, horse, sheep, cow, elephant, bear, zebra, giraffe
+* **Everyday objects:** bottle, cup, fork, knife, spoon, bowl, chair, couch, tv, laptop, mouse, keyboard, cell phone, book
+* And many more…
 
 ---
 
+## ⚙️ Running the Project
 
+### 1. **Babel-jest dependency conflict**
 
-\## ⚙️ Known Issues \& Setup Instructions
+* Older React Scripts require `babel-jest` v24.x; modern Node may have v29.x
+* **Solution:** Remove `node_modules`, `package-lock.json`, `yarn.lock` and reinstall with Yarn
 
-
-
-\### 1. `babel-jest` dependency conflicts
-
-
-
-\* Older React Scripts require `babel-jest@24.x`, but Node may have `v29.x`.
-
-\* \*\*Solution:\*\* Remove `node\_modules`, `package-lock.json`, `yarn.lock` and reinstall with Yarn.
-
-
-
-\### 2. PowerShell usage on Windows
-
-
-
-\* CMD commands like `rmdir /s /q node\_modules` may fail.
-
-
+### 2. **Windows PowerShell**
 
 ```powershell
-
-Remove-Item -Recurse -Force node\_modules
-
+Remove-Item -Recurse -Force node_modules
 ```
 
+### 3. **ERR_OSSL_EVP_UNSUPPORTED**
 
-
-\### 3. Node ≥17 OpenSSL error: `ERR\_OSSL\_EVP\_UNSUPPORTED`
-
-
-
-\* Recommended: use Node v16 (LTS) with \[nvm-windows](https://github.com/coreybutler/nvm-windows)
-
-
+* Node ≥17 may trigger OpenSSL errors
+* **Recommended:** Use Node v16 LTS with [nvm-windows](https://github.com/coreybutler/nvm-windows)
 
 ```powershell
-
 nvm install 16
-
 nvm use 16
-
 ```
 
-
-
-\* Quick alternative:
-
-
+* **Alternative:** Set legacy OpenSSL provider temporarily
 
 ```powershell
-
-$env:NODE\_OPTIONS="--openssl-legacy-provider"
-
+$env:NODE_OPTIONS="--openssl-legacy-provider"
 yarn start
-
 ```
 
-
-
-\### 4. Final Installation \& Run
-
-
+### 4. **Final Installation**
 
 ```powershell
-
-Remove-Item -Recurse -Force node\_modules
-
+Remove-Item -Recurse -Force node_modules
 Remove-Item -Force package-lock.json
-
 Remove-Item -Force yarn.lock
 
-
-
 yarn install
-
 yarn start
-
 ```
 
-
-
-Access the app at `http://localhost:3000` to test real-time object detection.
-
-
+The app will run on `http://localhost:3000`, with real-time object detection through your webcam.
 
 ---
 
+## 📜 Available Scripts
 
-
-\## 📜 Available Scripts
-
-
-
-\* `yarn start` → Development mode with live reload
-
-\* `yarn build` → Production-ready build in `build/`
-
-\* `yarn test` → Interactive test runner
-
-\* `yarn eject` → Exposes Webpack/Babel/ESLint config (irreversible)
-
-
+* **`yarn start`** → Development mode with live reload and console errors
+* **`yarn build`** → Production-ready build in `build/`
+* **`yarn test`** → Interactive test runner
+* **`yarn eject`** → Expose Webpack/Babel/ESLint configuration (⚠️ irreversible)
 
 ---
 
+## 🚀 Recommended Improvements
 
-
-\## 🚀 Recommended Improvements
-
-
-
-\* Add camera selection (front/back)
-
-\* Screenshot capture with overlays
-
-\* Object detection history logging
-
-\* Export detection statistics (CSV/JSON)
-
-\* Dark/light mode support
-
-\* Class-specific filters in UI
-
-\* Video recording with annotations
-
-\* Multi-language support
-
-\* PWA for mobile installation
-
-
+* Camera selection (front/back on mobile)
+* Screenshot capture with detection overlays
+* Object detection history logging
+* Export statistics (CSV/JSON)
+* Dark/light mode
+* Class filter UI
+* Video recording with annotations
+* Support for image/video uploads
+* Multi-language interface
+* PWA support for mobile installation
 
 ---
 
-
-
-\## 📄 License
-
-
+## 📄 License
 
 MIT License
-
-
-
-
 
