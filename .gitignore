@@ -25,3 +25,15 @@ obj/
 
 # Configs
 appsettings.Development.json
+
+__pycache__/
+*.pyc
+.venv/
+env/
+.env
+*.h5
+*.pb
+models/
+node_modules/
+dist/
+build/
