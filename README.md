@@ -1,19 +1,37 @@
 # 🎓 Master's Program Portfolio
 
-## 🚀 Featured Projects
+Software Engineer focused on backend systems, real-time architectures, and applied AI.
 
-### **🧏‍♂️ [Real-Time Sign Language Translator](https://github.com/HeilyMadelay-hub/Master-Proyects/tree/sign-language-translator)**
+# ⭐ Flagship Projects
+
+### 🧏‍♂️ Real-Time Sign Language Translator
 AI-powered computer vision system for sign language recognition.
 
-- 30-60 FPS real-time hand detection with MediaPipe
-- SignalR WebSocket communication (sub-100ms latency)
+- 30–60 FPS real-time hand detection with MediaPipe
+- SignalR WebSocket communication (<100ms latency)
 - ML gesture classification with Python training pipeline
 
 **Stack:** ASP.NET Core MVC · SignalR · MediaPipe · TensorFlow.js · Python · OpenCV
 
 ---
 
-### **🎓 [Business School Management System](https://github.com/HeilyMadelay-hub/Master-Proyects/tree/business-school-aspnet-core-mvc-identity)**
+### 🎫 Real-Time Event Management & Ticketing System
+REST API with Node.js, TypeScript, and MongoDB for real-time event management and ticket sales.
+
+- Ticket reservations with 10-minute timeout
+- Overselling prevention via transactions and optimistic locking
+- Real-time notifications with Socket.io
+- Background jobs for automatic order expiration
+- JWT authentication with role-based access
+- Dockerized, with validation and tests included
+
+**Stack:** Node.js · TypeScript · MongoDB · Socket.io · Docker
+
+---
+
+# 🛠 Additional Projects
+
+### 🎓 Business School Management System
 Full-stack academic management platform with gamification.
 
 - AI-powered club recommendation engine
@@ -24,7 +42,7 @@ Full-stack academic management platform with gamification.
 
 ---
 
-### **🔧 [Backend Advanced Development Exam](https://github.com/HeilyMadelay-hub/Master-Proyects/tree/backend-advanced-module3-exam)**
+### 🔧 Backend Advanced Development Exam
 Enterprise-grade MVC & Web API systems.
 
 - Laboratory device reservation system
@@ -33,21 +51,6 @@ Enterprise-grade MVC & Web API systems.
 
 **Stack:** ASP.NET Core 8.0 · Entity Framework Core · SQL Server · Swagger
 
----
-
-### **🎫 [Real-Time Event Management & Ticketing System](https://github.com/HeilyMadelay-hub/Master-Proyects/tree/event-ticketing-api)**
-
-
-REST API with Node.js, TypeScript, and MongoDB for real-time event management and ticket sales.
-
-- Ticket reservations with 10-minute timeout
-- Overselling prevention using transactions and optimistic locking
-- Real-time notifications with Socket.io
-- Background jobs for automatic order expiration
-- JWT authentication with role-based access
-- Dockerized, with validation and tests included
-
-**Stack:** Node.js · TypeScript · MongoDB · Socket.io · Docker
 
 ---
 
