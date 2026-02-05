@@ -2,7 +2,8 @@
 
 > **Demo project for a talk on “Artificial Intelligence on the Web with React and TensorFlow.js”**
 > This demo demonstrates real-time object detection in the browser using a webcam.
-> You can access the accompanying article here: [Medium Article](https://medium.com/@madcodlife)
+> You can access the accompanying article here: [Medium Article](https://medium.com/@madcodlife/tensorflow-js-react-from-zero-to-ai-web-apps-in-your-browser-no-servers-needed-8166477fdbd9)
+> You can access the demo here: [Video](https://www.youtube.com/watch?v=TRb_FkcAzEk)
 
 ---
 
