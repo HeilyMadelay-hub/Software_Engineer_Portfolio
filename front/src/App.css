@@ -1,0 +1,132 @@
+/* Reset básico del contenedor principal */
+#root {
+  max-width: 1280px; /* Ancho máximo del contenedor */
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
+  padding: 2rem; /* Espaciado interno de 32px */
+  text-align: center; /* Centra el texto */
+}
+
+/* Estilos para el contenedor principal de la app */
+.app-container {
+  padding: 20px; /* Espaciado interno */
+  font-family: Arial, sans-serif; /* Fuente legible */
+}
+
+/* Título principal */
+h1 {
+  color: #d42020; /* Color gris oscuro */
+  margin-bottom: 20px; /* Espacio debajo del título */
+  font-size: 2rem; /* Tamaño grande */
+}
+
+/* Estados de carga y error */
+.loading, .error {
+  padding: 20px; /* Espaciado interno */
+  border-radius: 8px; /* Bordes redondeados */
+  margin: 20px 0; /* Margen arriba y abajo */
+  font-size: 1.2rem; /* Tamaño de texto */
+}
+
+/* Estado de carga (azul) */
+.loading {
+  background-color: #e3f2fd; /* Fondo azul claro */
+  color: #1976d2; /* Texto azul */
+  border: 1px solid #1976d2; /* Borde azul */
+}
+
+/* Estado de error (rojo) */
+.error {
+  background-color: #ffebee; /* Fondo rojo claro */
+  color: #c62828; /* Texto rojo */
+  border: 1px solid #c62828; /* Borde rojo */
+}
+
+/* Lista de usuarios */
+.users-list {
+  list-style: none; /* Quita las viñetas */
+  padding: 0; /* Quita padding por defecto */
+  margin: 20px 0; /* Margen arriba y abajo */
+}
+
+/* Estado activo/inactivo del usuario */
+.user-status {
+  margin-top: 5px; /* Espacio arriba */
+  font-size: 0.85rem; /* Tamaño más pequeño */
+  color: #666; /* Color gris */
+}
+
+/* Ajusta el user-item para mejor espaciado */
+.user-item {
+  background-color: #f5f5f5;
+  padding: 15px 20px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border-left: 4px solid #1976d2;
+  text-align: left;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex; /* Usa flexbox */
+  flex-direction: column; /* Columna vertical */
+  gap: 5px; /* Espacio entre elementos */
+}
+
+/* Efecto hover en items de usuario */
+.user-item:hover {
+  background-color: #e3f2fd; /* Cambia a azul claro al pasar el mouse */
+  transform: translateX(5px); /* Se mueve ligeramente a la derecha */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Sombra más pronunciada */
+}
+
+/* Nombre del usuario */
+.user-name {
+  font-weight: bold; /* Negrita */
+  color: #1976d2; /* Color azul */
+  font-size: 1.1rem; /* Tamaño ligeramente mayor */
+}
+
+/* Email del usuario */
+.user-email {
+  color: #666; /* Gris medio */
+  font-size: 0.9rem; /* Tamaño ligeramente menor */
+  margin-top: 5px; /* Espacio arriba */
+}
+
+/* Contenedor vacío (cuando no hay usuarios) */
+.empty-state {
+  padding: 40px; /* Espaciado amplio */
+  color: #999; /* Color gris claro */
+  font-style: italic; /* Texto en cursiva */
+}
+
+/* Botón de recarga (opcional para agregar después) */
+.reload-button {
+  background-color: #1976d2; /* Fondo azul */
+  color: white; /* Texto blanco */
+  border: none; /* Sin borde */
+  padding: 10px 20px; /* Espaciado interno */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cursor de mano */
+  font-size: 1rem; /* Tamaño de texto */
+  margin-top: 20px; /* Margen arriba */
+  transition: background-color 0.3s ease; /* Transición suave */
+}
+
+/* Hover del botón */
+.reload-button:hover {
+  background-color: #1565c0; /* Azul más oscuro al pasar el mouse */
+}
+
+/* Responsive: tablets y móviles */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem; /* Reduce padding en pantallas pequeñas */
+  }
+  
+  h1 {
+    font-size: 1.5rem; /* Título más pequeño */
+  }
+  
+  .user-item {
+    padding: 10px 15px; /* Reduce padding de items */
+  }
+}
