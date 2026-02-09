@@ -4,7 +4,7 @@ const express = require("express");//Importa el servidor Express para manejar ru
 const cors = require("cors");//Importa el middleware CORS para permitir peticiones de otros orígenes
 const sequelize = require('./service/db');//Importamos la conexión configurada a nuestra base de datos SQLite
 
-import { Book, User, Loan } from "./models/index.js";//Importamos los modelos y sus relaciones para que Sequelize los registre
+import { Book, User, Loan } from "./models";//Importamos los modelos y sus relaciones para que Sequelize los registre
 import swaggerUi from "swagger-ui-express";//Importa Swagger UI para mostrar la documentación en una interfaz web
 import swaggerJsdoc from "swagger-jsdoc";//Genera la especificación OpenAPI a partir de opciones y comentarios
 import { swaggerOptions } from "./swagger/swagger";//Importa la configuración de Swagger (título, versión, rutas, etc.)
