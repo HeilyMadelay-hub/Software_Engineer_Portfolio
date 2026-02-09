@@ -1,4 +1,4 @@
-import { User } from "../models";//Importamos el modelo de usuario para trabajar con la base de datos
+import { User } from "../models/index";//Importamos el modelo de usuario para trabajar con la base de datos
 
 
 //Crear usuario

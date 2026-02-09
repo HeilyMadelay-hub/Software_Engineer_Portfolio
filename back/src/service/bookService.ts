@@ -1,4 +1,4 @@
-import { Book, Loan } from "../models";
+import { Book, Loan } from "../models/index";
 // Obtenemos los modelos de libros y préstamos para trabajar con la base de datos
 
 
