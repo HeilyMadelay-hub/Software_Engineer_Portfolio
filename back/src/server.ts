@@ -30,6 +30,7 @@ app.use("/api/loans", loanRoutes);
 // Servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, '../../front/dist')));
 
+//Middleware para SPA (debe ir al final)
 app.use((req, res, next) => {
     if (!req.path.startsWith('/api')) {
         return res.sendFile(path.join(__dirname, '../../front/dist/index.html'));

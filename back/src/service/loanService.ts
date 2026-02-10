@@ -58,7 +58,7 @@ export const createLoan = async (data: {
 // Método que devuelve todos los préstamos
 export const getLoans = async () => {
  // Busca todos los préstamos incluyendo la información del usuario y del libro asociado
- return Loan.findAll({ include: [User, Book] });
+ return Loan.findAll({ include: [{ model: User, as: "usuario" }, { model: Book, as: "libro" }] });
 };
 
 
@@ -66,7 +66,7 @@ export const getLoans = async () => {
 // Método que devuelve un préstamo concreto por su id
 export const getLoanById = async (id: number) => {
  // Busca un préstamo por su clave primaria e incluye usuario y libro relacionados
- return Loan.findByPk(id, { include: [User, Book] });
+ return Loan.findByPk(id, { include: [{ model: User, as: "usuario" }, { model: Book, as: "libro" }] });
 };
 
 
@@ -153,7 +153,7 @@ export const getActiveLoans = async () => {
  // Busca todos los préstamos que aún no tienen fecha de devolución real
  return Loan.findAll({
  where: { fechaDevolucionReal: null },
- include: [User, Book],
+ include: [{ model: User, as: "usuario" }, { model: Book, as: "libro" }],
  // Incluye también los datos del usuario y del libro asociado
  });
 };
@@ -164,6 +164,6 @@ export const getActiveLoans = async () => {
 export const getLoanHistory = async () => {
  // Devuelve todos los préstamos, sin filtrar, incluyendo usuario y libro
  return Loan.findAll({
- include: [User, Book],
+ include: [{ model: User, as: "usuario" }, { model: Book, as: "libro" }],
  });
 };
