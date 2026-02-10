@@ -18,7 +18,7 @@ import axios from 'axios';//Importa la librería Axios que instalamos con npm in
 */
 
 const api = axios.create({
-  baseURL: '', // Sin prefijo, los servicios ya incluyen /api en sus rutas
+  baseURL: import.meta.env.VITE_API_URL || '', // En producción usa la URL completa, en dev usa el proxy de Vite
   headers: {
     'Content-Type': 'application/json',
   },
