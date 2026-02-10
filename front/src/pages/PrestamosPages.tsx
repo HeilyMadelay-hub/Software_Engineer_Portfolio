@@ -10,7 +10,6 @@ import { loanService } from '../services/loanService';
 import { bookService } from '../services/bookService';
 import { userService } from '../services/userService';
 import type { LoanWithDetails, User, Book, CreateLoanDTO } from '../types';
-import React from 'react';
 
 // Tipo auxiliar para la vista de la tabla con estado calculado
 type LoanView = LoanWithDetails & {
