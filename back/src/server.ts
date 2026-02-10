@@ -1,51 +1,64 @@
-import dotenv from "dotenv";
-import express from "express"; // Importa el servidor Express para manejar rutas y peticiones HTTP
-import cors from "cors"; // Importa el middleware CORS para permitir peticiones de otros orígenes
-import sequelize from "./service/db"; // Importamos la conexión configurada a nuestra base de datos SQLite
+ï»¿import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import sequelize from "./service/db";
+import { Book, User, Loan } from "./models/index";
+import swaggerUi from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
+import { swaggerOptions } from "./swagger/swagger";
+import { runSeedIfEmpty } from "./seed/autoSeed";
+import userRoutes from "./routes/userRoutes";
+import bookRoutes from "./routes/bookRoutes";
+import loanRoutes from "./routes/loanRoutes";
 
-import { Book, User, Loan } from "./models/index"; // Importamos los modelos y sus relaciones para que Sequelize los registre
-import swaggerUi from "swagger-ui-express"; // Importa Swagger UI para mostrar la documentación en una interfaz web
-import swaggerJsdoc from "swagger-jsdoc"; // Genera la especificación OpenAPI a partir de opciones y comentarios
-import { swaggerOptions } from "./swagger/swagger"; // Importa la configuración de Swagger (título, versión, rutas, etc.)
-import { runSeedIfEmpty } from "./seed/autoSeed"; // Función que inserta datos iniciales si la base de datos está vacía
-import userRoutes from "./routes/userRoutes"; // Importa las rutas relacionadas con usuarios
-import bookRoutes from "./routes/bookRoutes"; // Importa las rutas relacionadas con libros
-import loanRoutes from "./routes/loanRoutes"; // Importa las rutas relacionadas con préstamos
+dotenv.config();
 
-dotenv.config(); // Carga las variables de entorno desde el archivo .env
+const app = express();
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-const app = express(); // Inicializa el servidor Express
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-const swaggerSpec = swaggerJsdoc(swaggerOptions); // Genera la documentación Swagger a partir de las opciones configuradas
+// Ruta raÃ­z para verificar que la API funciona
+app.get("/", (req, res) => {
+    res.json({
+        message: "API de Biblioteca funcionando",
+        endpoints: {
+            docs: "/api-docs",
+            books: "/api/books",
+            users: "/api/users",
+            loans: "/api/loans"
+        }
+    });
+});
 
-app.use(cors()); // Habilita CORS para peticiones desde otros orígenes (producción)
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Habilita la ruta /api-docs para visualizar la documentación de la API
+// Rutas de la API
+app.use("/api/books", bookRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/loans", loanRoutes);
 
-app.use(express.json()); // Permite que Express reciba y procese JSON en las peticiones
-
-app.use("/api/books", bookRoutes); // Registra las rutas de libros bajo el prefijo /api/books
-app.use("/api/users", userRoutes); // Registra las rutas de usuarios bajo el prefijo /api/users
-app.use("/api/loans", loanRoutes); // Registra las rutas de préstamos bajo el prefijo /api/loans
-
-const PORT = Number(process.env.PORT) || 4000; // Usa PORT (mayúsculas) esperado por Render
+const PORT = Number(process.env.PORT) || 4000;
 
 const start = async () => {
     try {
-        await sequelize.authenticate(); // Verifica la conexión con la base de datos
-        console.log("Conexión a SQLite OK"); // Mensaje de confirmación en consola
+        await sequelize.authenticate();
+        console.log("ConexiÃ³n a SQLite OK");
 
-        await sequelize.sync({ alter: true }); // Sincroniza los modelos con la base de datos (crea o actualiza tablas)
-        await runSeedIfEmpty(); // Inserta datos iniciales si la base está vacía
-        console.log("Modelos sincronizados"); // Confirma que las tablas están listas
+        await sequelize.sync({ alter: true });
+        await runSeedIfEmpty();
+        console.log("Modelos sincronizados");
 
-        app.listen(PORT, () => {
-            // Inicia el servidor en el puerto definido
-            console.log(`Servidor corriendo en el puerto ${PORT} `); // Mensaje indicando que el servidor está activo
+        // âœ… CORRECCIÃ“N: AÃ±adir host '0.0.0.0' y arreglar console.log
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Servidor corriendo en el puerto ${PORT}`);
         });
     } catch (error) {
-        console.error("Error iniciando la app:", error); // Muestra un mensaje si ocurre un error al iniciar
-        process.exit(1); // Finaliza la ejecución de la aplicación
+        console.error("Error iniciando la app:", error);
+        process.exit(1);
     }
 };
 
-start(); // Ejecuta la función principal para iniciar el servidor
+start();
+
