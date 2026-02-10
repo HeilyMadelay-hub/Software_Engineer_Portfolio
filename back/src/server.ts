@@ -30,9 +30,7 @@ app.use("/api/loans", loanRoutes);
 // Servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, '../../front/dist')));
 
-// Middleware para SPA - captura todas las rutas que NO son API
 app.use((req, res, next) => {
-    // Si la ruta NO empieza con /api, sirve el index.html
     if (!req.path.startsWith('/api')) {
         return res.sendFile(path.join(__dirname, '../../front/dist/index.html'));
     }
@@ -50,7 +48,6 @@ const start = async () => {
         await runSeedIfEmpty();
         console.log("Modelos sincronizados");
 
-        // ✅ CORRECCIÓN: Añadir host '0.0.0.0' y arreglar console.log
         app.listen(PORT, '0.0.0.0', () => {
             console.log(`Servidor corriendo en el puerto ${PORT}`);
         });
