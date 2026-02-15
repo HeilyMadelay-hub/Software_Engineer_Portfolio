@@ -1,5 +1,4 @@
-# 🎓 Heily Majtan
-### Software Engineer | Backend & Real-Time Systems | Applied AI
+# 🎓 Software Engineer | Backend & Real-Time Systems | Applied AI
 
 [![GitHub](https://img.shields.io/badge/GitHub-HeilyMadelay--hub-181717?style=for-the-badge&logo=github)](https://github.com/HeilyMadelay-hub)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-heilymajtan-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/heilymajtan/)
