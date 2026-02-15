@@ -2,6 +2,27 @@
 
 Full-stack application for managing a library's books, users, and loans. It provides a complete CRUD interface for librarians to track inventory, register members, and handle book borrowing with return deadlines.
 
+---
+
+## 🎙️ Technical Outreach Project
+
+> **Featured Talk:** This system was designed and showcased as the primary case study in the technical presentation **"Full Stack & Frontend Architecture: React, TypeScript & Cloud Deployment"** delivered at **Tech Riders, Tajamar** (February 2026).
+>
+> The presentation demonstrated the viability of full-stack monolithic deployments using lightweight architectures (SQLite + Express) in free-tier production environments like Render, emphasizing modern frontend practices with Atomic Design, TypeScript Generics, and SOLID principles.
+
+**Key Topics Covered:**
+- End-to-end frontend development with React 18 and TypeScript
+- Scalable and maintainable architecture using Atomic Design patterns
+- Building highly configurable components with TypeScript Generics
+- Layered architecture (Pages → Components → Services → Hooks) aligned with SOLID
+- Repository pattern for centralized API communication
+- Performance optimization (debounced search, optimized Vite builds)
+- Monolithic deployment strategy on Render (trade-offs vs microservices)
+
+This project serves as a practical example of professional software engineering practices applied to real-world scenarios.
+
+---
+
 ## Tech Stack
 
 | Layer    | Technology           |
@@ -50,11 +71,11 @@ For production, set `VITE_API_URL` in the frontend build environment pointing to
 Start both servers in separate terminals:
 
 ```bash
-# Terminal 1 � Backend (http://localhost:4000)
+# Terminal 1 — Backend (http://localhost:4000)
 cd back
 npm run dev
 
-# Terminal 2 � Frontend (http://localhost:5173)
+# Terminal 2 — Frontend (http://localhost:5173)
 cd front
 npm run dev
 ```
@@ -64,26 +85,26 @@ The database is auto-created on first run and seeded with sample data if empty.
 ## Project Structure
 
 ```
-??? back/           # Backend (Express API)
-?   ??? src/
-?       ??? controllers/     # Route handlers
-?       ??? models/          # Sequelize models (Book, User, Loan)
-? ??? routes/          # Express route definitions
-?       ??? service/      # Business logic and DB connection
-?       ??? seed/     # Auto-seed for initial data
-?       ??? swagger/         # OpenAPI configuration
-?       ??? server.ts      # App entry point
-?
-??? front/         # Frontend (React SPA)
-?   ??? src/
-?       ??? components/      # Reusable UI and domain components
-?     ??? hooks/           # Custom hooks (useSearch)
-?       ??? pages/        # Page-level components
-?       ??? services/     # API client (axios)
-?       ??? types/    # TypeScript type definitions
-?
-??? biblioteca.sqlite        # SQLite database file (auto-generated)
-??? docs/    # Additional documentation
+├── back/           # Backend (Express API)
+│   └── src/
+│       ├── controllers/     # Route handlers
+│       ├── models/          # Sequelize models (Book, User, Loan)
+│       ├── routes/          # Express route definitions
+│       ├── service/         # Business logic and DB connection
+│       ├── seed/            # Auto-seed for initial data
+│       ├── swagger/         # OpenAPI configuration
+│       └── server.ts        # App entry point
+│
+├── front/         # Frontend (React SPA)
+│   └── src/
+│       ├── components/      # Reusable UI and domain components
+│       ├── hooks/           # Custom hooks (useSearch)
+│       ├── pages/           # Page-level components
+│       ├── services/        # API client (axios)
+│       └── types/           # TypeScript type definitions
+│
+├── biblioteca.sqlite        # SQLite database file (auto-generated)
+└── docs/                    # Additional documentation
 ```
 
 ## API
@@ -96,7 +117,7 @@ http://localhost:4000/api-docs
 
 ### Endpoints
 
-| Resource | Base route      | Methods       |
+| Resource | Base route      | Methods                |
 | -------- | --------------- | ---------------------- |
 | Books    | `/api/books`    | GET, POST, PUT, DELETE |
 | Users    | `/api/users`    | GET, POST, PUT, DELETE |
@@ -105,7 +126,7 @@ http://localhost:4000/api-docs
 ## Build for Production
 
 ```bash
-# From the back/ directory � builds both frontend and backend
+# From the back/ directory — builds both frontend and backend
 cd back
 npm run build
 npm start
@@ -113,8 +134,8 @@ npm start
 
 The backend `build` script performs two steps:
 
-1. `cd ../front && npm install && npm run build` � installs frontend dependencies and generates the production bundle in `front/dist/`.
-2. `tsc` � compiles the backend TypeScript into `back/dist/`.
+1. `cd ../front && npm install && npm run build` — installs frontend dependencies and generates the production bundle in `front/dist/`.
+2. `tsc` — compiles the backend TypeScript into `back/dist/`.
 
 At runtime, Express serves the compiled React SPA as static files from `front/dist/` and handles API routes under `/api/*`. This means the entire application (frontend + backend) runs as a **single process** on a single port.
 
@@ -124,7 +145,7 @@ At runtime, Express serves the compiled React SPA as static files from `front/di
 
 ### Why Render?
 
-The entire project � frontend, backend, and database � is deployed as a **single Web Service on [Render](https://render.com/)**. This decision was made for several reasons:
+The entire project — frontend, backend, and database — is deployed as a **single Web Service on [Render](https://render.com/)**. This decision was made for several reasons:
 
 1. **Monorepo simplicity.** The backend already serves the frontend static files via Express (`express.static`). There is no need to deploy the frontend and backend separately; a single service handles everything.
 2. **SQLite as the database.** The project uses SQLite, which is a file-based database (`biblioteca.sqlite`). It does not require a separate database server or managed service, so a single Render Web Service is enough to run the full stack.
@@ -135,32 +156,32 @@ The entire project � frontend, backend, and database � is deployed as a **single
 
 ```
 Client (browser)
-    ?
-    ?
-???????????????????????????????????
-?  Render Web Service (Node.js)   ?
-?   ?
-?  Express serves:                ?
-?   ??? /api/*    ? REST API      ?
-?   ??? /api-docs ? Swagger UI    ?
-?   ??? /*        ? React SPA     ?
-?            (front/dist/)  ?
-?       ?
-?  SQLite DB: biblioteca.sqlite   ?
-???????????????????????????????????
+    ↓
+    ↓
+┌───────────────────────────────┐
+│  Render Web Service (Node.js) │
+│   ↓                            │
+│  Express serves:               │
+│   • /api/*    → REST API       │
+│   • /api-docs → Swagger UI     │
+│   • /*        → React SPA      │
+│            (front/dist/)       │
+│       ↓                        │
+│  SQLite DB: biblioteca.sqlite  │
+└───────────────────────────────┘
 ```
 
 All traffic goes through a single URL. API requests are handled by Express routes, and any non-API route serves the React `index.html` (SPA fallback), so client-side routing with React Router works correctly.
 
 ### Render Configuration
 
-| Setting   | Value   |
-| ---------------- | ---------------------------------------------- |
-| **Environment**  | Node      |
-| **Root Directory** | `back`     |
-| **Build Command** | `npm install && npm run build`        |
-| **Start Command** | `node dist/server.js`          |
-| **Branch**       | `demo-biblioteca`   |
+| Setting            | Value                                          |
+| ------------------ | ---------------------------------------------- |
+| **Environment**    | Node                                           |
+| **Root Directory** | `back`                                         |
+| **Build Command**  | `npm install && npm run build`                 |
+| **Start Command**  | `node dist/server.js`                          |
+| **Branch**         | `demo-biblioteca`                              |
 
 The `npm run build` script defined in `back/package.json` handles the full pipeline:
 
@@ -172,17 +193,17 @@ This installs all dependencies (back + front), builds the React app into `front/
 
 ### Environment Variables on Render
 
-| Variable | Description        | Example |
-| -------- | -------------------------- | ------- |
+| Variable | Description                                                  | Example |
+| -------- | ------------------------------------------------------------ | ------- |
 | `PORT`   | Port the server listens on (Render sets this automatically) | `10000` |
 
 No database URL is needed because SQLite runs as an embedded file alongside the application.
 
 ### Live URL
 
-?? **[https://software-engineer-portfolio-al1s.onrender.com/libros](https://software-engineer-portfolio-al1s.onrender.com/libros)**
+🌐 **[https://software-engineer-portfolio-al1s.onrender.com/libros](https://software-engineer-portfolio-al1s.onrender.com/libros)**
 
-> **Note:** Render's free tier spins down the service after ~15 minutes of inactivity. The first request after inactivity may take 30�60 seconds while the service cold-starts.
+> **Note:** Render's free tier spins down the service after ~15 minutes of inactivity. The first request after inactivity may take 30–60 seconds while the service cold-starts.
 
 ### Reproduce the Deployment Yourself
 
@@ -194,4 +215,39 @@ No database URL is needed because SQLite runs as an embedded file alongside the 
 6. Set the **Start Command** to `node dist/server.js`.
 7. Deploy. Render will build and start the application automatically.
 
-No additional environment variables are strictly required � `PORT` is injected by Render, and SQLite creates its database file on first run.
+No additional environment variables are strictly required — `PORT` is injected by Render, and SQLite creates its database file on first run.
+
+---
+
+## Key Features & Highlights
+
+### Frontend Architecture
+- **Atomic Design System**: Reduces UI duplication and ensures visual and structural consistency
+- **TypeScript Generics**: Highly configurable table component consolidating multiple feature implementations
+- **Layered Architecture**: Pages → Components → Services → Hooks (SOLID principles)
+- **Repository Pattern**: Centralized HTTP logic for improved error handling and code organization
+- **Performance**: Debounced search interactions and optimized Vite production builds
+
+### Backend Architecture
+- **RESTful API**: Full CRUD operations for Books, Users, and Loans
+- **ORM**: Sequelize for type-safe database operations
+- **Auto-seeding**: Database populated with sample data on first run
+- **API Documentation**: Interactive Swagger UI at `/api-docs`
+
+### Deployment Strategy
+- **Monolithic Architecture**: Single Web Service serving both frontend and backend
+- **Trade-offs Analysis**: Scope, cost, and operational complexity vs microservices
+- **Zero-cost Production**: Deployed on Render's free tier
+- **Continuous Deployment**: Auto-deploy on GitHub push
+
+---
+
+## License
+
+This project is available for educational and portfolio purposes.
+
+---
+
+## Contact
+
+For questions about this project or the technical presentation, feel free to reach out via GitHub or LinkedIn.
