@@ -38,7 +38,7 @@
 
 | Project | Achievements | Stack |
 |---------|-------------|-------|
-| Business School Management System | Academic platform with AI recommendations and gamification | ASP.NET Core MVC · EF Core · SQL Server · Docker |
-| Backend Advanced Development | MVC & Web API systems with transactional consistency | ASP.NET Core 8 · EF Core · SQL Server · Swagger |
+| [Business School Management System](https://github.com/HeilyMadelay-hub/master-portfolio/tree/business-school-aspnet-core-mvc-identity) | Academic platform with AI recommendations and gamification | ASP.NET Core MVC · EF Core · SQL Server · Docker |
+| [Backend Advanced Development](https://github.com/HeilyMadelay-hub/master-portfolio/tree/backend-advanced-module3-exam) | MVC & Web API systems with transactional consistency | ASP.NET Core 8 · EF Core · SQL Server · Swagger |
 
 
