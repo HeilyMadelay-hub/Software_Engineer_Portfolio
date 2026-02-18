@@ -1,6 +1,6 @@
-# Se encarga del flujo completo de traducción de mensaje:
+# Se encarga del flujo completo de traduccion de mensaje:
 
-# Validación de input
+# Validacion de input
 
 # Cache LRU
 
@@ -8,4 +8,24 @@
 
 # Scoring parcial y detectores (sarcasmo, sentimiento)
 
-# Es el núcleo del sistema, donde se analiza el mensaje ambiguo.
+# Es el nucleo del sistema, donde se analiza el mensaje ambiguo.
+
+from fastapi import APIRouter
+from ..models.traduccion import TraduccionRequest
+
+router = APIRouter()
+
+@router.post("/traducir")
+async def traducir(request: TraduccionRequest):
+     """
+     Endpoint de traduccion.
+     - Recibe JSON con 'mensaje'.
+     - Validacion via Pydantic.
+     - Logica de traduccion pendiente.
+     """
+
+     return {
+         "status": "ok",
+         "mensaje_recibido": request.mensaje,
+         "info": "Aqui se procesaria la traduccion mas adelante."
+     }
